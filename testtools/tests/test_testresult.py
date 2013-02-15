@@ -21,6 +21,7 @@ from testtools import (
     ExtendedToOriginalDecorator,
     MultiTestResult,
     PlaceHolder,
+    StreamResult,
     Tagger,
     TestCase,
     TestResult,
@@ -444,6 +445,86 @@ class TestTestResultDecoratorContract(TestCase, StartTestRunContract):
 
     def makeResult(self):
         return TestResultDecorator(TestResult())
+
+
+class TestStreamResultContract(object):
+
+    def _make_result(self):
+        raise NotImplementedError(self._make_result)
+
+    def test_startTestRun(self):
+        result = self._make_result()
+        result.startTestRun()
+        result.stopTestRun()
+
+    def test_estimate(self):
+        result = self._make_result()
+        result.startTestRun()
+        self.addCleanup(result.stopTestRun)
+        result.estimate(0)
+        result.estimate(10)
+        result.estimate(5, route_code=_u("1234"))
+        now = datetime.datetime.now(utc)
+        result.estimate(5, route_code=_u("1234"), timestamp=now)
+        result.estimate(5, timestamp=now)
+
+    def test_file(self):
+        result = self._make_result()
+        result.startTestRun()
+        self.addCleanup(result.stopTestRun)
+        now = datetime.datetime.now(utc)
+        inputs = list(dict(
+            eof=True,
+            mime_type="text/plain",
+            route_code=_u("1234"),
+            test_id=_u("foo"),
+            timestamp=now,
+            ).items())
+        param_dicts = self._permute(inputs)
+        for kwargs in param_dicts:
+            result.file(_u("foo"), _b(""), **kwargs)
+            result.file(_u("foo"), _b("bar"), **kwargs)
+
+    def test_status(self):
+        result = self._make_result()
+        result.startTestRun()
+        self.addCleanup(result.stopTestRun)
+        now = datetime.datetime.now(utc)
+        args = [[_u("foo"), s] for s in ['exists', 'inprogress', 'xfail',
+            'xsuccess', 'success', 'fail', 'skip']]
+        inputs = list(dict(
+            runnable=False,
+            test_tags=set(['quux']),
+            route_code=_u("1234"),
+            timestamp=now,
+            ).items())
+        param_dicts = self._permute(inputs)
+        for kwargs in param_dicts:
+            for arg in args:
+                result.status(*arg, **kwargs)
+
+    def _permute(self, inputs):
+        param_dicts = [{}]
+        # Build a full set of combinations
+        def permutations(size, inputs):
+            # For each possible start point, return the permutations one size
+            # smaller from the rest of the list combined with that start point.
+            if not size:
+                return [[]]
+            result = []
+            for start in range(len(inputs)-size+1):
+                for permutation in permutations(size-1, inputs[start+1:]):
+                    result.append([inputs[start]] + permutation)
+            return result
+        for size in range(1, len(inputs)+1):
+            param_dicts.extend(dict(p) for p in permutations(size, inputs))
+        return param_dicts
+
+
+class TestBaseStreamResultContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        return StreamResult()
 
 
 class TestTestResult(TestCase):
