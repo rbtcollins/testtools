@@ -16,6 +16,9 @@ Improvements
 * New class ``StreamResult`` which defines the API for the new result type.
   (Robert Collins)
 
+* New test support class ``testtools.testresult.doubles.StreamResult``, which
+  captures all the StreamResult events. (Robert Collins)
+
 * ``PlaceHolder`` can now hold tags, and applies them before, and removes them
   after, the test. (Robert Collins)
 
