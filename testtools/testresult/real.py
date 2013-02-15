@@ -14,6 +14,7 @@ __all__ = [
     ]
 
 import datetime
+from operator import methodcaller
 import sys
 import unittest
 
@@ -371,6 +372,35 @@ class StreamResult(object):
             tests which are not able to be explicitly run. For instance,
             subtests will report themselves as non-runnable.
         """
+
+
+def domap(*args, **kwargs):
+    return list(map(*args, **kwargs))
+
+
+class CopyStreamResult(object):
+    """Copies all event it receives to multiple results.
+    
+    This provides an easy facility for combining multiple StreamResults.
+    """
+
+    def __init__(self, targets):
+        self.targets = targets
+
+    def startTestRun(self):
+        domap(methodcaller('startTestRun'), self.targets)
+
+    def stopTestRun(self):
+        domap(methodcaller('stopTestRun'), self.targets)
+
+    def estimate(self, *args, **kwargs):
+        domap(methodcaller('estimate', *args, **kwargs), self.targets)
+
+    def file(self, *args, **kwargs):
+        domap(methodcaller('file', *args, **kwargs), self.targets)
+
+    def status(self, *args, **kwargs):
+        domap(methodcaller('status', *args, **kwargs), self.targets)
 
 
 class MultiTestResult(TestResult):
