@@ -6,6 +6,7 @@ __all__ = [
     'Python26TestResult',
     'Python27TestResult',
     'ExtendedTestResult',
+    'StreamResult',
     ]
 
 
@@ -148,3 +149,32 @@ class ExtendedTestResult(Python27TestResult):
 
     def wasSuccessful(self):
         return self._was_successful
+
+
+class StreamResult(object):
+    """A StreamResult implementation for testing.
+
+    All events are logged to _events.
+    """
+
+    def __init__(self):
+        self._events = []
+
+    def startTestRun(self):
+        self._events.append(('startTestRun',))
+
+    def stopTestRun(self):
+        self._events.append(('stopTestRun',))
+
+    def estimate(self, count, route_code=None, timestamp=None):
+        self._events.append(('estimate', count, route_code, timestamp))
+
+    def file(self, file_name, file_bytes, eof=False, mime_type=None,
+        test_id=None, route_code=None, timestamp=None):
+        self._events.append(('file', file_name, file_bytes, eof, mime_type,
+            test_id, route_code, timestamp))
+
+    def status(self, test_id, test_status, test_tags=None, runnable=True,
+        route_code=None, timestamp=None):
+        self._events.append(('status', test_id, test_status, test_tags,
+            runnable, route_code, timestamp))
