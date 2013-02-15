@@ -161,6 +161,15 @@ is observed. Aborting multiple workers in a distributed environment requires
 hooking whatever signalling mechanism the distributed environment has up to
 a ``TestControl`` in each worker process.
 
+ExtendedToStreamDecorator
+-------------------------
+
+This is a hybrid object that combines both the ``Extended`` and ``Stream``
+``TestResult`` APIs into one class, but only emits ``StreamResult`` events.
+This is useful when a ``StreamResult`` stream is desired, but you cannot
+be sure that the tests which will run have been updated to the ``StreamResult``
+API.
+
 ThreadsafeStreamResult
 ----------------------
 
