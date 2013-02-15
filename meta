@@ -1,6 +1,7 @@
 Version: 1
-Previous: None
-Head: d47c0e3a903df98d4dd4052127087928a0656a4f
+Previous: 2bf1a7e1b4a8f4add743736ce2fcf0e396d5ba43
+Head: 0088583d54907d8b2cdedb1ec9449352553a45b1
 Applied:
+  define-stream-result: 0088583d54907d8b2cdedb1ec9449352553a45b1
 Unapplied:
 Hidden:

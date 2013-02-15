@@ -1,0 +1,13 @@
+Bottom: dbe2fa7fde61a7a78146698c81e5a935137615b5
+Top:    dbe2fa7fde61a7a78146698c81e5a935137615b5
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-15 20:18:54 +1300
+
+This defines a new sort of TestResult, StreamResult.
+
+This is intended to prototype the new API for inclusion upstream.
+
+
+---
+
+
