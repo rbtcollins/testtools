@@ -19,6 +19,7 @@ from extras import safe_hasattr
 
 from testtools import (
     ExtendedToOriginalDecorator,
+    ExtendedToStreamDecorator,
     MultiTestResult,
     PlaceHolder,
     StreamResult,
@@ -439,6 +440,12 @@ class TestAdaptedPython27TestResultContract(TestCase, DetailsContract):
         return ExtendedToOriginalDecorator(Python27TestResult())
 
 
+class TestAdaptedStreamResult(TestCase, DetailsContract):
+
+    def makeResult(self):
+        return ExtendedToStreamDecorator(StreamResult())
+
+
 class TestTestResultDecoratorContract(TestCase, StartTestRunContract):
 
     run_test_with = FullStackRunTest
@@ -525,6 +532,12 @@ class TestBaseStreamResultContract(TestCase, TestStreamResultContract):
 
     def _make_result(self):
         return StreamResult()
+
+
+class TestExtendedToStreamDecoratorContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        return ExtendedToStreamDecorator(StreamResult())
 
 
 class TestTestResult(TestCase):

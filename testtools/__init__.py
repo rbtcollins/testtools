@@ -8,6 +8,7 @@ __all__ = [
     'ErrorHolder',
     'ExpectedException',
     'ExtendedToOriginalDecorator',
+    'ExtendedToStreamDecorator',
     'FixtureSuite',
     'iterate_tests',
     'MultipleExceptions',
@@ -66,6 +67,7 @@ else:
         )
     from testtools.testresult import (
         ExtendedToOriginalDecorator,
+        ExtendedToStreamDecorator,
         MultiTestResult,
         StreamResult,
         Tagger,
