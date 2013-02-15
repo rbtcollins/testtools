@@ -1,8 +1,7 @@
 Version: 1
-Previous: 86e4b2433ba7c7c75b02141e83849ea19859334b
-Head: a87b0149b6c4d4fcb615b6aba42b9d18455e1343
+Previous: 4b150b5e22af8f7e953f40fa109d64f881515d15
+Head: f80c92da4dd72398f9a646dd05c4f679dc3372a3
 Applied:
-  define-stream-result: 0088583d54907d8b2cdedb1ec9449352553a45b1
-  refresh-temp: a87b0149b6c4d4fcb615b6aba42b9d18455e1343
+  define-stream-result: f80c92da4dd72398f9a646dd05c4f679dc3372a3
 Unapplied:
 Hidden:
