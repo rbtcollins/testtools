@@ -20,6 +20,12 @@ Improvements
   ``StreamResult`` objects (each of which receives all the events).
   (Robert Collins)
 
+* New support class ``ExtendedToStreamResult`` which translates both regular
+  unittest TestResult API calls and the ExtendedTestResult API which testtools
+  has supported into the StreamResult API. ExtendedToStreamResult also forwards
+  calls made in the StreamResult API, permitting it to be used anywhere a 
+  StreamResult is used. (Robert Collins)
+
 * New test support class ``testtools.testresult.doubles.StreamResult``, which
   captures all the StreamResult events. (Robert Collins)
 
