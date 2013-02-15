@@ -1,0 +1,11 @@
+Bottom: 878ab330f2375cf3760cd8e181098ee917695324
+Top:    878ab330f2375cf3760cd8e181098ee917695324
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-16 11:51:04 +1300
+
+Adds a recording StreamResult for writing tests with.
+
+
+---
+
+
