@@ -1,7 +1,8 @@
 Version: 1
-Previous: 4b150b5e22af8f7e953f40fa109d64f881515d15
-Head: f80c92da4dd72398f9a646dd05c4f679dc3372a3
+Previous: 10a815107a8512248c0676a1d1064abb5c1e365b
+Head: 2e7e66166d18e91e5f7b574a5792d8d00b658dd4
 Applied:
   define-stream-result: f80c92da4dd72398f9a646dd05c4f679dc3372a3
+  extended-to-stream: 2e7e66166d18e91e5f7b574a5792d8d00b658dd4
 Unapplied:
 Hidden:

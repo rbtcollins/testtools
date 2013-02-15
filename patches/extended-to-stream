@@ -1,0 +1,14 @@
+Bottom: 878ab330f2375cf3760cd8e181098ee917695324
+Top:    878ab330f2375cf3760cd8e181098ee917695324
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-15 23:58:56 +1300
+
+Add an adapter to convert ExtendedTestResult to StreamResult.
+
+This permits using code that uses any Python unittest test code
+with a StreamResult.
+
+
+---
+
+
