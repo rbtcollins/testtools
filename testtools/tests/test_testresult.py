@@ -20,6 +20,7 @@ from extras import safe_hasattr
 from testtools import (
     CopyStreamResult,
     ExtendedToOriginalDecorator,
+    ExtendedToStreamDecorator,
     MultiTestResult,
     PlaceHolder,
     StreamFailfast,
@@ -446,6 +447,12 @@ class TestAdaptedPython27TestResultContract(TestCase, DetailsContract):
         return ExtendedToOriginalDecorator(Python27TestResult())
 
 
+class TestAdaptedStreamResult(TestCase, DetailsContract):
+
+    def makeResult(self):
+        return ExtendedToStreamDecorator(StreamResult())
+
+
 class TestTestResultDecoratorContract(TestCase, StartTestRunContract):
 
     run_test_with = FullStackRunTest
@@ -544,6 +551,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
 
     def _make_result(self):
         return LoggingStreamResult()
+
+
+class TestExtendedToStreamDecoratorContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        return ExtendedToStreamDecorator(StreamResult())
 
 
 class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
