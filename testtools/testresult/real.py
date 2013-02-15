@@ -856,6 +856,205 @@ class ExtendedToOriginalDecorator(object):
         return self.decorated.wasSuccessful()
 
 
+class ExtendedToStreamDecorator(object):
+    """Permit using old TestResult API code with new StreamResult objects.
+    
+    This decorates a StreamResult and converts old (Python 2.6 / 2.7 /
+    Extended) TestResult API calls into StreamResult calls.
+
+    It also supports regular StreamResult calls, making it safe to wrap around
+    any StreamResult.
+    """
+
+    def __init__(self, decorated):
+        self.decorated = decorated
+        self._tags = TagContext()
+        # Only used for old TestResults that do not have failfast.
+        self._failfast = False
+        # XXX: TODO: time handling is discarding timestamps at the moment.
+
+    def __repr__(self):
+        return '<%s %r>' % (self.__class__.__name__, self.decorated)
+
+    def __getattr__(self, name):
+        return getattr(self.decorated, name)
+
+    def startTest(self, test):
+        self.decorated.status(test.id(), 'inprogress')
+
+    def addError(self, test, err=None, details=None):
+        test_id = test.id()
+        try:
+            self._check_args(err, details)
+            if details is not None:
+                for name, content in details.items():
+                    mime_type = repr(content.content_type)
+                    for file_bytes in content.iter_bytes():
+                        self.decorated.file(name, file_bytes,
+                            mime_type=mime_type, test_id=test_id)
+                    self.decorated.file(name, _b(""), eof=True,
+                        mime_type=mime_type, test_id=test_id)
+                self.decorated.status(test_id, 'fail', test_tags=self.current_tags)
+        finally:
+            if self.failfast:
+                self.stop()
+
+    def addExpectedFailure(self, test, err=None, details=None):
+        self._check_args(err, details)
+        addExpectedFailure = getattr(
+            self.decorated, 'addExpectedFailure', None)
+        if addExpectedFailure is None:
+            return self.addSuccess(test)
+        if details is not None:
+            try:
+                return addExpectedFailure(test, details=details)
+            except TypeError:
+                # have to convert
+                err = self._details_to_exc_info(details)
+        return addExpectedFailure(test, err)
+
+    def addFailure(self, test, err=None, details=None):
+        try:
+            self._check_args(err, details)
+            if details is not None:
+                try:
+                    return self.decorated.addFailure(test, details=details)
+                except TypeError:
+                    # have to convert
+                    err = self._details_to_exc_info(details)
+            return self.decorated.addFailure(test, err)
+        finally:
+            if self.failfast:
+                self.stop()
+
+    def addSkip(self, test, reason=None, details=None):
+        self._check_args(reason, details)
+        addSkip = getattr(self.decorated, 'addSkip', None)
+        if addSkip is None:
+            return self.decorated.addSuccess(test)
+        if details is not None:
+            try:
+                return addSkip(test, details=details)
+            except TypeError:
+                # extract the reason if it's available
+                try:
+                    reason = details['reason'].as_text()
+                except KeyError:
+                    reason = _details_to_str(details)
+        return addSkip(test, reason)
+
+    def addUnexpectedSuccess(self, test, details=None):
+        try:
+            outcome = getattr(self.decorated, 'addUnexpectedSuccess', None)
+            if outcome is None:
+                try:
+                    test.fail("")
+                except test.failureException:
+                    return self.addFailure(test, sys.exc_info())
+            if details is not None:
+                try:
+                    return outcome(test, details=details)
+                except TypeError:
+                    pass
+            return outcome(test)
+        finally:
+            if self.failfast:
+                self.stop()
+
+    def addSuccess(self, test, details=None):
+        if details is not None:
+            try:
+                return self.decorated.addSuccess(test, details=details)
+            except TypeError:
+                pass
+        return self.decorated.addSuccess(test)
+
+    def _check_args(self, err, details):
+        param_count = 0
+        if err is not None:
+            param_count += 1
+        if details is not None:
+            param_count += 1
+        if param_count != 1:
+            raise ValueError("Must pass only one of err '%s' and details '%s"
+                % (err, details))
+
+    def _details_to_exc_info(self, details):
+        """Convert a details dict to an exc_info tuple."""
+        return (
+            _StringException,
+            _StringException(_details_to_str(details, special='traceback')),
+            None)
+
+    @property
+    def current_tags(self):
+        return getattr(
+            self.decorated, 'current_tags', self._tags.get_current_tags())
+
+    def done(self):
+        try:
+            return self.decorated.done()
+        except AttributeError:
+            return
+
+    def _get_failfast(self):
+        return getattr(self.decorated, 'failfast', self._failfast)
+    def _set_failfast(self, value):
+        if safe_hasattr(self.decorated, 'failfast'):
+            self.decorated.failfast = value
+        else:
+            self._failfast = value
+    failfast = property(_get_failfast, _set_failfast)
+
+    def progress(self, offset, whence):
+        method = getattr(self.decorated, 'progress', None)
+        if method is None:
+            return
+        return method(offset, whence)
+
+    @property
+    def shouldStop(self):
+        return self.decorated.shouldStop
+
+    def startTestRun(self):
+        self._tags = TagContext()
+        try:
+            return self.decorated.startTestRun()
+        except AttributeError:
+            return
+
+    def stop(self):
+        return self.decorated.stop()
+
+    def stopTest(self, test):
+        self._tags = self._tags.parent
+        pass
+
+    def stopTestRun(self):
+        try:
+            return self.decorated.stopTestRun()
+        except AttributeError:
+            return
+
+    def tags(self, new_tags, gone_tags):
+        method = getattr(self.decorated, 'tags', None)
+        if method is not None:
+            return method(new_tags, gone_tags)
+        else:
+            self._tags.change_tags(new_tags, gone_tags)
+
+    def time(self, a_datetime):
+        method = getattr(self.decorated, 'time', None)
+        if method is None:
+            return
+        return method(a_datetime)
+
+    def wasSuccessful(self):
+        return self.decorated.wasSuccessful()
+
+
+
+
 class TestResultDecorator(object):
     """General pass-through decorator.
 

@@ -4,6 +4,7 @@
 
 __all__ = [
     'ExtendedToOriginalDecorator',
+    'ExtendedToStreamDecorator',
     'MultiTestResult',
     'StreamResult',
     'Tagger',
@@ -16,6 +17,7 @@ __all__ = [
 
 from testtools.testresult.real import (
     ExtendedToOriginalDecorator,
+    ExtendedToStreamDecorator,
     MultiTestResult,
     StreamResult,
     Tagger,
