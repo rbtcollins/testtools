@@ -1,0 +1,13 @@
+Bottom: 878ab330f2375cf3760cd8e181098ee917695324
+Top:    878ab330f2375cf3760cd8e181098ee917695324
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-16 11:48:03 +1300
+
+Adds a CopyStreamResult which copies StreamResult events to multiple outputs.
+
+This allows applying multiple terminal handlers to one stream.
+
+
+---
+
+
