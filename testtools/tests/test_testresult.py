@@ -18,6 +18,7 @@ import warnings
 from extras import safe_hasattr
 
 from testtools import (
+    CopyStreamResult,
     ExtendedToOriginalDecorator,
     MultiTestResult,
     PlaceHolder,
@@ -48,6 +49,7 @@ from testtools.content import (
     )
 from testtools.content_type import ContentType, UTF8_TEXT
 from testtools.matchers import (
+    AllMatch,
     Contains,
     DocTestMatches,
     Equals,
@@ -517,6 +519,12 @@ class TestBaseStreamResultContract(TestCase, TestStreamResultContract):
         return StreamResult()
 
 
+class TestCopyStreamResultContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        return CopyStreamResult([StreamResult(), StreamResult()])
+
+
 class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
 
     def _make_result(self):
@@ -557,6 +565,45 @@ class TestDoubleStreamResultEvents(TestCase):
             [('startTestRun',),
              ('status', 'foo', 'success', set(['tag']), False, 'abc', now)],
             result._events)
+
+
+class TestCopyStreamResultCopies(TestCase):
+
+    def setUp(self):
+        super(TestCopyStreamResultCopies, self).setUp()
+        self.target1 = LoggingStreamResult()
+        self.target2 = LoggingStreamResult()
+        self.targets = [self.target1._events, self.target2._events]
+        self.result = CopyStreamResult([self.target1, self.target2])
+
+    def test_startTestRun(self):
+        self.result.startTestRun()
+        self.assertThat(self.targets, AllMatch(Equals([('startTestRun',)])))
+
+    def test_stopTestRun(self):
+        self.result.startTestRun()
+        self.result.stopTestRun()
+        self.assertThat(self.targets,
+            AllMatch(Equals([('startTestRun',), ('stopTestRun',)])))
+
+    def test_file(self):
+        self.result.startTestRun()
+        now = datetime.datetime.now(utc)
+        self.result.file("foo", "bar", eof=True, mime_type="text/json",
+            test_id="id", route_code='abc', timestamp=now)
+        self.assertThat(self.targets,
+            AllMatch(Equals([('startTestRun',),
+                ('file', 'foo', 'bar', True, 'text/json', 'id', 'abc', now)])))
+
+    def test_status(self):
+        self.result.startTestRun()
+        now = datetime.datetime.now(utc)
+        self.result.status("foo", "success", test_tags=set(['tag']),
+            runnable=False, route_code='abc', timestamp=now)
+        self.assertThat(self.targets,
+            AllMatch(Equals([('startTestRun',),
+                ('status', 'foo', 'success', set(['tag']), False, 'abc', now)
+                ])))
 
 
 class TestTestResult(TestCase):

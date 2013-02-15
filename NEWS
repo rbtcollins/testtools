@@ -23,6 +23,10 @@ Improvements
 * New class ``StreamResult`` which defines the API for the new result type.
   (Robert Collins)
 
+* New support class ``CopyStreamResult`` which forwards events onto multiple
+  ``StreamResult`` objects (each of which receives all the events).
+  (Robert Collins)
+
 * New test support class ``testtools.testresult.doubles.StreamResult``, which
   captures all the StreamResult events. (Robert Collins)
 
