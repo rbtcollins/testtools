@@ -1,5 +1,5 @@
-Bottom: 77a292506b6d333a77ce8ebc5c6c56fdc2ee5742
-Top:    64b6c7b5f6e444a98dfc0e04b486dfce99c9afda
+Bottom: f90119a0b2aa9c8829ae0c2c761e9da39ba726f6
+Top:    d75fd0c21fb721a502f77106f1f88a04626513b7
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -53,10 +53,10 @@ index f1ec047..9aa6b7e 100644
      TestByTestResult,
      TestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index a43727a..c0ab5e6 100644
+index ec13a73..f41c049 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -395,6 +395,34 @@ class CopyStreamResult(object):
+@@ -399,6 +399,34 @@ class CopyStreamResult(object):
          map(methodcaller('status', *args, **kwargs), self.targets)
  
  
