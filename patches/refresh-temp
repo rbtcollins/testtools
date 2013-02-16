@@ -1,0 +1,38 @@
+Bottom: fd95e19d033db6ea3781a3ee429f0ef3c60f36df
+Top:    2d3dccdafae81e0832f780991054975f627e0fc4
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-16 22:19:48 +1300
+
+Refresh of define-stream-result
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index c05a002..34d97f0 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -348,16 +348,19 @@ class StreamResult(object):
+         * inprogress - the test is currently running. Emitted by tests when
+           they start running and at any intermediary point they might choose to
+           indicate their continual operation.
+-        * xfail - the test failed but that was expected.
+-        * uxsuccess - the test passed but was expected to fail. Like finish,
+-          this must be the last event sent for this test.
++        * xfail - the test failed but that was expected. This is purely
++        * informative - the test is not considered to be a failure.
++        * uxsuccess - the test passed but was expected to fail. The test will
++          be considered a failure.
+         * finish - the test has finished. If no error status had been reported,
+           it can now be considered a success, otherwise it should be considered
+           a failure. This must be the last event sent for this test (including
+           file events).
+-        * fail - the test failed (or errored)
++        * fail - the test failed (or errored). The test will be considered a
++          failure.
+         * skip - the test was selected to run but chose to be skipped. E.g.
+-          a test dependency was missing.
++          a test dependency was missing. This is purely informative - the
++          test is not considered to be a failure.
+         :param test_tags: Optional set of tags to apply to the test. Tags
+             have no intrinsic meaning - that is up to the test author.
+         :param runnable: Allows status reports to mark that they are for
