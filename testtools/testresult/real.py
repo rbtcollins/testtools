@@ -886,7 +886,7 @@ class ExtendedToOriginalDecorator(object):
         return self.decorated.wasSuccessful()
 
 
-class ExtendedToStreamDecorator(object):
+class ExtendedToStreamDecorator(TestResult):
     """Permit using old TestResult API code with new StreamResult objects.
     
     This decorates a StreamResult and converts old (Python 2.6 / 2.7 /
@@ -897,11 +897,8 @@ class ExtendedToStreamDecorator(object):
     """
 
     def __init__(self, decorated):
+        super(ExtendedToStreamDecorator, self).__init__()
         self.decorated = decorated
-        self._tags = TagContext()
-        # Only used for old TestResults that do not have failfast.
-        self._failfast = False
-        # XXX: TODO: time handling is discarding timestamps at the moment.
 
     def __repr__(self):
         return '<%s %r>' % (self.__class__.__name__, self.decorated)
@@ -1027,31 +1024,15 @@ class ExtendedToStreamDecorator(object):
         except AttributeError:
             return
 
-    def _get_failfast(self):
-        return getattr(self.decorated, 'failfast', self._failfast)
-    def _set_failfast(self, value):
-        if safe_hasattr(self.decorated, 'failfast'):
-            self.decorated.failfast = value
-        else:
-            self._failfast = value
-    failfast = property(_get_failfast, _set_failfast)
-
     def progress(self, offset, whence):
         method = getattr(self.decorated, 'progress', None)
         if method is None:
             return
         return method(offset, whence)
 
-    @property
-    def shouldStop(self):
-        return self.decorated.shouldStop
-
     def startTestRun(self):
-        self._tags = TagContext()
-        try:
-            return self.decorated.startTestRun()
-        except AttributeError:
-            return
+        super(ExtendedToStreamDecorator, self).startTestRun()
+        self._saw_failure = False
 
     def stop(self):
         return self.decorated.stop()
@@ -1080,9 +1061,8 @@ class ExtendedToStreamDecorator(object):
         return method(a_datetime)
 
     def wasSuccessful(self):
-        return self.decorated.wasSuccessful()
-
-
+        return (super(ExtendedToStreamDecorator, self).wasSuccessful and 
+            not self._saw_failure)
 
 
 class TestResultDecorator(object):
