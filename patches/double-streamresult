@@ -1,5 +1,5 @@
 Bottom: 878ab330f2375cf3760cd8e181098ee917695324
-Top:    878ab330f2375cf3760cd8e181098ee917695324
+Top:    eb6fabbd4202ed7f37de43e0ae36e1fd3fe89347
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:51:04 +1300
 
@@ -8,4 +8,116 @@ Adds a recording StreamResult for writing tests with.
 
 ---
 
-
+diff --git a/testtools/testresult/doubles.py b/testtools/testresult/doubles.py
+index 1865e93..83c967e 100644
+--- a/testtools/testresult/doubles.py
++++ b/testtools/testresult/doubles.py
+@@ -6,6 +6,7 @@ __all__ = [
+     'Python26TestResult',
+     'Python27TestResult',
+     'ExtendedTestResult',
++    'StreamResult',
+     ]
+ 
+ 
+@@ -148,3 +149,32 @@ class ExtendedTestResult(Python27TestResult):
+ 
+     def wasSuccessful(self):
+         return self._was_successful
++
++
++class StreamResult(object):
++    """A StreamResult implementation for testing.
++
++    All events are logged to _events.
++    """
++
++    def __init__(self):
++        self._events = []
++
++    def startTestRun(self):
++        self._events.append(('startTestRun',))
++
++    def stopTestRun(self):
++        self._events.append(('stopTestRun',))
++
++    def estimate(self, count, route_code=None, timestamp=None):
++        self._events.append(('estimate', count, route_code, timestamp))
++
++    def file(self, file_name, file_bytes, eof=False, mime_type=None,
++        test_id=None, route_code=None, timestamp=None):
++        self._events.append(('file', file_name, file_bytes, eof, mime_type,
++            test_id, route_code, timestamp))
++
++    def status(self, test_id, test_status, test_tags=None, runnable=True,
++        route_code=None, timestamp=None):
++        self._events.append(('status', test_id, test_status, test_tags,
++            runnable, route_code, timestamp))
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index 7746420..d2748d6 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -65,6 +65,7 @@ from testtools.testresult.doubles import (
+     Python26TestResult,
+     Python27TestResult,
+     ExtendedTestResult,
++    StreamResult as LoggingStreamResult,
+     )
+ from testtools.testresult.real import (
+     _details_to_str,
+@@ -527,6 +528,56 @@ class TestBaseStreamResultContract(TestCase, TestStreamResultContract):
+         return StreamResult()
+ 
+ 
++class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
++
++    def _make_result(self):
++        return LoggingStreamResult()
++
++
++class TestDoubleStreamResultEvents(TestCase):
++
++    def test_startTestRun(self):
++        result = LoggingStreamResult()
++        result.startTestRun()
++        self.assertEqual([('startTestRun',)], result._events)
++
++    def test_stopTestRun(self):
++        result = LoggingStreamResult()
++        result.startTestRun()
++        result.stopTestRun()
++        self.assertEqual([('startTestRun',), ('stopTestRun',)], result._events)
++
++    def test_estimate(self):
++        result = LoggingStreamResult()
++        result.startTestRun()
++        now = datetime.datetime.now(utc)
++        result.estimate(2, route_code='abc', timestamp=now)
++        self.assertEqual(
++            [('startTestRun',), ('estimate', 2, 'abc', now)], result._events)
++
++    def test_file(self):
++        result = LoggingStreamResult()
++        result.startTestRun()
++        now = datetime.datetime.now(utc)
++        result.file("foo", "bar", eof=True, mime_type="text/json",
++            test_id="id", route_code='abc', timestamp=now)
++        self.assertEqual(
++            [('startTestRun',),
++             ('file', 'foo', 'bar', True, 'text/json', 'id', 'abc', now)],
++            result._events)
++
++    def test_status(self):
++        result = LoggingStreamResult()
++        result.startTestRun()
++        now = datetime.datetime.now(utc)
++        result.status("foo", "finished", test_tags=set(['tag']),
++            runnable=False, route_code='abc', timestamp=now)
++        self.assertEqual(
++            [('startTestRun',),
++             ('status', 'foo', 'finished', set(['tag']), False, 'abc', now)],
++            result._events)
++
++
+ class TestTestResult(TestCase):
+     """Tests for 'TestResult'."""
