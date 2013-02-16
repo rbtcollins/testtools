@@ -1,0 +1,182 @@
+Bottom: ecdb791adbb1d55a9e3d5f7781ae0842842af655
+Top:    b7cc31c24157428162943bcbdbed6024c8307723
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-16 22:13:06 +1300
+
+Refresh of stream-summary
+
+---
+
+diff --git a/testtools/__init__.py b/testtools/__init__.py
+index 9e64be2..2ea5542 100644
+--- a/testtools/__init__.py
++++ b/testtools/__init__.py
+@@ -27,6 +27,7 @@ __all__ = [
+     'skipIf',
+     'skipUnless',
+     'StreamResult',
++    'StreamSummary',
+     'ThreadsafeForwardingResult',
+     'try_import',
+     'try_imports',
+@@ -70,6 +71,7 @@ else:
+         ExtendedToOriginalDecorator,
+         MultiTestResult,
+         StreamResult,
++        StreamSummary,
+         Tagger,
+         TestByTestResult,
+         TestResult,
+diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
+index f1ec047..9aa6b7e 100644
+--- a/testtools/testresult/__init__.py
++++ b/testtools/testresult/__init__.py
+@@ -7,6 +7,7 @@ __all__ = [
+     'ExtendedToOriginalDecorator',
+     'MultiTestResult',
+     'StreamResult',
++    'StreamSummary',
+     'Tagger',
+     'TestByTestResult',
+     'TestResult',
+@@ -20,6 +21,7 @@ from testtools.testresult.real import (
+     ExtendedToOriginalDecorator,
+     MultiTestResult,
+     StreamResult,
++    StreamSummary,
+     Tagger,
+     TestByTestResult,
+     TestResult,
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 1842608..807914e 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -392,6 +392,34 @@ class CopyStreamResult(object):
+         map(methodcaller('status', *args, **kwargs), self.targets)
+ 
+ 
++class StreamSummary(StreamResult):
++    """A specialised StreamResult that summarises a stream.
++    
++    The summary uses the same representation as the original
++    unittest.TestResult contract, allowing it to be consumed by any test
++    runner.
++    """
++
++    def startTestRun(self):
++        super(StreamSummary, self).startTestRun()
++        self.failures = []
++        self.errors = []
++        self.testsRun = 0
++        self.skipped = []
++        self.expectedFailures = []
++        self.unexpectedSuccesses = []
++
++    def wasSuccessful(self):
++        """Return False if any failure has occured.
++
++        Note that incomplete tests can only be detected when stopTestRun is
++        called, so that should be called before checking wasSuccessful.
++        """
++        return (not self.failures and
++            not self.errors and
++            not self.expectedFailures and not self.unexpectedSuccesses)
++
++
+ class MultiTestResult(TestResult):
+     """A test result that dispatches to many test results."""
+ 
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index 7ca1bdd..ce06b6f 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -23,6 +23,7 @@ from testtools import (
+     MultiTestResult,
+     PlaceHolder,
+     StreamResult,
++    StreamSummary,
+     Tagger,
+     TestCase,
+     TestResult,
+@@ -542,6 +543,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
+         return LoggingStreamResult()
+ 
+ 
++class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
++
++    def _make_result(self):
++        return StreamSummary()
++
++
+ class TestDoubleStreamResultEvents(TestCase):
+ 
+     def test_startTestRun(self):
+@@ -632,6 +639,69 @@ class TestCopyStreamResultCopies(TestCase):
+                 ])))
+ 
+ 
++class TestStreamSummary(TestCase):
++
++    def test_attributes(self):
++        result = StreamSummary()
++        result.startTestRun()
++        self.assertEqual([], result.failures)
++        self.assertEqual([], result.errors)
++        self.assertEqual([], result.skipped)
++        self.assertEqual([], result.expectedFailures)
++        self.assertEqual([], result.unexpectedSuccesses)
++        self.assertEqual(0, result.testsRun)
++
++    def test_startTestRun(self):
++        result = StreamSummary()
++        result.startTestRun()
++        result.failures.append('x')
++        result.errors.append('x')
++        result.skipped.append('x')
++        result.expectedFailures.append('x')
++        result.unexpectedSuccesses.append('x')
++        result.testsRun = 1
++        result.startTestRun()
++        self.assertEqual([], result.failures)
++        self.assertEqual([], result.errors)
++        self.assertEqual([], result.skipped)
++        self.assertEqual([], result.expectedFailures)
++        self.assertEqual([], result.unexpectedSuccesses)
++        self.assertEqual(0, result.testsRun)
++
++    def test_wasSuccessful(self):
++        # wasSuccessful returns False if any of
++        # failures/errors/expectedFailures/unexpectedSuccesses is
++        # non-empty.
++        result = StreamSummary()
++        result.startTestRun()
++        self.assertEqual(True, result.wasSuccessful())
++        result.failures.append('x')
++        self.assertEqual(False, result.wasSuccessful())
++        result.startTestRun()
++        result.errors.append('x')
++        self.assertEqual(False, result.wasSuccessful())
++        result.startTestRun()
++        result.skipped.append('x')
++        self.assertEqual(True, result.wasSuccessful())
++        result.startTestRun()
++        result.expectedFailures.append('x')
++        self.assertEqual(False, result.wasSuccessful())
++        result.startTestRun()
++        result.unexpectedSuccesses.append('x')
++        self.assertEqual(False, result.wasSuccessful())
++
++    def test_inprogress_tests_generate_failures(self):
++        result = StreamSummary()
++        # complete status codes.
++        result.startTestRun()
++        result.status("foo", "finish")
++        result.status("bar", "skip")
++        result.status("baz", "exists")
++        result.stopTestRun()
++        self.assertEqual(True, result.wasSuccessful())
++        # errored tests, incomplete 
++
++
+ class TestTestResult(TestCase):
+     """Tests for 'TestResult'."""
