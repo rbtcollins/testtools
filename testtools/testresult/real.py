@@ -262,7 +262,7 @@ class StreamResult(object):
     generally make a sequence of calls like::
 
       >>> result.status(self.id(), 'inprogress')
-      >>> result.status(self.id(), 'success')
+      >>> result.status(self.id(), 'finish')
 
     General concepts
     ----------------
