@@ -6,6 +6,16 @@ Changes and improvements to testtools_, grouped by release.
 NEXT
 ~~~~
 
+A new sort of TestResult, the StreamResult has been added, as a prototype for
+a revised standard library test result API. The API is not stable yet, though
+we will endeavour to preserve compatibility for early adopters.
+
+Improvements
+------------
+
+* New class ``StreamResult`` which defines the API for the new result type.
+  (Robert Collins)
+
 0.9.29
 ~~~~~~
 

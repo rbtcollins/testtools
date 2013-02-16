@@ -349,8 +349,12 @@ class StreamResult(object):
           they start running and at any intermediary point they might choose to
           indicate their continual operation.
         * xfail - the test failed but that was expected.
-        * xsuccess - the test passed but was expected to fail.
-        * success - the test succeeded.
+        * uxsuccess - the test passed but was expected to fail. Like finish,
+          this must be the last event sent for this test.
+        * finish - the test has finished. If no error status had been reported,
+          it can now be considered a success, otherwise it should be considered
+          a failure. This must be the last event sent for this test (including
+          file events).
         * fail - the test failed (or errored)
         * skip - the test was selected to run but chose to be skipped. E.g.
           a test dependency was missing.
