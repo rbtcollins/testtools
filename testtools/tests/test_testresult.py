@@ -23,6 +23,7 @@ from testtools import (
     MultiTestResult,
     PlaceHolder,
     StreamResult,
+    StreamSummary,
     Tagger,
     TestCase,
     TestResult,
@@ -53,6 +54,7 @@ from testtools.matchers import (
     Contains,
     DocTestMatches,
     Equals,
+    HasLength,
     MatchesAny,
     MatchesException,
     Raises,
@@ -542,6 +544,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
         return LoggingStreamResult()
 
 
+class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        return StreamSummary()
+
+
 class TestDoubleStreamResultEvents(TestCase):
 
     def test_startTestRun(self):
@@ -630,6 +638,97 @@ class TestCopyStreamResultCopies(TestCase):
             AllMatch(Equals([('startTestRun',),
                 ('status', 'foo', 'success', set(['tag']), False, 'abc', now)
                 ])))
+
+
+class TestStreamSummary(TestCase):
+
+    def test_attributes(self):
+        result = StreamSummary()
+        result.startTestRun()
+        self.assertEqual([], result.failures)
+        self.assertEqual([], result.errors)
+        self.assertEqual([], result.skipped)
+        self.assertEqual([], result.expectedFailures)
+        self.assertEqual([], result.unexpectedSuccesses)
+        self.assertEqual(0, result.testsRun)
+
+    def test_startTestRun(self):
+        result = StreamSummary()
+        result.startTestRun()
+        result.failures.append('x')
+        result.errors.append('x')
+        result.skipped.append('x')
+        result.expectedFailures.append('x')
+        result.unexpectedSuccesses.append('x')
+        result.testsRun = 1
+        result.startTestRun()
+        self.assertEqual([], result.failures)
+        self.assertEqual([], result.errors)
+        self.assertEqual([], result.skipped)
+        self.assertEqual([], result.expectedFailures)
+        self.assertEqual([], result.unexpectedSuccesses)
+        self.assertEqual(0, result.testsRun)
+
+    def test_wasSuccessful(self):
+        # wasSuccessful returns False if any of
+        # failures/errors/expectedFailures/unexpectedSuccesses is
+        # non-empty.
+        result = StreamSummary()
+        result.startTestRun()
+        self.assertEqual(True, result.wasSuccessful())
+        result.failures.append('x')
+        self.assertEqual(False, result.wasSuccessful())
+        result.startTestRun()
+        result.errors.append('x')
+        self.assertEqual(False, result.wasSuccessful())
+        result.startTestRun()
+        result.skipped.append('x')
+        self.assertEqual(True, result.wasSuccessful())
+        result.startTestRun()
+        result.expectedFailures.append('x')
+        self.assertEqual(False, result.wasSuccessful())
+        result.startTestRun()
+        result.unexpectedSuccesses.append('x')
+        self.assertEqual(False, result.wasSuccessful())
+
+    def test_stopTestRun(self):
+        result = StreamSummary()
+        # terminal successful codes.
+        result.startTestRun()
+        result.status("foo", "inprogress")
+        result.status("foo", "success")
+        result.status("bar", "skip")
+        result.status("baz", "exists")
+        result.stopTestRun()
+        self.assertEqual(True, result.wasSuccessful())
+        # Tests inprogress at stopTestRun trigger a failure.
+        result.startTestRun()
+        result.status("foo", "inprogress")
+        result.stopTestRun()
+        self.assertEqual(False, result.wasSuccessful())
+        self.assertThat(result.errors, HasLength(1))
+        self.assertEqual("foo", result.errors[0][0].id())
+        self.assertEqual("Test did not complete", result.errors[0][1])
+        # interim state detection handles route codes - while duplicate ids in
+        # one run is undesirable, it may happen (e.g. with repeated tests).
+        result.startTestRun()
+        result.status("foo", "inprogress")
+        result.status("foo", "inprogress", route_code="A")
+        result.status("foo", "success", route_code="A")
+        result.stopTestRun()
+        self.assertEqual(False, result.wasSuccessful())
+
+    def test_status_skip(self):
+        # when skip is seen, a synthetic test is reported with reason captured
+        # from the 'reason' file attachment if any.
+        result = StreamSummary()
+        result.startTestRun()
+        result.file("reason", _b("Missing dependency"), eof=True,
+            mime_type="text/plain; charset=utf8", test_id="foo.bar")
+        result.status("foo.bar", "skip")
+        self.assertThat(result.skipped, HasLength(1))
+        self.assertEqual("foo.bar", result.skipped[0][0].id())
+        self.assertEqual(_u("Missing dependency"), result.skipped[0][1])
 
 
 class TestTestResult(TestCase):
