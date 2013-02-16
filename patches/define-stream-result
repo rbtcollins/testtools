@@ -1,5 +1,5 @@
 Bottom: dbe2fa7fde61a7a78146698c81e5a935137615b5
-Top:    8a9c77f483164bbbfd2673cb9bac4b5dca080839
+Top:    f76e36f1f0061179aa216410cdfc66e7b54b254c
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 20:18:54 +1300
 
@@ -137,7 +137,7 @@ index d37a772..bd1104f 100644
      TestByTestResult,
      TestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 7112ab6..98cc7d3 100644
+index 7112ab6..22f3b1f 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,6 +6,7 @@ __metaclass__ = type
@@ -169,7 +169,7 @@ index 7112ab6..98cc7d3 100644
 +    generally make a sequence of calls like::
 +
 +      >>> result.status(self.id(), 'inprogress')
-+      >>> result.status(self.id(), 'finish')
++      >>> result.status(self.id(), 'success')
 +
 +    General concepts
 +    ----------------
