@@ -1,5 +1,5 @@
-Bottom: 6be5ef03498256878029a56e11cc516ce8c6fca7
-Top:    ecdb791adbb1d55a9e3d5f7781ae0842842af655
+Bottom: 34b7cf766b70c1cd26451d346a34ba3cd45ccc18
+Top:    77a292506b6d333a77ce8ebc5c6c56fdc2ee5742
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:48:03 +1300
 
@@ -66,7 +66,7 @@ index bd1104f..f1ec047 100644
      MultiTestResult,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index c05a002..1842608 100644
+index 34d97f0..a43727a 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -14,6 +14,7 @@ __all__ = [
@@ -77,7 +77,7 @@ index c05a002..1842608 100644
  import sys
  import unittest
  
-@@ -366,6 +367,31 @@ class StreamResult(object):
+@@ -369,6 +370,31 @@ class StreamResult(object):
          """
  
  
