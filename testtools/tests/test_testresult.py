@@ -692,9 +692,9 @@ class TestStreamSummary(TestCase):
 
     def test_inprogress_tests_generate_failures(self):
         result = StreamSummary()
-        # complete status codes.
+        # terminal successful codes.
         result.startTestRun()
-        result.status("foo", "finish")
+        result.status("foo", "success")
         result.status("bar", "skip")
         result.status("baz", "exists")
         result.stopTestRun()
