@@ -1,5 +1,5 @@
-Bottom: 8724c5ff906ab8aeacb29f80cd2989daa099d20f
-Top:    f90119a0b2aa9c8829ae0c2c761e9da39ba726f6
+Bottom: 616c774ad30056b4af7e3ee897c245f10e574d1d
+Top:    12586278222dccaad38431db9d5ffa8617da4cb1
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:48:03 +1300
 
@@ -66,7 +66,7 @@ index bd1104f..f1ec047 100644
      MultiTestResult,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 98cc7d3..ec13a73 100644
+index 22f3b1f..382e872 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -14,6 +14,7 @@ __all__ = [

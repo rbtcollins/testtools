@@ -1,5 +1,5 @@
-Bottom: f90119a0b2aa9c8829ae0c2c761e9da39ba726f6
-Top:    e0288eaa86bd1f8b35b925a1f54698497e586aeb
+Bottom: 12586278222dccaad38431db9d5ffa8617da4cb1
+Top:    e7a9bf354672326265d3ea26dc4300c6d0860bda
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -53,7 +53,7 @@ index f1ec047..9aa6b7e 100644
      TestByTestResult,
      TestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index ec13a73..f41c049 100644
+index 382e872..75ee05b 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -399,6 +399,34 @@ class CopyStreamResult(object):
