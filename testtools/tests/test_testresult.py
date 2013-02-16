@@ -23,6 +23,7 @@ from testtools import (
     MultiTestResult,
     PlaceHolder,
     StreamResult,
+    StreamSummary,
     Tagger,
     TestCase,
     TestResult,
@@ -542,6 +543,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
         return LoggingStreamResult()
 
 
+class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        return StreamSummary()
+
+
 class TestDoubleStreamResultEvents(TestCase):
 
     def test_startTestRun(self):
@@ -630,6 +637,69 @@ class TestCopyStreamResultCopies(TestCase):
             AllMatch(Equals([('startTestRun',),
                 ('status', 'foo', 'finished', set(['tag']), False, 'abc', now)
                 ])))
+
+
+class TestStreamSummary(TestCase):
+
+    def test_attributes(self):
+        result = StreamSummary()
+        result.startTestRun()
+        self.assertEqual([], result.failures)
+        self.assertEqual([], result.errors)
+        self.assertEqual([], result.skipped)
+        self.assertEqual([], result.expectedFailures)
+        self.assertEqual([], result.unexpectedSuccesses)
+        self.assertEqual(0, result.testsRun)
+
+    def test_startTestRun(self):
+        result = StreamSummary()
+        result.startTestRun()
+        result.failures.append('x')
+        result.errors.append('x')
+        result.skipped.append('x')
+        result.expectedFailures.append('x')
+        result.unexpectedSuccesses.append('x')
+        result.testsRun = 1
+        result.startTestRun()
+        self.assertEqual([], result.failures)
+        self.assertEqual([], result.errors)
+        self.assertEqual([], result.skipped)
+        self.assertEqual([], result.expectedFailures)
+        self.assertEqual([], result.unexpectedSuccesses)
+        self.assertEqual(0, result.testsRun)
+
+    def test_wasSuccessful(self):
+        # wasSuccessful returns False if any of
+        # failures/errors/expectedFailures/unexpectedSuccesses is
+        # non-empty.
+        result = StreamSummary()
+        result.startTestRun()
+        self.assertEqual(True, result.wasSuccessful())
+        result.failures.append('x')
+        self.assertEqual(False, result.wasSuccessful())
+        result.startTestRun()
+        result.errors.append('x')
+        self.assertEqual(False, result.wasSuccessful())
+        result.startTestRun()
+        result.skipped.append('x')
+        self.assertEqual(True, result.wasSuccessful())
+        result.startTestRun()
+        result.expectedFailures.append('x')
+        self.assertEqual(False, result.wasSuccessful())
+        result.startTestRun()
+        result.unexpectedSuccesses.append('x')
+        self.assertEqual(False, result.wasSuccessful())
+
+    def test_inprogress_tests_generate_failures(self):
+        result = StreamSummary()
+        # terminal successful codes.
+        result.startTestRun()
+        result.status("foo", "success")
+        result.status("bar", "skip")
+        result.status("baz", "exists")
+        result.stopTestRun()
+        self.assertEqual(True, result.wasSuccessful())
+        # errored tests, incomplete 
 
 
 class TestTestResult(TestCase):
