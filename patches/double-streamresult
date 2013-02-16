@@ -1,5 +1,5 @@
 Bottom: 581a9f45647d396744a0f2bc98195faa23ee2c18
-Top:    746e7c122e30a04c6f62e8b23a07942d5506aecc
+Top:    f091ac59e906cefe9227f5d9345c7d2598c964d7
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:51:04 +1300
 
@@ -8,6 +8,20 @@ Adds a recording StreamResult for writing tests with.
 
 ---
 
+diff --git a/NEWS b/NEWS
+index 4387557..0820efc 100644
+--- a/NEWS
++++ b/NEWS
+@@ -16,6 +16,9 @@ Improvements
+ * New class ``StreamResult`` which defines the API for the new result type.
+   (Robert Collins)
+ 
++* New test support class ``testtools.testresult.doubles.StreamResult``, which
++  captures all the StreamResult events. (Robert Collins)
++
+ 0.9.29
+ ~~~~~~
+ 
 diff --git a/testtools/testresult/doubles.py b/testtools/testresult/doubles.py
 index 1865e93..83c967e 100644
 --- a/testtools/testresult/doubles.py
