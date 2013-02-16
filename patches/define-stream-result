@@ -1,5 +1,5 @@
 Bottom: dbe2fa7fde61a7a78146698c81e5a935137615b5
-Top:    878ab330f2375cf3760cd8e181098ee917695324
+Top:    73da618464d06661ec8b0936a9a17ad7237e34cb
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 20:18:54 +1300
 
@@ -10,6 +10,27 @@ This is intended to prototype the new API for inclusion upstream.
 
 ---
 
+diff --git a/NEWS b/NEWS
+index 0c6b7f5..4387557 100644
+--- a/NEWS
++++ b/NEWS
+@@ -6,6 +6,16 @@ Changes and improvements to testtools_, grouped by release.
+ NEXT
+ ~~~~
+ 
++A new sort of TestResult, the StreamResult has been added, as a prototype for
++a revised standard library test result API. The API is not stable yet, though
++we will endeavour to preserve compatibility for early adopters.
++
++Improvements
++------------
++
++* New class ``StreamResult`` which defines the API for the new result type.
++  (Robert Collins)
++
+ 0.9.29
+ ~~~~~~
+ 
 diff --git a/testtools/__init__.py b/testtools/__init__.py
 index 707fb55..fa362af 100644
 --- a/testtools/__init__.py
@@ -51,7 +72,7 @@ index d37a772..bd1104f 100644
      TestByTestResult,
      TestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 7112ab6..3e6cb33 100644
+index 7112ab6..5a53c20 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,6 +6,7 @@ __metaclass__ = type
@@ -62,7 +83,7 @@ index 7112ab6..3e6cb33 100644
      'Tagger',
      'TestResult',
      'TestResultDecorator',
-@@ -244,6 +245,123 @@ class TestResult(unittest.TestResult):
+@@ -244,6 +245,127 @@ class TestResult(unittest.TestResult):
          """
  
  
@@ -170,8 +191,12 @@ index 7112ab6..3e6cb33 100644
 +          they start running and at any intermediary point they might choose to
 +          indicate their continual operation.
 +        * xfail - the test failed but that was expected.
-+        * xsuccess - the test passed but was expected to fail.
-+        * success - the test succeeded.
++        * uxsuccess - the test passed but was expected to fail. Like finish,
++          this must be the last event sent for this test.
++        * finish - the test has finished. If no error status had been reported,
++          it can now be considered a success, otherwise it should be considered
++          a failure. This must be the last event sent for this test (including
++          file events).
 +        * fail - the test failed (or errored)
 +        * skip - the test was selected to run but chose to be skipped. E.g.
 +          a test dependency was missing.
@@ -187,7 +212,7 @@ index 7112ab6..3e6cb33 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 64bb743..7746420 100644
+index 64bb743..21f15fd 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -21,6 +21,7 @@ from testtools import (
@@ -246,7 +271,7 @@ index 64bb743..7746420 100644
 +        self.addCleanup(result.stopTestRun)
 +        now = datetime.datetime.now(utc)
 +        args = [[_u("foo"), s] for s in ['exists', 'inprogress', 'xfail',
-+            'xsuccess', 'success', 'fail', 'skip']]
++            'uxsuccess', 'finish', 'fail', 'skip']]
 +        inputs = list(dict(
 +            runnable=False,
 +            test_tags=set(['quux']),
