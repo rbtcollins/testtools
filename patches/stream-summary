@@ -1,5 +1,5 @@
 Bottom: f90119a0b2aa9c8829ae0c2c761e9da39ba726f6
-Top:    d75fd0c21fb721a502f77106f1f88a04626513b7
+Top:    e0288eaa86bd1f8b35b925a1f54698497e586aeb
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -92,7 +92,7 @@ index ec13a73..f41c049 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 7ca1bdd..ce06b6f 100644
+index 7ca1bdd..147588d 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -23,6 +23,7 @@ from testtools import (
@@ -173,9 +173,9 @@ index 7ca1bdd..ce06b6f 100644
 +
 +    def test_inprogress_tests_generate_failures(self):
 +        result = StreamSummary()
-+        # complete status codes.
++        # terminal successful codes.
 +        result.startTestRun()
-+        result.status("foo", "finish")
++        result.status("foo", "success")
 +        result.status("bar", "skip")
 +        result.status("baz", "exists")
 +        result.stopTestRun()
