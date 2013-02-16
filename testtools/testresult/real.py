@@ -19,13 +19,19 @@ import sys
 import unittest
 
 from extras import safe_hasattr
+from mimeparse import parse_mime_type
 
 from testtools.compat import all, str_is_unicode, _u
 from testtools.content import (
+    Content,
     text_content,
     TracebackContent,
     )
+from testtools.content_type import ContentType
 from testtools.tags import TagContext
+# circular import
+# from testtools.testcase import PlaceHolder
+PlaceHolder = None
 
 # From http://docs.python.org/library/datetime.html
 _ZERO = datetime.timedelta(0)
@@ -407,6 +413,118 @@ class CopyStreamResult(StreamResult):
     def status(self, *args, **kwargs):
         super(CopyStreamResult, self).status(*args, **kwargs)
         domap(methodcaller('status', *args, **kwargs), self.targets)
+
+
+class StreamSummary(StreamResult):
+    """A specialised StreamResult that summarises a stream.
+    
+    The summary uses the same representation as the original
+    unittest.TestResult contract, allowing it to be consumed by any test
+    runner.
+    """
+
+    def startTestRun(self):
+        super(StreamSummary, self).startTestRun()
+        self.failures = []
+        self.errors = []
+        self.testsRun = 0
+        self.skipped = []
+        self.expectedFailures = []
+        self.unexpectedSuccesses = []
+        # Maps (id, route_code) -> a PlaceHolder
+        global PlaceHolder
+        from testtools.testcase import PlaceHolder
+        self._inprogress = {}
+        self._handle_final_status = {
+            'success': self._success,
+            'skip': self._skip,
+            'exists': self._exists,
+            'fail': self._fail,
+            'xfail': self._xfail,
+            'uxsuccess': self._uxsuccess,
+            }
+
+    def stopTestRun(self):
+        super(StreamSummary, self).stopTestRun()
+        self.testsRun += len(self._inprogress)
+        for case in self._inprogress.values():
+            self.errors.append((case, "Test did not complete"))
+        self._inprogress.clear()
+
+    def file(self, file_name, file_bytes, eof=False, mime_type=None,
+        test_id=None, route_code=None, timestamp=None):
+        super(StreamSummary, self).file(file_name, file_bytes, eof=eof,
+            mime_type=mime_type, test_id=test_id, route_code=route_code,
+            timestamp=timestamp)
+        key = self._ensure_key(test_id, route_code)
+        if key:
+            case = self._inprogress[key]
+            if file_name not in case._details:
+                if mime_type is None:
+                    mime_type = 'application/octet-stream'
+                primary, sub, parameters = parse_mime_type(mime_type)
+                content_type = ContentType(primary, sub, parameters)
+                content_bytes = []
+                case._details[file_name] = Content(
+                    content_type, lambda:content_bytes)
+            case._details[file_name].iter_bytes().append(file_bytes)
+
+    def status(self, test_id, test_status, test_tags=None, runnable=True,
+        route_code=None, timestamp=None):
+        super(StreamSummary, self).status(test_id, test_status,
+            test_tags=test_tags, runnable=runnable, route_code=route_code,
+            timestamp=timestamp)
+        key = self._ensure_key(test_id, route_code)
+        if test_status != 'inprogress':
+            case = self._inprogress.pop(key)
+            self._handle_final_status[test_status](
+                case, test_tags, runnable, route_code, timestamp)
+            self.testsRun += 1
+    
+    def _ensure_key(self, test_id, route_code):
+        if test_id is None:
+            return
+        key = (test_id, route_code)
+        if key not in self._inprogress:
+            self._inprogress[key] = PlaceHolder(test_id, outcome='unknown')
+        return key
+
+    def _success(self, case, test_tags, runnable, route_code, timestamp):
+        pass
+
+    def _skip(self, case, test_tags, runnable, route_code, timestamp):
+        case._outcome = 'addSkip'
+        if 'reason' not in case._details:
+            reason = "Unknown"
+        else:
+            reason = case._details['reason'].as_text()
+        self.skipped.append((case, reason))
+
+    def _exists(self, case, test_tags, runnable, route_code, timestamp):
+        pass
+
+    def _fail(self, case, test_tags, runnable, route_code, timestamp):
+        case._outcome = 'addError'
+        message = _details_to_str(case._details, special="traceback")
+        self.errors.append((case, message))
+
+    def _xfail(self, case, test_tags, runnable, route_code, timestamp):
+        case._outcome = 'addExpectedFailure'
+        message = _details_to_str(case._details, special="traceback")
+        self.expectedFailures.append((case, message))
+
+    def _uxsuccess(self, case, test_tags, runnable, route_code, timestamp):
+        case._outcome = 'addUnexpectedSuccess'
+        self.unexpectedSuccesses.append(case)
+
+    def wasSuccessful(self):
+        """Return False if any failure has occured.
+
+        Note that incomplete tests can only be detected when stopTestRun is
+        called, so that should be called before checking wasSuccessful.
+        """
+        return (not self.failures and
+            not self.errors)
 
 
 class MultiTestResult(TestResult):
