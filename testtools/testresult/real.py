@@ -7,6 +7,7 @@ __all__ = [
     'ExtendedToOriginalDecorator',
     'MultiTestResult',
     'StreamResult',
+    'StreamSummary',
     'StreamToDict',
     'Tagger',
     'TestResult',
@@ -30,6 +31,9 @@ from testtools.content import (
     )
 from testtools.content_type import ContentType
 from testtools.tags import TagContext
+# circular import
+# from testtools.testcase import PlaceHolder
+PlaceHolder = None
 
 # From http://docs.python.org/library/datetime.html
 _ZERO = datetime.timedelta(0)
@@ -491,6 +495,94 @@ class StreamToDict(StreamResult):
                 'details': {},
                 'status': 'unknown'}
         return key
+
+
+class StreamSummary(StreamToDict):
+    """A specialised StreamResult that summarises a stream.
+    
+    The summary uses the same representation as the original
+    unittest.TestResult contract, allowing it to be consumed by any test
+    runner.
+    """
+
+    def __init__(self):
+        super(StreamSummary, self).__init__(self._gather_test)
+        self._status_map = {
+            'inprogress': 'addFailure',
+            'unknown': 'addFailure',
+            'success': 'addSuccess',
+            'skip': 'addSkip',
+            'fail': 'addFailure',
+            'xfail': 'addExpectedFailure',
+            'uxsuccess': 'addUnexpectedSuccess',
+            }
+        self._handle_status = {
+            'success': self._success,
+            'skip': self._skip,
+            'exists': self._exists,
+            'fail': self._fail,
+            'xfail': self._xfail,
+            'uxsuccess': self._uxsuccess,
+            'unknown': self._incomplete,
+            'inprogress': self._incomplete,
+            }
+
+    def startTestRun(self):
+        super(StreamSummary, self).startTestRun()
+        self.failures = []
+        self.errors = []
+        self.testsRun = 0
+        self.skipped = []
+        self.expectedFailures = []
+        self.unexpectedSuccesses = []
+        # Circular import.
+        global PlaceHolder
+        from testtools.testcase import PlaceHolder
+
+    def wasSuccessful(self):
+        """Return False if any failure has occured.
+
+        Note that incomplete tests can only be detected when stopTestRun is
+        called, so that should be called before checking wasSuccessful.
+        """
+        return (not self.failures and not self.errors)
+
+    def _gather_test(self, test_dict):
+        self.testsRun += 1
+        if test_dict['status'] == 'exists':
+            return
+        outcome = self._status_map[test_dict['status']]
+        case = PlaceHolder(test_dict['id'], outcome=outcome,
+            details=test_dict['details'])
+        self._handle_status[test_dict['status']](case)
+
+    def _incomplete(self, case):
+        self.errors.append((case, "Test did not complete"))
+
+    def _success(self, case):
+        pass
+
+    def _skip(self, case):
+        if 'reason' not in case._details:
+            reason = "Unknown"
+        else:
+            reason = case._details['reason'].as_text()
+        self.skipped.append((case, reason))
+
+    def _exists(self, case):
+        pass
+
+    def _fail(self, case):
+        message = _details_to_str(case._details, special="traceback")
+        self.errors.append((case, message))
+
+    def _xfail(self, case):
+        message = _details_to_str(case._details, special="traceback")
+        self.expectedFailures.append((case, message))
+
+    def _uxsuccess(self, case):
+        case._outcome = 'addUnexpectedSuccess'
+        self.unexpectedSuccesses.append(case)
 
 
 class MultiTestResult(TestResult):
