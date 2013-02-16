@@ -399,6 +399,34 @@ class CopyStreamResult(object):
         map(methodcaller('status', *args, **kwargs), self.targets)
 
 
+class StreamSummary(StreamResult):
+    """A specialised StreamResult that summarises a stream.
+    
+    The summary uses the same representation as the original
+    unittest.TestResult contract, allowing it to be consumed by any test
+    runner.
+    """
+
+    def startTestRun(self):
+        super(StreamSummary, self).startTestRun()
+        self.failures = []
+        self.errors = []
+        self.testsRun = 0
+        self.skipped = []
+        self.expectedFailures = []
+        self.unexpectedSuccesses = []
+
+    def wasSuccessful(self):
+        """Return False if any failure has occured.
+
+        Note that incomplete tests can only be detected when stopTestRun is
+        called, so that should be called before checking wasSuccessful.
+        """
+        return (not self.failures and
+            not self.errors and
+            not self.expectedFailures and not self.unexpectedSuccesses)
+
+
 class MultiTestResult(TestResult):
     """A test result that dispatches to many test results."""
 
