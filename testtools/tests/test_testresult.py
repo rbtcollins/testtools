@@ -22,10 +22,12 @@ from testtools import (
     ExtendedToOriginalDecorator,
     MultiTestResult,
     PlaceHolder,
+    StreamFailfast,
     StreamResult,
     StreamSummary,
     Tagger,
     TestCase,
+    TestControl,
     TestResult,
     TestResultDecorator,
     TestByTestResult,
@@ -550,6 +552,12 @@ class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
         return StreamSummary()
 
 
+class TestStreamFailfastContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        return StreamFailfast(lambda:None)
+
+
 class TestDoubleStreamResultEvents(TestCase):
 
     def test_startTestRun(self):
@@ -638,6 +646,47 @@ class TestCopyStreamResultCopies(TestCase):
             AllMatch(Equals([('startTestRun',),
                 ('status', 'foo', 'success', set(['tag']), False, 'abc', now)
                 ])))
+
+
+class TestStreamFailfast(TestCase):
+
+    def test_inprogress(self):
+        result = StreamFailfast(self.fail)
+        result.status('foo', 'inprogress')
+
+    def test_exists(self):
+        result = StreamFailfast(self.fail)
+        result.status('foo', 'exists')
+
+    def test_xfail(self):
+        result = StreamFailfast(self.fail)
+        result.status('foo', 'xfail')
+
+    def test_uxsuccess(self):
+        calls = []
+        def hook():
+            calls.append("called")
+        result = StreamFailfast(hook)
+        result.status('foo', 'uxsuccess')
+        result.status('foo', 'uxsuccess')
+        self.assertEqual(['called', 'called'], calls)
+
+    def test_success(self):
+        result = StreamFailfast(self.fail)
+        result.status('foo', 'success')
+
+    def test_fail(self):
+        calls = []
+        def hook():
+            calls.append("called")
+        result = StreamFailfast(hook)
+        result.status('foo', 'fail')
+        result.status('foo', 'fail')
+        self.assertEqual(['called', 'called'], calls)
+
+    def test_skip(self):
+        result = StreamFailfast(self.fail)
+        result.status('foo', 'skip')
 
 
 class TestStreamSummary(TestCase):
@@ -783,6 +832,17 @@ testtools.matchers._impl.MismatchError: Differences: [
         result.status("foo.bar", "uxsuccess")
         self.assertThat(result.unexpectedSuccesses, HasLength(1))
         self.assertEqual("foo.bar", result.unexpectedSuccesses[0].id())
+
+
+class TestTestControl(TestCase):
+
+    def test_default(self):
+        self.assertEqual(False, TestControl().shouldStop)
+
+    def test_stop(self):
+        control = TestControl()
+        control.stop()
+        self.assertEqual(True, control.shouldStop)
 
 
 class TestTestResult(TestCase):
