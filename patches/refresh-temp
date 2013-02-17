@@ -1,0 +1,186 @@
+Bottom: 3923469011f7d3bfe815d63a38b3cb5b3916da5b
+Top:    651aba783483a013091bf86cba4cd0feb7430132
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-17 21:26:30 +1300
+
+Refresh of test-control
+
+---
+
+diff --git a/NEWS b/NEWS
+index addff88..3a11e8c 100644
+--- a/NEWS
++++ b/NEWS
+@@ -23,6 +23,9 @@ Improvements
+ * New support class ``TestControl`` which permits cancelling an in-progress
+   run. (Robert Collins)
+ 
++* New support class ``StreamFailfast`` which calls a ``TestControl`` instance
++  to abort the test run when a failure is detected. (Robert Collins)
++
+ * New test support class ``testtools.testresult.doubles.StreamResult``, which
+   captures all the StreamResult events. (Robert Collins)
+ 
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index 3bb4222..492e9b7 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -155,7 +155,11 @@ TestControl
+ 
+ Lastly we define the ``TestControl`` API which is used to provide the
+ ``shouldStop`` and ``stop`` elements from ``TestResult``. Again, see the API
+-documentation for ``testtools.TestControl``.
++documentation for ``testtools.TestControl``. ``TestControl`` can be paired with
++a ``StreamFailfast`` to trigger failing aborting a test run when a failure
++is observed. Aborting multiple workers in a distributed environment requires
++hooking whatever signalling mechanism the distributed environment has up to
++a ``TestControl`` in each worker process.
+ 
+ ThreadsafeStreamResult
+ ----------------------
+diff --git a/testtools/__init__.py b/testtools/__init__.py
+index 0fee56d..3caba55 100644
+--- a/testtools/__init__.py
++++ b/testtools/__init__.py
+@@ -26,6 +26,7 @@ __all__ = [
+     'skip',
+     'skipIf',
+     'skipUnless',
++    'StreamFailfast',
+     'StreamResult',
+     'StreamSummary',
+     'TestControl',
+@@ -71,6 +72,7 @@ else:
+         CopyStreamResult,
+         ExtendedToOriginalDecorator,
+         MultiTestResult,
++        StreamFailfast,
+         StreamResult,
+         StreamSummary,
+         Tagger,
+diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
+index a42439b..7b0cc3a 100644
+--- a/testtools/testresult/__init__.py
++++ b/testtools/testresult/__init__.py
+@@ -6,6 +6,7 @@ __all__ = [
+     'CopyStreamResult',
+     'ExtendedToOriginalDecorator',
+     'MultiTestResult',
++    'StreamFailfast',
+     'StreamResult',
+     'StreamSummary',
+     'Tagger',
+@@ -21,6 +22,7 @@ from testtools.testresult.real import (
+     CopyStreamResult,
+     ExtendedToOriginalDecorator,
+     MultiTestResult,
++    StreamFailfast,
+     StreamResult,
+     StreamSummary,
+     Tagger,
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index c194386..d86e5ef 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -6,7 +6,9 @@ __metaclass__ = type
+ __all__ = [
+     'ExtendedToOriginalDecorator',
+     'MultiTestResult',
++    'StreamFailfast',
+     'StreamResult',
++    'StreamSummary',
+     'Tagger',
+     'TestControl',
+     'TestResult',
+@@ -410,6 +412,18 @@ class CopyStreamResult(object):
+         domap(methodcaller('status', *args, **kwargs), self.targets)
+ 
+ 
++class StreamFailfast(StreamResult):
++    """Call the supplied callback if an error is seen in a stream."""
++
++    def __init__(self, callback):
++        self.callback = callback
++
++    def status(self, test_id, test_status, test_tags=None, runnable=True,
++        route_code=None, timestamp=None):
++        if test_status in ('uxsuccess', 'fail'):
++            self.callback()
++
++
+ class StreamSummary(StreamResult):
+     """A specialised StreamResult that summarises a stream.
+     
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index ae377db..11ed802 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -22,6 +22,7 @@ from testtools import (
+     ExtendedToOriginalDecorator,
+     MultiTestResult,
+     PlaceHolder,
++    StreamFailfast,
+     StreamResult,
+     StreamSummary,
+     Tagger,
+@@ -551,6 +552,12 @@ class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
+         return StreamSummary()
+ 
+ 
++class TestStreamFailfastContract(TestCase, TestStreamResultContract):
++
++    def _make_result(self):
++        return StreamFailfast(lambda:None)
++
++
+ class TestDoubleStreamResultEvents(TestCase):
+ 
+     def test_startTestRun(self):
+@@ -641,6 +648,47 @@ class TestCopyStreamResultCopies(TestCase):
+                 ])))
+ 
+ 
++class TestStreamFailfast(TestCase):
++
++    def test_inprogress(self):
++        result = StreamFailfast(self.fail)
++        result.status('foo', 'inprogress')
++
++    def test_exists(self):
++        result = StreamFailfast(self.fail)
++        result.status('foo', 'exists')
++
++    def test_xfail(self):
++        result = StreamFailfast(self.fail)
++        result.status('foo', 'xfail')
++
++    def test_uxsuccess(self):
++        calls = []
++        def hook():
++            calls.append("called")
++        result = StreamFailfast(hook)
++        result.status('foo', 'uxsuccess')
++        result.status('foo', 'uxsuccess')
++        self.assertEqual(['called', 'called'], calls)
++
++    def test_success(self):
++        result = StreamFailfast(self.fail)
++        result.status('foo', 'success')
++
++    def test_fail(self):
++        calls = []
++        def hook():
++            calls.append("called")
++        result = StreamFailfast(hook)
++        result.status('foo', 'fail')
++        result.status('foo', 'fail')
++        self.assertEqual(['called', 'called'], calls)
++
++    def test_skip(self):
++        result = StreamFailfast(self.fail)
++        result.status('foo', 'skip')
++
++
+ class TestStreamSummary(TestCase):
+ 
+     def test_attributes(self):
