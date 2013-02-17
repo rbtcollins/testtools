@@ -1,5 +1,5 @@
-Bottom: f3cb66112e35dfb3fb7ce2d5156ccb087e498c47
-Top:    651aba783483a013091bf86cba4cd0feb7430132
+Bottom: 3fe230284e2632e17c6735282ea68da794bb5bda
+Top:    e1c5ea2f90712b6f48a45b3468fba50ce84446db
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-17 16:12:38 +1300
 
@@ -9,7 +9,7 @@ Add a dedicated interface for controlling an in-progress TestRun.
 ---
 
 diff --git a/NEWS b/NEWS
-index 0b9ebc3..3a11e8c 100644
+index 01084dd..35de1f5 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -20,6 +20,12 @@ Improvements
@@ -101,7 +101,7 @@ index 9aa6b7e..7b0cc3a 100644
      TestResultDecorator,
      TextTestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index fe49701..d86e5ef 100644
+index afb0312..cf9ee83 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,8 +6,11 @@ __metaclass__ = type
@@ -116,7 +116,7 @@ index fe49701..d86e5ef 100644
      'TestResult',
      'TestResultDecorator',
      'ThreadsafeForwardingResult',
-@@ -409,6 +412,18 @@ class CopyStreamResult(object):
+@@ -415,6 +418,18 @@ class CopyStreamResult(StreamResult):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  
@@ -135,8 +135,8 @@ index fe49701..d86e5ef 100644
  class StreamSummary(StreamResult):
      """A specialised StreamResult that summarises a stream.
      
-@@ -522,6 +537,23 @@ class StreamSummary(StreamResult):
-             not self.expectedFailures and not self.unexpectedSuccesses)
+@@ -527,6 +542,23 @@ class StreamSummary(StreamResult):
+             not self.errors)
  
  
 +class TestControl(object):
@@ -160,7 +160,7 @@ index fe49701..d86e5ef 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 183b184..11ed802 100644
+index be57648..fa7c913 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -22,10 +22,12 @@ from testtools import (
@@ -237,7 +237,7 @@ index 183b184..11ed802 100644
  class TestStreamSummary(TestCase):
  
      def test_attributes(self):
-@@ -785,6 +834,17 @@ testtools.matchers._impl.MismatchError: Differences: [
+@@ -784,6 +833,17 @@ testtools.matchers._impl.MismatchError: Differences: [
          self.assertEqual("foo.bar", result.unexpectedSuccesses[0].id())
  
  

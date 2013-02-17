@@ -1,13 +1,13 @@
 Version: 1
-Previous: 1ef5de8a441030f153aef2be9b3d4992bc468ec1
-Head: e42bfb41ed439074666dcad6c9157fcd3c6d933b
+Previous: de04f944741f9d59b3f2a9f9caede4c8e2e15bf5
+Head: 36796bd98da90ff7c155253ae3a560c86c9850f7
 Applied:
   content-type-repr: e42bfb41ed439074666dcad6c9157fcd3c6d933b
+  define-stream-result: f3efccefd54570e8e6319c47be7f0e5325c7be0f
+  double-streamresult: 224dd76d631e4166e9f273f0dd4ba95201fe8dd4
+  copy-stream: fd555d54b885573be6bd9df0530fbbebf0e60f01
+  stream-summary: a5e567524565548928a76aa5e76f26a99e388a1b
+  test-control: 57a2d0641e53dfb5d8ba596e2990e608a4c8789b
+  extended-to-stream: 36796bd98da90ff7c155253ae3a560c86c9850f7
 Unapplied:
-  define-stream-result: fb5f80c195d2a12fa47bbdbd5f666b9766e7ce83
-  double-streamresult: b18d537724b7f6dfcfc45d8d38702f1c82c014e3
-  copy-stream: ccf264a7b31227072a627b4bf06559b6014aa4f4
-  stream-summary: 69462d749c228bc8f4b18b2dc88cc3d054180571
-  test-control: 675e3eb96fbb0c1b12f2ab836956ccb29695d6cb
-  extended-to-stream: 3471f59855cd4c3ffcd8ad1a97d3054a31197554
 Hidden:

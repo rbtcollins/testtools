@@ -1,5 +1,5 @@
-Bottom: 651aba783483a013091bf86cba4cd0feb7430132
-Top:    c27b80621c8143ca8da580d88dd242d354a290e3
+Bottom: e1c5ea2f90712b6f48a45b3468fba50ce84446db
+Top:    5a18ef32c19634dad91251028eaaaf279bff3f52
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -12,7 +12,7 @@ with a StreamResult.
 ---
 
 diff --git a/NEWS b/NEWS
-index 3a11e8c..c35500d 100644
+index 35de1f5..d168452 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -26,6 +26,16 @@ Improvements
@@ -73,7 +73,7 @@ index 7b0cc3a..45df0f2 100644
      StreamFailfast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index d86e5ef..56b3010 100644
+index cf9ee83..b4b9367 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -93,7 +93,7 @@ index d86e5ef..56b3010 100644
  from testtools.content import (
      Content,
      text_content,
-@@ -1048,6 +1049,138 @@ class ExtendedToOriginalDecorator(object):
+@@ -1053,6 +1054,138 @@ class ExtendedToOriginalDecorator(object):
          return self.decorated.wasSuccessful()
  
  
@@ -233,7 +233,7 @@ index d86e5ef..56b3010 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 11ed802..6090a7f 100644
+index fa7c913..3980157 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -20,6 +20,7 @@ from extras import safe_hasattr

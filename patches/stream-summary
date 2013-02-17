@@ -1,5 +1,5 @@
-Bottom: 46f9217888c9acebd399b8bae5da7220e1c019e9
-Top:    89b726063ff9f6d280dfb08173ac26994ba4ad5c
+Bottom: 4f35743e52fc2ca919510d9ef6531e33ea0f066a
+Top:    3fe230284e2632e17c6735282ea68da794bb5bda
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -65,7 +65,7 @@ index f1ec047..9aa6b7e 100644
      TestByTestResult,
      TestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 1d4aff9..a01d843 100644
+index 4e045a5..afb0312 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -19,13 +19,19 @@ import sys
@@ -88,7 +88,7 @@ index 1d4aff9..a01d843 100644
  
  # From http://docs.python.org/library/datetime.html
  _ZERO = datetime.timedelta(0)
-@@ -403,6 +409,118 @@ class CopyStreamResult(object):
+@@ -409,6 +415,118 @@ class CopyStreamResult(StreamResult):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  
