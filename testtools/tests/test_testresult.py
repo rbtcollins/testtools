@@ -491,7 +491,7 @@ class TestStreamResultContract(object):
         self.addCleanup(result.stopTestRun)
         now = datetime.datetime.now(utc)
         args = [[_u("foo"), s] for s in ['exists', 'inprogress', 'xfail',
-            'uxsuccess', 'finish', 'fail', 'skip']]
+            'uxsuccess', 'success', 'fail', 'skip']]
         inputs = list(dict(
             runnable=False,
             test_tags=set(['quux']),
