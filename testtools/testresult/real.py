@@ -1071,6 +1071,7 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
         # this until a method / lookup is done without calling startTestRun and
         # then trigger startTestRun.
         self._tags = TagContext()
+        self.__now = None
         StreamSummary.startTestRun(self)
         # Deal with mismatched base class constructors.
         TestControl.__init__(self)
@@ -1087,7 +1088,7 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
     failfast = property(_get_failfast, _set_failfast)
 
     def startTest(self, test):
-        self.status(test.id(), 'inprogress')
+        self.status(test.id(), 'inprogress', timestamp=self._now())
         self._tags = TagContext(self._tags)
 
     def stopTest(self, test):
@@ -1100,6 +1101,7 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
 
     def _convert(self, test, err, details, status, reason=None):
         test_id = test.id()
+        now = self._now()
         if err is not None:
             if details is None:
                 details = {}
@@ -1109,13 +1111,15 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
                 mime_type = repr(content.content_type)
                 for file_bytes in content.iter_bytes():
                     self.file(name, file_bytes,
-                        mime_type=mime_type, test_id=test_id)
+                        mime_type=mime_type, test_id=test_id, timestamp=now)
                 self.file(name, _b(""), eof=True,
-                    mime_type=mime_type, test_id=test_id)
+                    mime_type=mime_type, test_id=test_id, timestamp=now)
         if reason is not None:
             self.file('reason', reason.encode('utf8'), eof=True,
-                mime_type="text/plain; charset=utf8", test_id=test_id)
-        self.status(test_id, status, test_tags=self.current_tags)
+                mime_type="text/plain; charset=utf8", test_id=test_id,
+                timestamp=now)
+        self.status(test_id, status, test_tags=self.current_tags,
+            timestamp=now)
 
     def addExpectedFailure(self, test, err=None, details=None):
         self._check_args(err, details)
@@ -1140,32 +1144,15 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
             raise ValueError("Must pass only one of err '%s' and details '%s"
                 % (err, details))
 
-    def done(self):
-        try:
-            return self.decorated.done()
-        except AttributeError:
-            return
-
-    def progress(self, offset, whence):
-        method = getattr(self.decorated, 'progress', None)
-        if method is None:
-            return
-        return method(offset, whence)
-
     def startTestRun(self):
         super(ExtendedToStreamDecorator, self).startTestRun()
         self._tags = TagContext()
         self.shouldStop = False
+        self.__now = None
 
     def stopTest(self, test):
         self._tags = self._tags.parent
         pass
-
-    def stopTestRun(self):
-        try:
-            return self.decorated.stopTestRun()
-        except AttributeError:
-            return
 
     @property
     def current_tags(self):
@@ -1180,12 +1167,20 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
         """
         self._tags.change_tags(new_tags, gone_tags)
 
+    def _now(self):
+        """Return the current 'test time'.
+
+        If the time() method has not been called, this is equivalent to
+        datetime.now(), otherwise its the last supplied datestamp given to the
+        time() method.
+        """
+        if self.__now is None:
+            return datetime.datetime.now(utc)
+        else:
+            return self.__now
 
     def time(self, a_datetime):
-        method = getattr(self.decorated, 'time', None)
-        if method is None:
-            return
-        return method(a_datetime)
+        self.__now = a_datetime
 
 
 class TestResultDecorator(object):

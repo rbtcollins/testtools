@@ -661,6 +661,38 @@ class TestCopyStreamResultCopies(TestCase):
                 ])))
 
 
+class TestExtendedToStreamDecorator(TestCase):
+
+    def test_explicit_time(self):
+        log = LoggingStreamResult()
+        result = ExtendedToStreamDecorator(log)
+        result.startTestRun()
+        now = datetime.datetime.now(utc)
+        result.time(now)
+        result.startTest(self)
+        result.addSuccess(self)
+        result.stopTest(self)
+        result.stopTestRun()
+        self.assertEqual([
+            ('startTestRun',),
+            ('status',
+             'testtools.tests.test_testresult.TestExtendedToStreamDecorator.test_time',
+             'inprogress',
+             None,
+             True,
+             None,
+             now),
+            ('status',
+             'testtools.tests.test_testresult.TestExtendedToStreamDecorator.test_time',
+             'success',
+              set(),
+              True,
+              None,
+              now),
+             ('stopTestRun',)], log._events)
+        
+
+
 class TestStreamFailfast(TestCase):
 
     def test_inprogress(self):
