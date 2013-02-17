@@ -20,6 +20,9 @@ Improvements
   ``StreamResult`` objects (each of which receives all the events).
   (Robert Collins)
 
+* New support class ``TestControl`` which permits cancelling an in-progress
+  run. (Robert Collins)
+
 * New test support class ``testtools.testresult.doubles.StreamResult``, which
   captures all the StreamResult events. (Robert Collins)
 
