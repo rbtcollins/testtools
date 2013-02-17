@@ -1,0 +1,25 @@
+Bottom: 12586278222dccaad38431db9d5ffa8617da4cb1
+Top:    f57547d32a51bc31b7d8bff502749519f0ac8c0d
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-17 13:11:03 +1300
+
+Refresh of copy-stream
+
+---
+
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index 7ca1bdd..48e3b22 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -624,11 +624,11 @@ class TestCopyStreamResultCopies(TestCase):
+     def test_status(self):
+         self.result.startTestRun()
+         now = datetime.datetime.now(utc)
+-        self.result.status("foo", "finished", test_tags=set(['tag']),
++        self.result.status("foo", "success", test_tags=set(['tag']),
+             runnable=False, route_code='abc', timestamp=now)
+         self.assertThat(self.targets,
+             AllMatch(Equals([('startTestRun',),
+-                ('status', 'foo', 'finished', set(['tag']), False, 'abc', now)
++                ('status', 'foo', 'success', set(['tag']), False, 'abc', now)
+                 ])))
