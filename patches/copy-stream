@@ -1,5 +1,5 @@
 Bottom: 02be6619aa81fb8897beea2d176ecc5280897e28
-Top:    da512ddcdb47103978a99c0875512aa9d2d06e32
+Top:    46f9217888c9acebd399b8bae5da7220e1c019e9
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:48:03 +1300
 
@@ -66,7 +66,7 @@ index bd1104f..f1ec047 100644
      MultiTestResult,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 22f3b1f..382e872 100644
+index 22f3b1f..1d4aff9 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -14,6 +14,7 @@ __all__ = [
@@ -77,10 +77,14 @@ index 22f3b1f..382e872 100644
  import sys
  import unittest
  
-@@ -373,6 +374,31 @@ class StreamResult(object):
+@@ -373,6 +374,35 @@ class StreamResult(object):
          """
  
  
++def domap(*args, **kwargs):
++    return list(map(*args, **kwargs))
++
++
 +class CopyStreamResult(object):
 +    """Copies all event it receives to multiple results.
 +    
@@ -91,19 +95,19 @@ index 22f3b1f..382e872 100644
 +        self.targets = targets
 +
 +    def startTestRun(self):
-+        map(methodcaller('startTestRun'), self.targets)
++        domap(methodcaller('startTestRun'), self.targets)
 +
 +    def stopTestRun(self):
-+        map(methodcaller('stopTestRun'), self.targets)
++        domap(methodcaller('stopTestRun'), self.targets)
 +
 +    def estimate(self, *args, **kwargs):
-+        map(methodcaller('estimate', *args, **kwargs), self.targets)
++        domap(methodcaller('estimate', *args, **kwargs), self.targets)
 +
 +    def file(self, *args, **kwargs):
-+        map(methodcaller('file', *args, **kwargs), self.targets)
++        domap(methodcaller('file', *args, **kwargs), self.targets)
 +
 +    def status(self, *args, **kwargs):
-+        map(methodcaller('status', *args, **kwargs), self.targets)
++        domap(methodcaller('status', *args, **kwargs), self.targets)
 +
 +
  class MultiTestResult(TestResult):
