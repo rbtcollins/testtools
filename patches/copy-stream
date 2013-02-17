@@ -1,5 +1,5 @@
 Bottom: 02be6619aa81fb8897beea2d176ecc5280897e28
-Top:    46f9217888c9acebd399b8bae5da7220e1c019e9
+Top:    bdc0ae7702fb6b75959bf3c239104a346303de5a
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:48:03 +1300
 
@@ -66,7 +66,7 @@ index bd1104f..f1ec047 100644
      MultiTestResult,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 22f3b1f..1d4aff9 100644
+index 22f3b1f..4e045a5 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -14,6 +14,7 @@ __all__ = [
@@ -77,7 +77,7 @@ index 22f3b1f..1d4aff9 100644
  import sys
  import unittest
  
-@@ -373,6 +374,35 @@ class StreamResult(object):
+@@ -373,6 +374,41 @@ class StreamResult(object):
          """
  
  
@@ -85,28 +85,34 @@ index 22f3b1f..1d4aff9 100644
 +    return list(map(*args, **kwargs))
 +
 +
-+class CopyStreamResult(object):
++class CopyStreamResult(StreamResult):
 +    """Copies all event it receives to multiple results.
 +    
 +    This provides an easy facility for combining multiple StreamResults.
 +    """
 +
 +    def __init__(self, targets):
++        super(CopyStreamResult, self).__init__()
 +        self.targets = targets
 +
 +    def startTestRun(self):
++        super(CopyStreamResult, self).startTestRun()
 +        domap(methodcaller('startTestRun'), self.targets)
 +
 +    def stopTestRun(self):
++        super(CopyStreamResult, self).stopTestRun()
 +        domap(methodcaller('stopTestRun'), self.targets)
 +
 +    def estimate(self, *args, **kwargs):
++        super(CopyStreamResult, self).estimate(*args, **kwargs)
 +        domap(methodcaller('estimate', *args, **kwargs), self.targets)
 +
 +    def file(self, *args, **kwargs):
++        super(CopyStreamResult, self).file(*args, **kwargs)
 +        domap(methodcaller('file', *args, **kwargs), self.targets)
 +
 +    def status(self, *args, **kwargs):
++        super(CopyStreamResult, self).status(*args, **kwargs)
 +        domap(methodcaller('status', *args, **kwargs), self.targets)
 +
 +
