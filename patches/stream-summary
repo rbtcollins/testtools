@@ -1,5 +1,5 @@
-Bottom: 12586278222dccaad38431db9d5ffa8617da4cb1
-Top:    c3ba5b78bca0f51e8b47d134275d033dfffe58e6
+Bottom: da512ddcdb47103978a99c0875512aa9d2d06e32
+Top:    4369d0dd5c72677fcdbf0f1674cb05408f1f5385
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -151,7 +151,7 @@ index 382e872..73af7cb 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 7ca1bdd..227ac2f 100644
+index 2abfdff..8e59d95 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -23,6 +23,7 @@ from testtools import (
