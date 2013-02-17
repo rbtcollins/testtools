@@ -374,6 +374,10 @@ class StreamResult(object):
         """
 
 
+def domap(*args, **kwargs):
+    return list(map(*args, **kwargs))
+
+
 class CopyStreamResult(object):
     """Copies all event it receives to multiple results.
     
@@ -384,19 +388,19 @@ class CopyStreamResult(object):
         self.targets = targets
 
     def startTestRun(self):
-        map(methodcaller('startTestRun'), self.targets)
+        domap(methodcaller('startTestRun'), self.targets)
 
     def stopTestRun(self):
-        map(methodcaller('stopTestRun'), self.targets)
+        domap(methodcaller('stopTestRun'), self.targets)
 
     def estimate(self, *args, **kwargs):
-        map(methodcaller('estimate', *args, **kwargs), self.targets)
+        domap(methodcaller('estimate', *args, **kwargs), self.targets)
 
     def file(self, *args, **kwargs):
-        map(methodcaller('file', *args, **kwargs), self.targets)
+        domap(methodcaller('file', *args, **kwargs), self.targets)
 
     def status(self, *args, **kwargs):
-        map(methodcaller('status', *args, **kwargs), self.targets)
+        domap(methodcaller('status', *args, **kwargs), self.targets)
 
 
 class MultiTestResult(TestResult):
