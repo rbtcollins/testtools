@@ -54,6 +54,7 @@ from testtools.matchers import (
     Contains,
     DocTestMatches,
     Equals,
+    HasLength,
     MatchesAny,
     MatchesException,
     Raises,
@@ -690,16 +691,40 @@ class TestStreamSummary(TestCase):
         result.unexpectedSuccesses.append('x')
         self.assertEqual(False, result.wasSuccessful())
 
-    def test_inprogress_tests_generate_failures(self):
+    def test_stopTestRun(self):
         result = StreamSummary()
         # terminal successful codes.
         result.startTestRun()
+        result.status("foo", "inprogress")
         result.status("foo", "success")
         result.status("bar", "skip")
         result.status("baz", "exists")
         result.stopTestRun()
         self.assertEqual(True, result.wasSuccessful())
-        # errored tests, incomplete 
+        # Tests inprogress at stopTestRun trigger a failure.
+        result.startTestRun()
+        result.status("foo", "inprogress")
+        result.stopTestRun()
+        self.assertEqual(False, result.wasSuccessful())
+        # interim state detection handles route codes - while duplicate ids in
+        # one run is undesirable, it may happen (e.g. with repeated tests).
+        result.startTestRun()
+        result.status("foo", "inprogress")
+        result.status("foo", "inprogress", route_code="A")
+        result.status("foo", "success", route_code="A")
+        result.stopTestRun()
+        self.assertEqual(False, result.wasSuccessful())
+
+    def test_status_skip(self):
+        # when skip is seen, a synthetic test is reported with reason captured
+        # from the 'reason' file attachment if any.
+        result = StreamSummary()
+        result.startTestRun()
+        result.file("reason", _b("Missing dependency"), eof=True,
+            mime_type="text/plain; charset=utf8", test_id="foo.bar")
+        result.status("foo.bar", "skip")
+        self.assertThat(result.skipped, HasLength(1))
+
 
 
 class TestTestResult(TestCase):

@@ -26,6 +26,9 @@ from testtools.content import (
     TracebackContent,
     )
 from testtools.tags import TagContext
+# circular import
+# from testtools.testcase import PlaceHolder
+PlaceHolder = None
 
 # From http://docs.python.org/library/datetime.html
 _ZERO = datetime.timedelta(0)
@@ -415,6 +418,55 @@ class StreamSummary(StreamResult):
         self.skipped = []
         self.expectedFailures = []
         self.unexpectedSuccesses = []
+        # Maps (id, route_code) -> a PlaceHolder
+        global PlaceHolder
+        from testtools.testcase import PlaceHolder
+        self._inprogress = {}
+        self._handle_final_status = {
+            'success': self._success,
+            'skip': self._skip,
+            'exists': self._exists,
+            'fail': self._fail,
+            'xfail': self._xfail,
+            'uxsuccess': self._uxsuccess,
+            }
+
+    def stopTestRun(self):
+        super(StreamSummary, self).stopTestRun()
+        self.testsRun += len(self._inprogress)
+        self.errors.extend(self._inprogress.values())
+
+    def status(self, test_id, test_status, test_tags=None, runnable=True,
+        route_code=None, timestamp=None):
+        super(StreamSummary, self).status(test_id, test_status,
+            test_tags=test_tags, runnable=runnable, route_code=route_code,
+            timestamp=timestamp)
+        key = (test_id, route_code)
+        if key not in self._inprogress:
+            self._inprogress[key] = PlaceHolder(test_id, outcome='unknown')
+        if test_status != 'inprogress':
+            case = self._inprogress.pop(key)
+            self._handle_final_status[test_status](
+                case, test_tags, runnable, route_code, timestamp)
+    
+    def _success(self, case, test_tags, runnable, route_code, timestamp):
+        pass
+
+    def _skip(self, case, test_tags, runnable, route_code, timestamp):
+        case._outcome = 'addSkip'
+        self.skipped.append(case)
+
+    def _exists(self, case, test_tags, runnable, route_code, timestamp):
+        pass
+
+    def _fail(self, case, test_tags, runnable, route_code, timestamp):
+        pass
+
+    def _xfail(self, case, test_tags, runnable, route_code, timestamp):
+        pass
+
+    def _uxsuccess(self, case, test_tags, runnable, route_code, timestamp):
+        pass
 
     def wasSuccessful(self):
         """Return False if any failure has occured.
