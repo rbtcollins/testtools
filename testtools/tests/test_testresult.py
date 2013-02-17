@@ -22,6 +22,7 @@ from testtools import (
     ExtendedToOriginalDecorator,
     MultiTestResult,
     PlaceHolder,
+    StreamFailfast,
     StreamResult,
     StreamSummary,
     Tagger,
@@ -551,6 +552,12 @@ class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
         return StreamSummary()
 
 
+class TestStreamFailfastContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        return StreamFailfast(lambda:None)
+
+
 class TestDoubleStreamResultEvents(TestCase):
 
     def test_startTestRun(self):
@@ -639,6 +646,47 @@ class TestCopyStreamResultCopies(TestCase):
             AllMatch(Equals([('startTestRun',),
                 ('status', 'foo', 'success', set(['tag']), False, 'abc', now)
                 ])))
+
+
+class TestStreamFailfast(TestCase):
+
+    def test_inprogress(self):
+        result = StreamFailfast(self.fail)
+        result.status('foo', 'inprogress')
+
+    def test_exists(self):
+        result = StreamFailfast(self.fail)
+        result.status('foo', 'exists')
+
+    def test_xfail(self):
+        result = StreamFailfast(self.fail)
+        result.status('foo', 'xfail')
+
+    def test_uxsuccess(self):
+        calls = []
+        def hook():
+            calls.append("called")
+        result = StreamFailfast(hook)
+        result.status('foo', 'uxsuccess')
+        result.status('foo', 'uxsuccess')
+        self.assertEqual(['called', 'called'], calls)
+
+    def test_success(self):
+        result = StreamFailfast(self.fail)
+        result.status('foo', 'success')
+
+    def test_fail(self):
+        calls = []
+        def hook():
+            calls.append("called")
+        result = StreamFailfast(hook)
+        result.status('foo', 'fail')
+        result.status('foo', 'fail')
+        self.assertEqual(['called', 'called'], calls)
+
+    def test_skip(self):
+        result = StreamFailfast(self.fail)
+        result.status('foo', 'skip')
 
 
 class TestStreamSummary(TestCase):
