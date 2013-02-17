@@ -570,11 +570,11 @@ class TestDoubleStreamResultEvents(TestCase):
         result = LoggingStreamResult()
         result.startTestRun()
         now = datetime.datetime.now(utc)
-        result.status("foo", "finished", test_tags=set(['tag']),
+        result.status("foo", "success", test_tags=set(['tag']),
             runnable=False, route_code='abc', timestamp=now)
         self.assertEqual(
             [('startTestRun',),
-             ('status', 'foo', 'finished', set(['tag']), False, 'abc', now)],
+             ('status', 'foo', 'success', set(['tag']), False, 'abc', now)],
             result._events)
 
 
