@@ -1,5 +1,5 @@
 Bottom: 12586278222dccaad38431db9d5ffa8617da4cb1
-Top:    e7a9bf354672326265d3ea26dc4300c6d0860bda
+Top:    c3ba5b78bca0f51e8b47d134275d033dfffe58e6
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -53,10 +53,20 @@ index f1ec047..9aa6b7e 100644
      TestByTestResult,
      TestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 382e872..75ee05b 100644
+index 382e872..73af7cb 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -399,6 +399,34 @@ class CopyStreamResult(object):
+@@ -26,6 +26,9 @@ from testtools.content import (
+     TracebackContent,
+     )
+ from testtools.tags import TagContext
++# circular import
++# from testtools.testcase import PlaceHolder
++PlaceHolder = None
+ 
+ # From http://docs.python.org/library/datetime.html
+ _ZERO = datetime.timedelta(0)
+@@ -399,6 +402,83 @@ class CopyStreamResult(object):
          map(methodcaller('status', *args, **kwargs), self.targets)
  
  
@@ -76,6 +86,55 @@ index 382e872..75ee05b 100644
 +        self.skipped = []
 +        self.expectedFailures = []
 +        self.unexpectedSuccesses = []
++        # Maps (id, route_code) -> a PlaceHolder
++        global PlaceHolder
++        from testtools.testcase import PlaceHolder
++        self._inprogress = {}
++        self._handle_final_status = {
++            'success': self._success,
++            'skip': self._skip,
++            'exists': self._exists,
++            'fail': self._fail,
++            'xfail': self._xfail,
++            'uxsuccess': self._uxsuccess,
++            }
++
++    def stopTestRun(self):
++        super(StreamSummary, self).stopTestRun()
++        self.testsRun += len(self._inprogress)
++        self.errors.extend(self._inprogress.values())
++
++    def status(self, test_id, test_status, test_tags=None, runnable=True,
++        route_code=None, timestamp=None):
++        super(StreamSummary, self).status(test_id, test_status,
++            test_tags=test_tags, runnable=runnable, route_code=route_code,
++            timestamp=timestamp)
++        key = (test_id, route_code)
++        if key not in self._inprogress:
++            self._inprogress[key] = PlaceHolder(test_id, outcome='unknown')
++        if test_status != 'inprogress':
++            case = self._inprogress.pop(key)
++            self._handle_final_status[test_status](
++                case, test_tags, runnable, route_code, timestamp)
++    
++    def _success(self, case, test_tags, runnable, route_code, timestamp):
++        pass
++
++    def _skip(self, case, test_tags, runnable, route_code, timestamp):
++        case._outcome = 'addSkip'
++        self.skipped.append(case)
++
++    def _exists(self, case, test_tags, runnable, route_code, timestamp):
++        pass
++
++    def _fail(self, case, test_tags, runnable, route_code, timestamp):
++        pass
++
++    def _xfail(self, case, test_tags, runnable, route_code, timestamp):
++        pass
++
++    def _uxsuccess(self, case, test_tags, runnable, route_code, timestamp):
++        pass
 +
 +    def wasSuccessful(self):
 +        """Return False if any failure has occured.
@@ -92,7 +151,7 @@ index 382e872..75ee05b 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 7ca1bdd..147588d 100644
+index 7ca1bdd..227ac2f 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -23,6 +23,7 @@ from testtools import (
@@ -103,7 +162,15 @@ index 7ca1bdd..147588d 100644
      Tagger,
      TestCase,
      TestResult,
-@@ -542,6 +543,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
+@@ -53,6 +54,7 @@ from testtools.matchers import (
+     Contains,
+     DocTestMatches,
+     Equals,
++    HasLength,
+     MatchesAny,
+     MatchesException,
+     Raises,
+@@ -542,6 +544,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
          return LoggingStreamResult()
  
  
@@ -116,7 +183,7 @@ index 7ca1bdd..147588d 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -632,6 +639,69 @@ class TestCopyStreamResultCopies(TestCase):
+@@ -632,6 +640,93 @@ class TestCopyStreamResultCopies(TestCase):
                  ])))
  
  
@@ -171,16 +238,40 @@ index 7ca1bdd..147588d 100644
 +        result.unexpectedSuccesses.append('x')
 +        self.assertEqual(False, result.wasSuccessful())
 +
-+    def test_inprogress_tests_generate_failures(self):
++    def test_stopTestRun(self):
 +        result = StreamSummary()
 +        # terminal successful codes.
 +        result.startTestRun()
++        result.status("foo", "inprogress")
 +        result.status("foo", "success")
 +        result.status("bar", "skip")
 +        result.status("baz", "exists")
 +        result.stopTestRun()
 +        self.assertEqual(True, result.wasSuccessful())
-+        # errored tests, incomplete 
++        # Tests inprogress at stopTestRun trigger a failure.
++        result.startTestRun()
++        result.status("foo", "inprogress")
++        result.stopTestRun()
++        self.assertEqual(False, result.wasSuccessful())
++        # interim state detection handles route codes - while duplicate ids in
++        # one run is undesirable, it may happen (e.g. with repeated tests).
++        result.startTestRun()
++        result.status("foo", "inprogress")
++        result.status("foo", "inprogress", route_code="A")
++        result.status("foo", "success", route_code="A")
++        result.stopTestRun()
++        self.assertEqual(False, result.wasSuccessful())
++
++    def test_status_skip(self):
++        # when skip is seen, a synthetic test is reported with reason captured
++        # from the 'reason' file attachment if any.
++        result = StreamSummary()
++        result.startTestRun()
++        result.file("reason", _b("Missing dependency"), eof=True,
++            mime_type="text/plain; charset=utf8", test_id="foo.bar")
++        result.status("foo.bar", "skip")
++        self.assertThat(result.skipped, HasLength(1))
++
 +
 +
  class TestTestResult(TestCase):
