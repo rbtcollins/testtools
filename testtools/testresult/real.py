@@ -473,6 +473,7 @@ class StreamSummary(StreamResult):
             case = self._inprogress.pop(key)
             self._handle_final_status[test_status](
                 case, test_tags, runnable, route_code, timestamp)
+            self.testsRun += 1
     
     def _ensure_key(self, test_id, route_code):
         if test_id is None:
@@ -497,13 +498,18 @@ class StreamSummary(StreamResult):
         pass
 
     def _fail(self, case, test_tags, runnable, route_code, timestamp):
-        pass
+        case._outcome = 'addError'
+        message = _details_to_str(case._details, special="traceback")
+        self.errors.append((case, message))
 
     def _xfail(self, case, test_tags, runnable, route_code, timestamp):
-        pass
+        case._outcome = 'addExpectedFailure'
+        message = _details_to_str(case._details, special="traceback")
+        self.expectedFailures.append((case, message))
 
     def _uxsuccess(self, case, test_tags, runnable, route_code, timestamp):
-        pass
+        case._outcome = 'addUnexpectedSuccess'
+        self.unexpectedSuccesses.append(case)
 
     def wasSuccessful(self):
         """Return False if any failure has occured.

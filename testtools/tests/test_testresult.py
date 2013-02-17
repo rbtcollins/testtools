@@ -701,6 +701,7 @@ class TestStreamSummary(TestCase):
         result.status("baz", "exists")
         result.stopTestRun()
         self.assertEqual(True, result.wasSuccessful())
+        self.assertEqual(3, result.testsRun)
         # Tests inprogress at stopTestRun trigger a failure.
         result.startTestRun()
         result.status("foo", "inprogress")
@@ -729,6 +730,59 @@ class TestStreamSummary(TestCase):
         self.assertThat(result.skipped, HasLength(1))
         self.assertEqual("foo.bar", result.skipped[0][0].id())
         self.assertEqual(_u("Missing dependency"), result.skipped[0][1])
+
+    def _report_files(self, result):
+        result.file("some log.txt", _b("1234 log message"), eof=True,
+            mime_type="text/plain; charset=utf8", test_id="foo.bar")
+        result.file("traceback", _b("""Traceback (most recent call last):
+  File "testtools/tests/test_testresult.py", line 607, in test_stopTestRun
+      AllMatch(Equals([('startTestRun',), ('stopTestRun',)])))
+testtools.matchers._impl.MismatchError: Differences: [
+[('startTestRun',), ('stopTestRun',)] != []
+[('startTestRun',), ('stopTestRun',)] != []
+]
+"""), eof=True, mime_type="text/plain; charset=utf8", test_id="foo.bar")
+
+    files_message = Equals(_u("""some log.txt: {{{1234 log message}}}
+
+Traceback (most recent call last):
+  File "testtools/tests/test_testresult.py", line 607, in test_stopTestRun
+      AllMatch(Equals([('startTestRun',), ('stopTestRun',)])))
+testtools.matchers._impl.MismatchError: Differences: [
+[('startTestRun',), ('stopTestRun',)] != []
+[('startTestRun',), ('stopTestRun',)] != []
+]
+"""))
+
+    def test_status_fail(self):
+        # when fail is seen, a synthetic test is reported with all files
+        # attached shown as the message.
+        result = StreamSummary()
+        result.startTestRun()
+        self._report_files(result)
+        result.status("foo.bar", "fail")
+        self.assertThat(result.errors, HasLength(1))
+        self.assertEqual("foo.bar", result.errors[0][0].id())
+        self.assertThat(result.errors[0][1], self.files_message)
+
+    def test_status_xfail(self):
+        # when xfail is seen, a synthetic test is reported with all files
+        # attached shown as the message.
+        result = StreamSummary()
+        result.startTestRun()
+        self._report_files(result)
+        result.status("foo.bar", "xfail")
+        self.assertThat(result.expectedFailures, HasLength(1))
+        self.assertEqual("foo.bar", result.expectedFailures[0][0].id())
+        self.assertThat(result.expectedFailures[0][1], self.files_message)
+
+    def test_status_uxsuccess(self):
+        # when uxsuccess is seen, a synthetic test is reported.
+        result = StreamSummary()
+        result.startTestRun()
+        result.status("foo.bar", "uxsuccess")
+        self.assertThat(result.unexpectedSuccesses, HasLength(1))
+        self.assertEqual("foo.bar", result.unexpectedSuccesses[0].id())
 
 
 class TestTestResult(TestCase):
