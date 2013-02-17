@@ -1,5 +1,5 @@
 Bottom: e1c5ea2f90712b6f48a45b3468fba50ce84446db
-Top:    491040ecc8de6610af58d5badece4e5d79150045
+Top:    da2f09831f39cac1620a98c833c02d3c356a4c7b
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -230,7 +230,7 @@ index cf9ee83..ede2faf 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index fa7c913..64df1b4 100644
+index fa7c913..c4f25ac 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -20,6 +20,7 @@ from extras import safe_hasattr
@@ -286,14 +286,14 @@ index fa7c913..64df1b4 100644
 +        self.assertEqual([
 +            ('startTestRun',),
 +            ('status',
-+             'testtools.tests.test_testresult.TestExtendedToStreamDecorator.test_time',
++             'testtools.tests.test_testresult.TestExtendedToStreamDecorator.test_explicit_time',
 +             'inprogress',
 +             None,
 +             True,
 +             None,
 +             now),
 +            ('status',
-+             'testtools.tests.test_testresult.TestExtendedToStreamDecorator.test_time',
++             'testtools.tests.test_testresult.TestExtendedToStreamDecorator.test_explicit_time',
 +             'success',
 +              set(),
 +              True,
