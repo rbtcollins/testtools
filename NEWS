@@ -34,6 +34,12 @@ Improvements
   series of dicts describing a test. Useful for writing trivial stream
   analysers. (Robert Collins)
 
+* New support class ``TestControl`` which permits cancelling an in-progress
+  run. (Robert Collins)
+
+* New support class ``StreamFailfast`` which calls a ``TestControl`` instance
+  to abort the test run when a failure is detected. (Robert Collins)
+
 * New test support class ``testtools.testresult.doubles.StreamResult``, which
   captures all the StreamResult events. (Robert Collins)
 
