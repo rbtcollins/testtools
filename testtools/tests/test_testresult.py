@@ -624,11 +624,11 @@ class TestCopyStreamResultCopies(TestCase):
     def test_status(self):
         self.result.startTestRun()
         now = datetime.datetime.now(utc)
-        self.result.status("foo", "finished", test_tags=set(['tag']),
+        self.result.status("foo", "success", test_tags=set(['tag']),
             runnable=False, route_code='abc', timestamp=now)
         self.assertThat(self.targets,
             AllMatch(Equals([('startTestRun',),
-                ('status', 'foo', 'finished', set(['tag']), False, 'abc', now)
+                ('status', 'foo', 'success', set(['tag']), False, 'abc', now)
                 ])))
 
 
