@@ -1,5 +1,5 @@
 Bottom: dbe2fa7fde61a7a78146698c81e5a935137615b5
-Top:    f76e36f1f0061179aa216410cdfc66e7b54b254c
+Top:    4a0a4499e2c7177a4b79afb24d2f3b4284421462
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 20:18:54 +1300
 
@@ -284,7 +284,7 @@ index 7112ab6..22f3b1f 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 64bb743..21f15fd 100644
+index 64bb743..b79f288 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -21,6 +21,7 @@ from testtools import (
@@ -343,7 +343,7 @@ index 64bb743..21f15fd 100644
 +        self.addCleanup(result.stopTestRun)
 +        now = datetime.datetime.now(utc)
 +        args = [[_u("foo"), s] for s in ['exists', 'inprogress', 'xfail',
-+            'uxsuccess', 'finish', 'fail', 'skip']]
++            'uxsuccess', 'success', 'fail', 'skip']]
 +        inputs = list(dict(
 +            runnable=False,
 +            test_tags=set(['quux']),
