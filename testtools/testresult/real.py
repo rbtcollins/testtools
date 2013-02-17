@@ -6,8 +6,11 @@ __metaclass__ = type
 __all__ = [
     'ExtendedToOriginalDecorator',
     'MultiTestResult',
+    'StreamFailfast',
     'StreamResult',
+    'StreamSummary',
     'Tagger',
+    'TestControl',
     'TestResult',
     'TestResultDecorator',
     'ThreadsafeForwardingResult',
@@ -415,6 +418,18 @@ class CopyStreamResult(StreamResult):
         domap(methodcaller('status', *args, **kwargs), self.targets)
 
 
+class StreamFailfast(StreamResult):
+    """Call the supplied callback if an error is seen in a stream."""
+
+    def __init__(self, callback):
+        self.callback = callback
+
+    def status(self, test_id, test_status, test_tags=None, runnable=True,
+        route_code=None, timestamp=None):
+        if test_status in ('uxsuccess', 'fail'):
+            self.callback()
+
+
 class StreamSummary(StreamResult):
     """A specialised StreamResult that summarises a stream.
     
@@ -525,6 +540,23 @@ class StreamSummary(StreamResult):
         """
         return (not self.failures and
             not self.errors)
+
+
+class TestControl(object):
+    """Controls a running test run, allowing it to be interrupted.
+    
+    :attribute shouldStop: If True, tests should no run and should instead
+        return without running. Similarly a TestSuite should abort running
+        and return immediately.
+    """
+
+    def __init__(self):
+        super(TestControl, self).__init__()
+        self.shouldStop = False
+
+    def stop(self):
+        """Indicate that tests should stop running."""
+        self.shouldStop = True
 
 
 class MultiTestResult(TestResult):
