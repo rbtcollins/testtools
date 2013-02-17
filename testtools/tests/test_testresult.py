@@ -671,8 +671,7 @@ class TestStreamSummary(TestCase):
 
     def test_wasSuccessful(self):
         # wasSuccessful returns False if any of
-        # failures/errors/expectedFailures/unexpectedSuccesses is
-        # non-empty.
+        # failures/errors is non-empty.
         result = StreamSummary()
         result.startTestRun()
         self.assertEqual(True, result.wasSuccessful())
@@ -686,10 +685,10 @@ class TestStreamSummary(TestCase):
         self.assertEqual(True, result.wasSuccessful())
         result.startTestRun()
         result.expectedFailures.append('x')
-        self.assertEqual(False, result.wasSuccessful())
+        self.assertEqual(True, result.wasSuccessful())
         result.startTestRun()
         result.unexpectedSuccesses.append('x')
-        self.assertEqual(False, result.wasSuccessful())
+        self.assertEqual(True, result.wasSuccessful())
 
     def test_stopTestRun(self):
         result = StreamSummary()

@@ -518,8 +518,7 @@ class StreamSummary(StreamResult):
         called, so that should be called before checking wasSuccessful.
         """
         return (not self.failures and
-            not self.errors and
-            not self.expectedFailures and not self.unexpectedSuccesses)
+            not self.errors)
 
 
 class MultiTestResult(TestResult):
