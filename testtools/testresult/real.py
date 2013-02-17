@@ -1100,6 +1100,10 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
 
     def _convert(self, test, err, details, status, reason=None):
         test_id = test.id()
+        if err is not None:
+            if details is None:
+                details = {}
+            details['traceback'] = TracebackContent(err, test)
         if details is not None:
             for name, content in details.items():
                 mime_type = repr(content.content_type)
@@ -1108,8 +1112,6 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
                         mime_type=mime_type, test_id=test_id)
                 self.file(name, _b(""), eof=True,
                     mime_type=mime_type, test_id=test_id)
-        elif err is not None:
-            pass
         if reason is not None:
             self.file('reason', reason.encode('utf8'), eof=True,
                 mime_type="text/plain; charset=utf8", test_id=test_id)
