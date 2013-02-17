@@ -1,5 +1,5 @@
 Bottom: 46f9217888c9acebd399b8bae5da7220e1c019e9
-Top:    1b99ea48ced884eb0b687d567a6340f4577adb57
+Top:    f3cb66112e35dfb3fb7ce2d5156ccb087e498c47
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -65,7 +65,7 @@ index f1ec047..9aa6b7e 100644
      TestByTestResult,
      TestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 1d4aff9..787e3a4 100644
+index 1d4aff9..fe49701 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -19,13 +19,19 @@ import sys
@@ -88,7 +88,7 @@ index 1d4aff9..787e3a4 100644
  
  # From http://docs.python.org/library/datetime.html
  _ZERO = datetime.timedelta(0)
-@@ -403,6 +409,113 @@ class CopyStreamResult(object):
+@@ -403,6 +409,119 @@ class CopyStreamResult(object):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  
@@ -156,6 +156,7 @@ index 1d4aff9..787e3a4 100644
 +            case = self._inprogress.pop(key)
 +            self._handle_final_status[test_status](
 +                case, test_tags, runnable, route_code, timestamp)
++            self.testsRun += 1
 +    
 +    def _ensure_key(self, test_id, route_code):
 +        if test_id is None:
@@ -180,13 +181,18 @@ index 1d4aff9..787e3a4 100644
 +        pass
 +
 +    def _fail(self, case, test_tags, runnable, route_code, timestamp):
-+        pass
++        case._outcome = 'addError'
++        message = _details_to_str(case._details, special="traceback")
++        self.errors.append((case, message))
 +
 +    def _xfail(self, case, test_tags, runnable, route_code, timestamp):
-+        pass
++        case._outcome = 'addExpectedFailure'
++        message = _details_to_str(case._details, special="traceback")
++        self.expectedFailures.append((case, message))
 +
 +    def _uxsuccess(self, case, test_tags, runnable, route_code, timestamp):
-+        pass
++        case._outcome = 'addUnexpectedSuccess'
++        self.unexpectedSuccesses.append(case)
 +
 +    def wasSuccessful(self):
 +        """Return False if any failure has occured.
@@ -203,7 +209,7 @@ index 1d4aff9..787e3a4 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 2abfdff..8e4fc5e 100644
+index 2abfdff..183b184 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -23,6 +23,7 @@ from testtools import (
@@ -235,7 +241,7 @@ index 2abfdff..8e4fc5e 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -632,6 +640,97 @@ class TestCopyStreamResultCopies(TestCase):
+@@ -632,6 +640,151 @@ class TestCopyStreamResultCopies(TestCase):
                  ])))
  
  
@@ -300,6 +306,7 @@ index 2abfdff..8e4fc5e 100644
 +        result.status("baz", "exists")
 +        result.stopTestRun()
 +        self.assertEqual(True, result.wasSuccessful())
++        self.assertEqual(3, result.testsRun)
 +        # Tests inprogress at stopTestRun trigger a failure.
 +        result.startTestRun()
 +        result.status("foo", "inprogress")
@@ -328,6 +335,59 @@ index 2abfdff..8e4fc5e 100644
 +        self.assertThat(result.skipped, HasLength(1))
 +        self.assertEqual("foo.bar", result.skipped[0][0].id())
 +        self.assertEqual(_u("Missing dependency"), result.skipped[0][1])
++
++    def _report_files(self, result):
++        result.file("some log.txt", _b("1234 log message"), eof=True,
++            mime_type="text/plain; charset=utf8", test_id="foo.bar")
++        result.file("traceback", _b("""Traceback (most recent call last):
++  File "testtools/tests/test_testresult.py", line 607, in test_stopTestRun
++      AllMatch(Equals([('startTestRun',), ('stopTestRun',)])))
++testtools.matchers._impl.MismatchError: Differences: [
++[('startTestRun',), ('stopTestRun',)] != []
++[('startTestRun',), ('stopTestRun',)] != []
++]
++"""), eof=True, mime_type="text/plain; charset=utf8", test_id="foo.bar")
++
++    files_message = Equals(_u("""some log.txt: {{{1234 log message}}}
++
++Traceback (most recent call last):
++  File "testtools/tests/test_testresult.py", line 607, in test_stopTestRun
++      AllMatch(Equals([('startTestRun',), ('stopTestRun',)])))
++testtools.matchers._impl.MismatchError: Differences: [
++[('startTestRun',), ('stopTestRun',)] != []
++[('startTestRun',), ('stopTestRun',)] != []
++]
++"""))
++
++    def test_status_fail(self):
++        # when fail is seen, a synthetic test is reported with all files
++        # attached shown as the message.
++        result = StreamSummary()
++        result.startTestRun()
++        self._report_files(result)
++        result.status("foo.bar", "fail")
++        self.assertThat(result.errors, HasLength(1))
++        self.assertEqual("foo.bar", result.errors[0][0].id())
++        self.assertThat(result.errors[0][1], self.files_message)
++
++    def test_status_xfail(self):
++        # when xfail is seen, a synthetic test is reported with all files
++        # attached shown as the message.
++        result = StreamSummary()
++        result.startTestRun()
++        self._report_files(result)
++        result.status("foo.bar", "xfail")
++        self.assertThat(result.expectedFailures, HasLength(1))
++        self.assertEqual("foo.bar", result.expectedFailures[0][0].id())
++        self.assertThat(result.expectedFailures[0][1], self.files_message)
++
++    def test_status_uxsuccess(self):
++        # when uxsuccess is seen, a synthetic test is reported.
++        result = StreamSummary()
++        result.startTestRun()
++        result.status("foo.bar", "uxsuccess")
++        self.assertThat(result.unexpectedSuccesses, HasLength(1))
++        self.assertEqual("foo.bar", result.unexpectedSuccesses[0].id())
 +
 +
  class TestTestResult(TestCase):
