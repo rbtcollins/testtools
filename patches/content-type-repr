@@ -1,0 +1,11 @@
+Bottom: dbe2fa7fde61a7a78146698c81e5a935137615b5
+Top:    dbe2fa7fde61a7a78146698c81e5a935137615b5
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-17 22:48:44 +1300
+
+The ContentType repr() incorrectly used , instead of ;.
+
+
+---
+
+
