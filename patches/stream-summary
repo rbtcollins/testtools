@@ -1,5 +1,5 @@
 Bottom: 46f9217888c9acebd399b8bae5da7220e1c019e9
-Top:    f3cb66112e35dfb3fb7ce2d5156ccb087e498c47
+Top:    89b726063ff9f6d280dfb08173ac26994ba4ad5c
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -65,7 +65,7 @@ index f1ec047..9aa6b7e 100644
      TestByTestResult,
      TestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 1d4aff9..fe49701 100644
+index 1d4aff9..a01d843 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -19,13 +19,19 @@ import sys
@@ -88,7 +88,7 @@ index 1d4aff9..fe49701 100644
  
  # From http://docs.python.org/library/datetime.html
  _ZERO = datetime.timedelta(0)
-@@ -403,6 +409,119 @@ class CopyStreamResult(object):
+@@ -403,6 +409,118 @@ class CopyStreamResult(object):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  
@@ -201,15 +201,14 @@ index 1d4aff9..fe49701 100644
 +        called, so that should be called before checking wasSuccessful.
 +        """
 +        return (not self.failures and
-+            not self.errors and
-+            not self.expectedFailures and not self.unexpectedSuccesses)
++            not self.errors)
 +
 +
  class MultiTestResult(TestResult):
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 2abfdff..183b184 100644
+index 2abfdff..be57648 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -23,6 +23,7 @@ from testtools import (
@@ -241,7 +240,7 @@ index 2abfdff..183b184 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -632,6 +640,151 @@ class TestCopyStreamResultCopies(TestCase):
+@@ -632,6 +640,150 @@ class TestCopyStreamResultCopies(TestCase):
                  ])))
  
  
@@ -276,8 +275,7 @@ index 2abfdff..183b184 100644
 +
 +    def test_wasSuccessful(self):
 +        # wasSuccessful returns False if any of
-+        # failures/errors/expectedFailures/unexpectedSuccesses is
-+        # non-empty.
++        # failures/errors is non-empty.
 +        result = StreamSummary()
 +        result.startTestRun()
 +        self.assertEqual(True, result.wasSuccessful())
@@ -291,10 +289,10 @@ index 2abfdff..183b184 100644
 +        self.assertEqual(True, result.wasSuccessful())
 +        result.startTestRun()
 +        result.expectedFailures.append('x')
-+        self.assertEqual(False, result.wasSuccessful())
++        self.assertEqual(True, result.wasSuccessful())
 +        result.startTestRun()
 +        result.unexpectedSuccesses.append('x')
-+        self.assertEqual(False, result.wasSuccessful())
++        self.assertEqual(True, result.wasSuccessful())
 +
 +    def test_stopTestRun(self):
 +        result = StreamSummary()
