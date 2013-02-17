@@ -706,6 +706,9 @@ class TestStreamSummary(TestCase):
         result.status("foo", "inprogress")
         result.stopTestRun()
         self.assertEqual(False, result.wasSuccessful())
+        self.assertThat(result.errors, HasLength(1))
+        self.assertEqual("foo", result.errors[0][0].id())
+        self.assertEqual("Test did not complete", result.errors[0][1])
         # interim state detection handles route codes - while duplicate ids in
         # one run is undesirable, it may happen (e.g. with repeated tests).
         result.startTestRun()
@@ -724,7 +727,8 @@ class TestStreamSummary(TestCase):
             mime_type="text/plain; charset=utf8", test_id="foo.bar")
         result.status("foo.bar", "skip")
         self.assertThat(result.skipped, HasLength(1))
-
+        self.assertEqual("foo.bar", result.skipped[0][0].id())
+        self.assertEqual(_u("Missing dependency"), result.skipped[0][1])
 
 
 class TestTestResult(TestCase):

@@ -19,12 +19,15 @@ import sys
 import unittest
 
 from extras import safe_hasattr
+from mimeparse import parse_mime_type
 
 from testtools.compat import all, str_is_unicode, _u
 from testtools.content import (
+    Content,
     text_content,
     TracebackContent,
     )
+from testtools.content_type import ContentType
 from testtools.tags import TagContext
 # circular import
 # from testtools.testcase import PlaceHolder
@@ -434,27 +437,57 @@ class StreamSummary(StreamResult):
     def stopTestRun(self):
         super(StreamSummary, self).stopTestRun()
         self.testsRun += len(self._inprogress)
-        self.errors.extend(self._inprogress.values())
+        for case in self._inprogress.values():
+            self.errors.append((case, "Test did not complete"))
+        self._inprogress.clear()
+
+    def file(self, file_name, file_bytes, eof=False, mime_type=None,
+        test_id=None, route_code=None, timestamp=None):
+        super(StreamSummary, self).file(file_name, file_bytes, eof=eof,
+            mime_type=mime_type, test_id=test_id, route_code=route_code,
+            timestamp=timestamp)
+        key = self._ensure_key(test_id, route_code)
+        if key:
+            case = self._inprogress[key]
+            if file_name not in case._details:
+                if mime_type is None:
+                    mime_type = 'application/octet-stream'
+                primary, sub, parameters = parse_mime_type(mime_type)
+                content_type = ContentType(primary, sub, parameters)
+                content_bytes = []
+                case._details[file_name] = Content(
+                    content_type, lambda:content_bytes)
+            case._details[file_name].iter_bytes().append(file_bytes)
 
     def status(self, test_id, test_status, test_tags=None, runnable=True,
         route_code=None, timestamp=None):
         super(StreamSummary, self).status(test_id, test_status,
             test_tags=test_tags, runnable=runnable, route_code=route_code,
             timestamp=timestamp)
-        key = (test_id, route_code)
-        if key not in self._inprogress:
-            self._inprogress[key] = PlaceHolder(test_id, outcome='unknown')
+        key = self._ensure_key(test_id, route_code)
         if test_status != 'inprogress':
             case = self._inprogress.pop(key)
             self._handle_final_status[test_status](
                 case, test_tags, runnable, route_code, timestamp)
     
+    def _ensure_key(self, test_id, route_code):
+        if test_id is None:
+            return
+        key = (test_id, route_code)
+        if key not in self._inprogress:
+            self._inprogress[key] = PlaceHolder(test_id, outcome='unknown')
+        return key
+
     def _success(self, case, test_tags, runnable, route_code, timestamp):
         pass
 
     def _skip(self, case, test_tags, runnable, route_code, timestamp):
         case._outcome = 'addSkip'
-        self.skipped.append(case)
+        if 'reason' not in case._details:
+            reason = "Unknown"
+        else:
+            reason = case._details['reason'].as_text()
+        self.skipped.append((case, reason))
 
     def _exists(self, case, test_tags, runnable, route_code, timestamp):
         pass
