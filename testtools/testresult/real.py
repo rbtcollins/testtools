@@ -8,6 +8,7 @@ __all__ = [
     'MultiTestResult',
     'StreamResult',
     'Tagger',
+    'TestControl',
     'TestResult',
     'TestResultDecorator',
     'ThreadsafeForwardingResult',
@@ -520,6 +521,23 @@ class StreamSummary(StreamResult):
         return (not self.failures and
             not self.errors and
             not self.expectedFailures and not self.unexpectedSuccesses)
+
+
+class TestControl(object):
+    """Controls a running test run, allowing it to be interrupted.
+    
+    :attribute shouldStop: If True, tests should no run and should instead
+        return without running. Similarly a TestSuite should abort running
+        and return immediately.
+    """
+
+    def __init__(self):
+        super(TestControl, self).__init__()
+        self.shouldStop = False
+
+    def stop(self):
+        """Indicate that tests should stop running."""
+        self.shouldStop = True
 
 
 class MultiTestResult(TestResult):

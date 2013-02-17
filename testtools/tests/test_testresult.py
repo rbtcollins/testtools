@@ -26,6 +26,7 @@ from testtools import (
     StreamSummary,
     Tagger,
     TestCase,
+    TestControl,
     TestResult,
     TestResultDecorator,
     TestByTestResult,
@@ -783,6 +784,17 @@ testtools.matchers._impl.MismatchError: Differences: [
         result.status("foo.bar", "uxsuccess")
         self.assertThat(result.unexpectedSuccesses, HasLength(1))
         self.assertEqual("foo.bar", result.unexpectedSuccesses[0].id())
+
+
+class TestTestControl(TestCase):
+
+    def test_default(self):
+        self.assertEqual(False, TestControl().shouldStop)
+
+    def test_stop(self):
+        control = TestControl()
+        control.stop()
+        self.assertEqual(True, control.shouldStop)
 
 
 class TestTestResult(TestCase):
