@@ -1,0 +1,128 @@
+Bottom: 4369d0dd5c72677fcdbf0f1674cb05408f1f5385
+Top:    89eee45e325676c896087df98e85b448c3afae7c
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-17 14:08:49 +1300
+
+Refresh of stream-summary
+
+---
+
+diff --git a/setup.py b/setup.py
+index 2e079bf..2ad6a62 100755
+--- a/setup.py
++++ b/setup.py
+@@ -69,5 +69,7 @@ setup(name='testtools',
+       zip_safe=False,
+       install_requires=[
+         'extras',
++        # 'mimetype' has not been uploaded by the maintainer with Python3 compat
++        'python-mimetype',
+         ],
+       )
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 73af7cb..d7e3e9b 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -19,12 +19,15 @@ import sys
+ import unittest
+ 
+ from extras import safe_hasattr
++from mimeparse import parse_mime_type
+ 
+ from testtools.compat import all, str_is_unicode, _u
+ from testtools.content import (
++    Content,
+     text_content,
+     TracebackContent,
+     )
++from testtools.content_type import ContentType
+ from testtools.tags import TagContext
+ # circular import
+ # from testtools.testcase import PlaceHolder
+@@ -434,27 +437,57 @@ class StreamSummary(StreamResult):
+     def stopTestRun(self):
+         super(StreamSummary, self).stopTestRun()
+         self.testsRun += len(self._inprogress)
+-        self.errors.extend(self._inprogress.values())
++        for case in self._inprogress.values():
++            self.errors.append((case, "Test did not complete"))
++        self._inprogress.clear()
++
++    def file(self, file_name, file_bytes, eof=False, mime_type=None,
++        test_id=None, route_code=None, timestamp=None):
++        super(StreamSummary, self).file(file_name, file_bytes, eof=eof,
++            mime_type=mime_type, test_id=test_id, route_code=route_code,
++            timestamp=timestamp)
++        key = self._ensure_key(test_id, route_code)
++        if key:
++            case = self._inprogress[key]
++            if file_name not in case._details:
++                if mime_type is None:
++                    mime_type = 'application/octet-stream'
++                primary, sub, parameters = parse_mime_type(mime_type)
++                content_type = ContentType(primary, sub, parameters)
++                content_bytes = []
++                case._details[file_name] = Content(
++                    content_type, lambda:content_bytes)
++            case._details[file_name].iter_bytes().append(file_bytes)
+ 
+     def status(self, test_id, test_status, test_tags=None, runnable=True,
+         route_code=None, timestamp=None):
+         super(StreamSummary, self).status(test_id, test_status,
+             test_tags=test_tags, runnable=runnable, route_code=route_code,
+             timestamp=timestamp)
+-        key = (test_id, route_code)
+-        if key not in self._inprogress:
+-            self._inprogress[key] = PlaceHolder(test_id, outcome='unknown')
++        key = self._ensure_key(test_id, route_code)
+         if test_status != 'inprogress':
+             case = self._inprogress.pop(key)
+             self._handle_final_status[test_status](
+                 case, test_tags, runnable, route_code, timestamp)
+     
++    def _ensure_key(self, test_id, route_code):
++        if test_id is None:
++            return
++        key = (test_id, route_code)
++        if key not in self._inprogress:
++            self._inprogress[key] = PlaceHolder(test_id, outcome='unknown')
++        return key
++
+     def _success(self, case, test_tags, runnable, route_code, timestamp):
+         pass
+ 
+     def _skip(self, case, test_tags, runnable, route_code, timestamp):
+         case._outcome = 'addSkip'
+-        self.skipped.append(case)
++        if 'reason' not in case._details:
++            reason = "Unknown"
++        else:
++            reason = case._details['reason'].as_text()
++        self.skipped.append((case, reason))
+ 
+     def _exists(self, case, test_tags, runnable, route_code, timestamp):
+         pass
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index 8e59d95..8e4fc5e 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -706,6 +706,9 @@ class TestStreamSummary(TestCase):
+         result.status("foo", "inprogress")
+         result.stopTestRun()
+         self.assertEqual(False, result.wasSuccessful())
++        self.assertThat(result.errors, HasLength(1))
++        self.assertEqual("foo", result.errors[0][0].id())
++        self.assertEqual("Test did not complete", result.errors[0][1])
+         # interim state detection handles route codes - while duplicate ids in
+         # one run is undesirable, it may happen (e.g. with repeated tests).
+         result.startTestRun()
+@@ -724,7 +727,8 @@ class TestStreamSummary(TestCase):
+             mime_type="text/plain; charset=utf8", test_id="foo.bar")
+         result.status("foo.bar", "skip")
+         self.assertThat(result.skipped, HasLength(1))
+-
++        self.assertEqual("foo.bar", result.skipped[0][0].id())
++        self.assertEqual(_u("Missing dependency"), result.skipped[0][1])
+ 
+ 
+ class TestTestResult(TestCase):
