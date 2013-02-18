@@ -1,5 +1,5 @@
 Bottom: da2f09831f39cac1620a98c833c02d3c356a4c7b
-Top:    da2f09831f39cac1620a98c833c02d3c356a4c7b
+Top:    633bc3d1eb5e2297a09487f8c924ce69a370ba9b
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -12,4 +12,111 @@ TestResult into a StreamResult.
 
 ---
 
-
+diff --git a/NEWS b/NEWS
+index d168452..891f2cd 100644
+--- a/NEWS
++++ b/NEWS
+@@ -36,6 +36,11 @@ Improvements
+   created to support that.
+   (Robert Collins)
+ 
++* New support class ``StreamToExtendedDecorator`` which translates
++  ``StreamResult`` API calls into ``ExtendedTestResult`` (or any older
++  ``TestResult``) calls. This permits using un-migrated result objects with
++  new runners / tests. (Robert Collins)
++
+ * New test support class ``testtools.testresult.doubles.StreamResult``, which
+   captures all the StreamResult events. (Robert Collins)
+ 
+diff --git a/testtools/__init__.py b/testtools/__init__.py
+index 1850162..8524221 100644
+--- a/testtools/__init__.py
++++ b/testtools/__init__.py
+@@ -30,6 +30,7 @@ __all__ = [
+     'StreamFailfast',
+     'StreamResult',
+     'StreamSummary',
++    'StreamToExtendedDecorator',
+     'TestControl',
+     'ThreadsafeForwardingResult',
+     'try_import',
+@@ -77,6 +78,7 @@ else:
+         StreamFailfast,
+         StreamResult,
+         StreamSummary,
++        StreamToExtendedDecorator,
+         Tagger,
+         TestByTestResult,
+         TestControl,
+diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
+index 45df0f2..8f93f15 100644
+--- a/testtools/testresult/__init__.py
++++ b/testtools/testresult/__init__.py
+@@ -10,6 +10,7 @@ __all__ = [
+     'StreamFailfast',
+     'StreamResult',
+     'StreamSummary',
++    'StreamToExtendedDecorator',
+     'Tagger',
+     'TestByTestResult',
+     'TestControl',
+@@ -27,6 +28,7 @@ from testtools.testresult.real import (
+     StreamFailfast,
+     StreamResult,
+     StreamSummary,
++    StreamToExtendedDecorator,
+     Tagger,
+     TestByTestResult,
+     TestControl,
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index ede2faf..b01f8b2 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -1183,6 +1183,22 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+         self.__now = a_datetime
+ 
+ 
++class StreamToExtendedDecorator(StreamResult):
++    """Convert StreamResult API calls into ExtendedTestResult calls.
++
++    This will buffer all calls for all concurrently active tests, and
++    then flush each test as they complete.
++
++    Incomplete tests will be flushed as errors when the test run stops.
++
++    Non test file attachments are accumulated into a test called
++    'testtools.extradata' flushed at the end of the run.
++    """
++
++    def __init__(self, decorated):
++        self.decorated = decorated
++
++
+ class TestResultDecorator(object):
+     """General pass-through decorator.
+ 
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index c4f25ac..29dedab 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -26,6 +26,7 @@ from testtools import (
+     StreamFailfast,
+     StreamResult,
+     StreamSummary,
++    StreamToExtendedDecorator,
+     Tagger,
+     TestCase,
+     TestControl,
+@@ -565,6 +566,12 @@ class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
+         return StreamSummary()
+ 
+ 
++class TestStreamToExtendedDecoratorContract(TestCase, TestStreamResultContract):
++
++    def _make_result(self):
++        return StreamToExtendedDecorator(ExtendedTestResult())
++
++
+ class TestStreamFailfastContract(TestCase, TestStreamResultContract):
+ 
+     def _make_result(self):
