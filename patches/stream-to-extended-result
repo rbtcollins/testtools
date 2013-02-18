@@ -1,0 +1,15 @@
+Bottom: da2f09831f39cac1620a98c833c02d3c356a4c7b
+Top:    da2f09831f39cac1620a98c833c02d3c356a4c7b
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-18 15:34:54 +1300
+
+Add an adapter to adapt StreamResult event streams into ExtendedTestResult.
+
+This permits running existing tools like test runners and reporters with
+StreamResult generating test runs adapting any unittest or testtools compatible
+TestResult into a StreamResult.
+
+
+---
+
+
