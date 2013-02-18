@@ -1,0 +1,24 @@
+Bottom: 5157c6ac129412a4f410be9da7d02d5d2e97308c
+Top:    8e69b322cde926446d7c63ce367e089f2c061fb3
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-19 00:06:35 +1300
+
+Refresh of stream-to-extended-result
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 740ed49..cbb8edf 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -1272,7 +1272,10 @@ class StreamToExtendedDecorator(StreamResult):
+     """
+ 
+     def __init__(self, decorated):
++        # ExtendedToOriginalDecorator takes care of thunking details back to
++        # exceptions/reasons etc.
+         self.decorated = ExtendedToOriginalDecorator(decorated)
++        # StreamToDict buffers and gives us individual tests.
+         self.hook = StreamToDict(self._handle_tests)
+ 
+     def estimate(self, *args, **kwargs):
