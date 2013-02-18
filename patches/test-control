@@ -1,5 +1,5 @@
-Bottom: 1193995dd306bd925e06b1ea09f1c819bce9a194
-Top:    0107b1aa6d80e62845164a5ab3783769ce41e599
+Bottom: 8315c09e2eae26949b3ae447b152c7908c111587
+Top:    0ae674457a2da0bb9a43d860a6be1ea88988e029
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-17 16:12:38 +1300
 
@@ -105,7 +105,7 @@ index 29ee39d..435cb32 100644
      TestResultDecorator,
      TextTestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 8d2999b..b417cfe 100644
+index 8c382d6..af0d1f0 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,10 +6,12 @@ __metaclass__ = type
@@ -140,7 +140,7 @@ index 8d2999b..b417cfe 100644
  class StreamToDict(StreamResult):
      """A specialised StreamResult that emits a callback as tests complete.
  
-@@ -585,6 +599,23 @@ class StreamSummary(StreamToDict):
+@@ -597,6 +611,23 @@ class StreamSummary(StreamToDict):
          self.unexpectedSuccesses.append(case)
  
  

@@ -1,5 +1,5 @@
-Bottom: 4b77c49433960f7205d1f8af6f12cb30ba511344
-Top:    6dbcbbfd27332d860100da51a8bbebf05469a069
+Bottom: 42a9e530d5fd67f2b314c770a7d7a12223fff592
+Top:    eb742682b60bc1d3dac95696ed80d55db9bc4617
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -88,10 +88,10 @@ index 2827f0b..8f0fd76 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index efac704..ef92654 100644
+index 98ec9d1..99daa54 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -1239,6 +1239,25 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+@@ -1251,6 +1251,25 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
          self.__now = a_datetime
  
  
