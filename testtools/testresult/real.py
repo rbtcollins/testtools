@@ -1259,6 +1259,49 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
         return super(ExtendedToStreamDecorator, self).wasSuccessful()
 
 
+class StreamToExtendedDecorator(StreamResult):
+    """Convert StreamResult API calls into ExtendedTestResult calls.
+
+    This will buffer all calls for all concurrently active tests, and
+    then flush each test as they complete.
+
+    Incomplete tests will be flushed as errors when the test run stops.
+
+    Non test file attachments are accumulated into a test called
+    'testtools.extradata' flushed at the end of the run.
+    """
+
+    def __init__(self, decorated):
+        # ExtendedToOriginalDecorator takes care of thunking details back to
+        # exceptions/reasons etc.
+        self.decorated = ExtendedToOriginalDecorator(decorated)
+        # StreamToDict buffers and gives us individual tests.
+        self.hook = StreamToDict(self._handle_tests)
+
+    def estimate(self, *args, **kwargs):
+        """Not passed on."""
+
+    def file(self, *args, **kwargs):
+        self.hook.file(*args, **kwargs)
+
+    def status(self, test_id, test_status, *args, **kwargs):
+        if test_status == 'exists':
+            return
+        self.hook.status(test_id, test_status, *args, **kwargs)
+
+    def startTestRun(self):
+        self.decorated.startTestRun()
+        self.hook.startTestRun()
+
+    def stopTestRun(self):
+        self.hook.stopTestRun()
+        self.decorated.stopTestRun()
+
+    def _handle_tests(self, test_dict):
+        case = test_dict_to_case(test_dict)
+        case.run(self.decorated)
+
+
 class TestResultDecorator(object):
     """General pass-through decorator.
 
