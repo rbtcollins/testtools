@@ -7,6 +7,8 @@ __all__ = [
     'ExtendedToOriginalDecorator',
     'MultiTestResult',
     'StreamResult',
+    'StreamSummary',
+    'StreamToDict',
     'Tagger',
     'TestResult',
     'TestResultDecorator',
@@ -415,13 +417,115 @@ class CopyStreamResult(StreamResult):
         domap(methodcaller('status', *args, **kwargs), self.targets)
 
 
-class StreamSummary(StreamResult):
+class StreamToDict(StreamResult):
+    """A specialised StreamResult that emits a callback as tests complete.
+
+    Top level file attachments are simply discarded. Hung tests are detected
+    by stopTestRun and notified there and then.
+
+    The callback is passed a dict with the following keys:
+    * id: the test id.
+    * tags: The tags for the test. A set of unicode strings.
+    * details: A dict of file attachments - ``testtools.content.Content``
+        objects.
+    * status: One of the StreamResult status codes (including inprogress) or
+        'unknown' (used if only file events for a test were received...)
+
+    Only the most recent tags observed in the stream are reported.
+    """
+
+    def __init__(self, on_test):
+        """Create a StreamToDict calling on_test on test completions.
+
+        :param on_test: A callback that accepts one parameter - a dict
+            describing a test.
+        """
+        super(StreamToDict, self).__init__()
+        self.on_test = on_test
+
+    def startTestRun(self):
+        super(StreamToDict, self).startTestRun()
+        self._inprogress = {}
+
+    def file(self, file_name, file_bytes, eof=False, mime_type=None,
+        test_id=None, route_code=None, timestamp=None):
+        super(StreamToDict, self).file(file_name, file_bytes, eof=eof,
+            mime_type=mime_type, test_id=test_id, route_code=route_code,
+            timestamp=timestamp)
+        key = self._ensure_key(test_id, route_code)
+        if key:
+            case = self._inprogress[key]
+            if file_name not in case['details']:
+                if mime_type is None:
+                    mime_type = 'application/octet-stream'
+                primary, sub, parameters = parse_mime_type(mime_type)
+                content_type = ContentType(primary, sub, parameters)
+                content_bytes = []
+                case['details'][file_name] = Content(
+                    content_type, lambda:content_bytes)
+            case['details'][file_name].iter_bytes().append(file_bytes)
+    
+    def status(self, test_id, test_status, test_tags=None, runnable=True,
+        route_code=None, timestamp=None):
+        super(StreamToDict, self).status(test_id, test_status,
+            test_tags=test_tags, runnable=runnable, route_code=route_code,
+            timestamp=timestamp)
+        key = self._ensure_key(test_id, route_code)
+        # update fields
+        self._inprogress[key]['status'] = test_status
+        if test_tags is not None:
+            self._inprogress[key]['tags'] = test_tags
+        # notify completed tests.
+        if test_status != 'inprogress':
+            self.on_test(self._inprogress.pop(key))
+    
+    def stopTestRun(self):
+        super(StreamToDict, self).stopTestRun()
+        while self._inprogress:
+            self.on_test(self._inprogress.popitem()[1])
+
+    def _ensure_key(self, test_id, route_code):
+        if test_id is None:
+            return
+        key = (test_id, route_code)
+        if key not in self._inprogress:
+            self._inprogress[key] = {
+                'id': test_id,
+                'tags': set(),
+                'details': {},
+                'status': 'unknown'}
+        return key
+
+
+class StreamSummary(StreamToDict):
     """A specialised StreamResult that summarises a stream.
     
     The summary uses the same representation as the original
     unittest.TestResult contract, allowing it to be consumed by any test
     runner.
     """
+
+    def __init__(self):
+        super(StreamSummary, self).__init__(self._gather_test)
+        self._status_map = {
+            'inprogress': 'addFailure',
+            'unknown': 'addFailure',
+            'success': 'addSuccess',
+            'skip': 'addSkip',
+            'fail': 'addFailure',
+            'xfail': 'addExpectedFailure',
+            'uxsuccess': 'addUnexpectedSuccess',
+            }
+        self._handle_status = {
+            'success': self._success,
+            'skip': self._skip,
+            'exists': self._exists,
+            'fail': self._fail,
+            'xfail': self._xfail,
+            'uxsuccess': self._uxsuccess,
+            'unknown': self._incomplete,
+            'inprogress': self._incomplete,
+            }
 
     def startTestRun(self):
         super(StreamSummary, self).startTestRun()
@@ -431,91 +535,9 @@ class StreamSummary(StreamResult):
         self.skipped = []
         self.expectedFailures = []
         self.unexpectedSuccesses = []
-        # Maps (id, route_code) -> a PlaceHolder
+        # Circular import.
         global PlaceHolder
         from testtools.testcase import PlaceHolder
-        self._inprogress = {}
-        self._handle_final_status = {
-            'success': self._success,
-            'skip': self._skip,
-            'exists': self._exists,
-            'fail': self._fail,
-            'xfail': self._xfail,
-            'uxsuccess': self._uxsuccess,
-            }
-
-    def stopTestRun(self):
-        super(StreamSummary, self).stopTestRun()
-        self.testsRun += len(self._inprogress)
-        for case in self._inprogress.values():
-            self.errors.append((case, "Test did not complete"))
-        self._inprogress.clear()
-
-    def file(self, file_name, file_bytes, eof=False, mime_type=None,
-        test_id=None, route_code=None, timestamp=None):
-        super(StreamSummary, self).file(file_name, file_bytes, eof=eof,
-            mime_type=mime_type, test_id=test_id, route_code=route_code,
-            timestamp=timestamp)
-        key = self._ensure_key(test_id, route_code)
-        if key:
-            case = self._inprogress[key]
-            if file_name not in case._details:
-                if mime_type is None:
-                    mime_type = 'application/octet-stream'
-                primary, sub, parameters = parse_mime_type(mime_type)
-                content_type = ContentType(primary, sub, parameters)
-                content_bytes = []
-                case._details[file_name] = Content(
-                    content_type, lambda:content_bytes)
-            case._details[file_name].iter_bytes().append(file_bytes)
-
-    def status(self, test_id, test_status, test_tags=None, runnable=True,
-        route_code=None, timestamp=None):
-        super(StreamSummary, self).status(test_id, test_status,
-            test_tags=test_tags, runnable=runnable, route_code=route_code,
-            timestamp=timestamp)
-        key = self._ensure_key(test_id, route_code)
-        if test_status != 'inprogress':
-            case = self._inprogress.pop(key)
-            self._handle_final_status[test_status](
-                case, test_tags, runnable, route_code, timestamp)
-            self.testsRun += 1
-    
-    def _ensure_key(self, test_id, route_code):
-        if test_id is None:
-            return
-        key = (test_id, route_code)
-        if key not in self._inprogress:
-            self._inprogress[key] = PlaceHolder(test_id, outcome='unknown')
-        return key
-
-    def _success(self, case, test_tags, runnable, route_code, timestamp):
-        pass
-
-    def _skip(self, case, test_tags, runnable, route_code, timestamp):
-        case._outcome = 'addSkip'
-        if 'reason' not in case._details:
-            reason = "Unknown"
-        else:
-            reason = case._details['reason'].as_text()
-        self.skipped.append((case, reason))
-
-    def _exists(self, case, test_tags, runnable, route_code, timestamp):
-        pass
-
-    def _fail(self, case, test_tags, runnable, route_code, timestamp):
-        case._outcome = 'addError'
-        message = _details_to_str(case._details, special="traceback")
-        self.errors.append((case, message))
-
-    def _xfail(self, case, test_tags, runnable, route_code, timestamp):
-        case._outcome = 'addExpectedFailure'
-        message = _details_to_str(case._details, special="traceback")
-        self.expectedFailures.append((case, message))
-
-    def _uxsuccess(self, case, test_tags, runnable, route_code, timestamp):
-        case._outcome = 'addUnexpectedSuccess'
-        self.unexpectedSuccesses.append(case)
 
     def wasSuccessful(self):
         """Return False if any failure has occured.
@@ -523,8 +545,44 @@ class StreamSummary(StreamResult):
         Note that incomplete tests can only be detected when stopTestRun is
         called, so that should be called before checking wasSuccessful.
         """
-        return (not self.failures and
-            not self.errors)
+        return (not self.failures and not self.errors)
+
+    def _gather_test(self, test_dict):
+        self.testsRun += 1
+        if test_dict['status'] == 'exists':
+            return
+        outcome = self._status_map[test_dict['status']]
+        case = PlaceHolder(test_dict['id'], outcome=outcome,
+            details=test_dict['details'])
+        self._handle_status[test_dict['status']](case)
+
+    def _incomplete(self, case):
+        self.errors.append((case, "Test did not complete"))
+
+    def _success(self, case):
+        pass
+
+    def _skip(self, case):
+        if 'reason' not in case._details:
+            reason = "Unknown"
+        else:
+            reason = case._details['reason'].as_text()
+        self.skipped.append((case, reason))
+
+    def _exists(self, case):
+        pass
+
+    def _fail(self, case):
+        message = _details_to_str(case._details, special="traceback")
+        self.errors.append((case, message))
+
+    def _xfail(self, case):
+        message = _details_to_str(case._details, special="traceback")
+        self.expectedFailures.append((case, message))
+
+    def _uxsuccess(self, case):
+        case._outcome = 'addUnexpectedSuccess'
+        self.unexpectedSuccesses.append(case)
 
 
 class MultiTestResult(TestResult):
