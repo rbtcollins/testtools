@@ -1,0 +1,14 @@
+Bottom: 4f35743e52fc2ca919510d9ef6531e33ea0f066a
+Top:    4f35743e52fc2ca919510d9ef6531e33ea0f066a
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-18 21:28:29 +1300
+
+Provide a loosely typed buffer layer for simple processing of completed tests.
+
+This avoids all of the buffer management and analysis and should be suitable
+for most terminal filters.
+
+
+---
+
+
