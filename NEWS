@@ -36,6 +36,11 @@ Improvements
   created to support that.
   (Robert Collins)
 
+* New support class ``StreamToExtendedDecorator`` which translates
+  ``StreamResult`` API calls into ``ExtendedTestResult`` (or any older
+  ``TestResult``) calls. This permits using un-migrated result objects with
+  new runners / tests. (Robert Collins)
+
 * New test support class ``testtools.testresult.doubles.StreamResult``, which
   captures all the StreamResult events. (Robert Collins)
 
