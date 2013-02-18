@@ -20,6 +20,10 @@ Improvements
   ``StreamResult`` objects (each of which receives all the events).
   (Robert Collins)
 
+* New support class ``StreamToDict`` which converts a ``StreamResult`` to a
+  series of dicts describing a test. Useful for writing trivial stream
+  analysers. (Robert Collins)
+
 * New test support class ``testtools.testresult.doubles.StreamResult``, which
   captures all the StreamResult events. (Robert Collins)
 
