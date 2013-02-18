@@ -1,5 +1,5 @@
 Version: 1
-Previous: 3a5103fb373de50b305506d5a6de54571367d7ec
+Previous: b91a70143699e37f40a15d5e415328eb3e2d89f4
 Head: 064aa30d9e2eb38d2b33e7baca8e49d9290bda53
 Applied:
   content-type-repr: e42bfb41ed439074666dcad6c9157fcd3c6d933b
@@ -10,6 +10,6 @@ Applied:
   stream-summary: 7342a69322f8e0a4da6af7f06ce7aa50ee355949
   test-control: f57be7edcb4aa33b413abe850c7414bf816934ac
   extended-to-stream: ca70a54614ca68f8eb4e8a72da5ecba5957bf06f
+  stream-to-extended-result: 064aa30d9e2eb38d2b33e7baca8e49d9290bda53
 Unapplied:
-  stream-to-extended-result: 25f8eb101a9957e0af53799771dbe7f66d17edda
 Hidden:
