@@ -1,5 +1,5 @@
-Bottom: 42a9e530d5fd67f2b314c770a7d7a12223fff592
-Top:    6d11dd08dca898e4134a858e4aa3a5e214d3c86d
+Bottom: b3b29f68fb97a86b02e46de51ddb4015b2dc6e20
+Top:    5157c6ac129412a4f410be9da7d02d5d2e97308c
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -88,11 +88,11 @@ index 2827f0b..8f0fd76 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 98ec9d1..ea892bc 100644
+index 6980cc3..740ed49 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -1251,6 +1251,46 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
-         self.__now = a_datetime
+@@ -1259,6 +1259,46 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+         return super(ExtendedToStreamDecorator, self).wasSuccessful()
  
  
 +class StreamToExtendedDecorator(StreamResult):
@@ -139,7 +139,7 @@ index 98ec9d1..ea892bc 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index f7ab6b2..0204b47 100644
+index 9d5af0f..fb20884 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -27,6 +27,7 @@ from testtools import (
@@ -150,7 +150,7 @@ index f7ab6b2..0204b47 100644
      Tagger,
      TestCase,
      TestControl,
-@@ -462,6 +463,15 @@ class TestTestResultDecoratorContract(TestCase, StartTestRunContract):
+@@ -466,6 +467,15 @@ class TestTestResultDecoratorContract(TestCase, StartTestRunContract):
          return TestResultDecorator(TestResult())
  
  
@@ -166,7 +166,7 @@ index f7ab6b2..0204b47 100644
  class TestStreamResultContract(object):
  
      def _make_result(self):
-@@ -572,6 +582,12 @@ class TestStreamToDictContract(TestCase, TestStreamResultContract):
+@@ -576,6 +586,12 @@ class TestStreamToDictContract(TestCase, TestStreamResultContract):
          return StreamToDict(lambda x:None)
  
  
