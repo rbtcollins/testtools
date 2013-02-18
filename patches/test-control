@@ -1,5 +1,5 @@
 Bottom: 1193995dd306bd925e06b1ea09f1c819bce9a194
-Top:    7c73d7294721d8b9a3728a9b997be2f28e2fed78
+Top:    0107b1aa6d80e62845164a5ab3783769ce41e599
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-17 16:12:38 +1300
 
@@ -9,30 +9,22 @@ Add a dedicated interface for controlling an in-progress TestRun.
 ---
 
 diff --git a/NEWS b/NEWS
-index 4fd368c..31101fc 100644
+index 4fd368c..7290e1f 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -20,12 +20,20 @@ Improvements
-   ``StreamResult`` objects (each of which receives all the events).
-   (Robert Collins)
- 
-+<<<<<<< current
- * New support class ``StreamSummary`` which summarises a ``StreamResult``
-   stream compatibly with ``TestResult`` code. (Robert Collins)
- 
- * New support class ``StreamToDict`` which converts a ``StreamResult`` to a
+@@ -27,6 +27,12 @@ Improvements
    series of dicts describing a test. Useful for writing trivial stream
    analysers. (Robert Collins)
-+=======
+ 
 +* New support class ``TestControl`` which permits cancelling an in-progress
 +  run. (Robert Collins)
 +
 +* New support class ``StreamFailfast`` which calls a ``TestControl`` instance
 +  to abort the test run when a failure is detected. (Robert Collins)
-+>>>>>>> patched
- 
++
  * New test support class ``testtools.testresult.doubles.StreamResult``, which
    captures all the StreamResult events. (Robert Collins)
+ 
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
 index d3b7c0f..c7b3904 100644
 --- a/doc/for-framework-folk.rst
