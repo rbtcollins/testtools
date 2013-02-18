@@ -1,5 +1,5 @@
 Bottom: 0107b1aa6d80e62845164a5ab3783769ce41e599
-Top:    4bf55edbdfd5f0f7f5559c316d0ae5391485c70c
+Top:    4b77c49433960f7205d1f8af6f12cb30ba511344
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -93,7 +93,7 @@ index 435cb32..2827f0b 100644
      StreamFailfast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index b417cfe..5b23786 100644
+index b417cfe..efac704 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -113,7 +113,7 @@ index b417cfe..5b23786 100644
  from testtools.content import (
      Content,
      text_content,
-@@ -1110,6 +1111,135 @@ class ExtendedToOriginalDecorator(object):
+@@ -1110,6 +1111,134 @@ class ExtendedToOriginalDecorator(object):
          return self.decorated.wasSuccessful()
  
  
@@ -215,7 +215,6 @@ index b417cfe..5b23786 100644
 +
 +    def stopTest(self, test):
 +        self._tags = self._tags.parent
-+        pass
 +
 +    @property
 +    def current_tags(self):
