@@ -462,6 +462,15 @@ class TestTestResultDecoratorContract(TestCase, StartTestRunContract):
         return TestResultDecorator(TestResult())
 
 
+# DetailsContract because ExtendedToStreamDecorator follows Python for
+# uxsuccess handling.
+class TestStreamToExtendedContract(TestCase, DetailsContract):
+
+    def makeResult(self):
+        return ExtendedToStreamDecorator(
+            StreamToExtendedDecorator(ExtendedTestResult()))
+
+
 class TestStreamResultContract(object):
 
     def _make_result(self):

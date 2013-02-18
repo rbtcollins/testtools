@@ -1196,7 +1196,10 @@ class StreamToExtendedDecorator(StreamResult):
     """
 
     def __init__(self, decorated):
-        self.decorated = decorated
+        self.decorated = ExtendedToOriginalDecorator(decorated)
+
+    def estimate(self, *args, **kwargs):
+        """Not passed on."""
 
 
 class TestResultDecorator(object):
