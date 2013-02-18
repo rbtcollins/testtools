@@ -1,5 +1,5 @@
 Bottom: 0107b1aa6d80e62845164a5ab3783769ce41e599
-Top:    a581af6f2220d0264f56d6fb17718d7a70e3484d
+Top:    4bf55edbdfd5f0f7f5559c316d0ae5391485c70c
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -12,21 +12,21 @@ with a StreamResult.
 ---
 
 diff --git a/NEWS b/NEWS
-index 7290e1f..0eacf36 100644
+index 7290e1f..3bb4b2b 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -33,6 +33,16 @@ Improvements
  * New support class ``StreamFailfast`` which calls a ``TestControl`` instance
    to abort the test run when a failure is detected. (Robert Collins)
  
-+* New support class ``ExtendedToStreamResult`` which translates both regular
++* New support class ``ExtendedToStreamDecorator`` which translates both regular
 +  unittest TestResult API calls and the ExtendedTestResult API which testtools
-+  has supported into the StreamResult API. ExtendedToStreamResult also forwards
-+  calls made in the StreamResult API, permitting it to be used anywhere a 
-+  StreamResult is used. Key TestResult query methods like wasSuccessful and
-+  shouldStop are synchronised with the StreamResult API calls, but the detailed
-+  statistics like the list of errors are not - a separate consumer will be
-+  created to support that.
++  has supported into the StreamResult API. ExtendedToStreamDecorator also
++  forwards calls made in the StreamResult API, permitting it to be used
++  anywhere a StreamResult is used. Key TestResult query methods like
++  wasSuccessful and shouldStop are synchronised with the StreamResult API
++  calls, but the detailed statistics like the list of errors are not - a
++  separate consumer will be created to support that.
 +  (Robert Collins)
 +
  * New test support class ``testtools.testresult.doubles.StreamResult``, which
