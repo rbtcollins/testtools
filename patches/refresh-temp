@@ -1,0 +1,35 @@
+Bottom: 7c73d7294721d8b9a3728a9b997be2f28e2fed78
+Top:    0107b1aa6d80e62845164a5ab3783769ce41e599
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-18 22:39:08 +1300
+
+Refresh of test-control
+
+---
+
+diff --git a/NEWS b/NEWS
+index 31101fc..7290e1f 100644
+--- a/NEWS
++++ b/NEWS
+@@ -20,20 +20,18 @@ Improvements
+   ``StreamResult`` objects (each of which receives all the events).
+   (Robert Collins)
+ 
+-<<<<<<< current
+ * New support class ``StreamSummary`` which summarises a ``StreamResult``
+   stream compatibly with ``TestResult`` code. (Robert Collins)
+ 
+ * New support class ``StreamToDict`` which converts a ``StreamResult`` to a
+   series of dicts describing a test. Useful for writing trivial stream
+   analysers. (Robert Collins)
+-=======
++
+ * New support class ``TestControl`` which permits cancelling an in-progress
+   run. (Robert Collins)
+ 
+ * New support class ``StreamFailfast`` which calls a ``TestControl`` instance
+   to abort the test run when a failure is detected. (Robert Collins)
+->>>>>>> patched
+ 
+ * New test support class ``testtools.testresult.doubles.StreamResult``, which
+   captures all the StreamResult events. (Robert Collins)
