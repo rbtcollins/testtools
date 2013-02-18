@@ -1,5 +1,5 @@
 Bottom: b3b29f68fb97a86b02e46de51ddb4015b2dc6e20
-Top:    5157c6ac129412a4f410be9da7d02d5d2e97308c
+Top:    8e69b322cde926446d7c63ce367e089f2c061fb3
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -88,10 +88,10 @@ index 2827f0b..8f0fd76 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 6980cc3..740ed49 100644
+index 6980cc3..cbb8edf 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -1259,6 +1259,46 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+@@ -1259,6 +1259,49 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
          return super(ExtendedToStreamDecorator, self).wasSuccessful()
  
  
@@ -108,7 +108,10 @@ index 6980cc3..740ed49 100644
 +    """
 +
 +    def __init__(self, decorated):
++        # ExtendedToOriginalDecorator takes care of thunking details back to
++        # exceptions/reasons etc.
 +        self.decorated = ExtendedToOriginalDecorator(decorated)
++        # StreamToDict buffers and gives us individual tests.
 +        self.hook = StreamToDict(self._handle_tests)
 +
 +    def estimate(self, *args, **kwargs):
