@@ -26,6 +26,7 @@ from testtools import (
     StreamFailfast,
     StreamResult,
     StreamSummary,
+    StreamToExtendedDecorator,
     Tagger,
     TestCase,
     TestControl,
@@ -461,6 +462,15 @@ class TestTestResultDecoratorContract(TestCase, StartTestRunContract):
         return TestResultDecorator(TestResult())
 
 
+# DetailsContract because ExtendedToStreamDecorator follows Python for
+# uxsuccess handling.
+class TestStreamToExtendedContract(TestCase, DetailsContract):
+
+    def makeResult(self):
+        return ExtendedToStreamDecorator(
+            StreamToExtendedDecorator(ExtendedTestResult()))
+
+
 class TestStreamResultContract(object):
 
     def _make_result(self):
@@ -563,6 +573,12 @@ class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
 
     def _make_result(self):
         return StreamSummary()
+
+
+class TestStreamToExtendedDecoratorContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        return StreamToExtendedDecorator(ExtendedTestResult())
 
 
 class TestStreamFailfastContract(TestCase, TestStreamResultContract):

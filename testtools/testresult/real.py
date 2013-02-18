@@ -1183,6 +1183,25 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
         self.__now = a_datetime
 
 
+class StreamToExtendedDecorator(StreamResult):
+    """Convert StreamResult API calls into ExtendedTestResult calls.
+
+    This will buffer all calls for all concurrently active tests, and
+    then flush each test as they complete.
+
+    Incomplete tests will be flushed as errors when the test run stops.
+
+    Non test file attachments are accumulated into a test called
+    'testtools.extradata' flushed at the end of the run.
+    """
+
+    def __init__(self, decorated):
+        self.decorated = ExtendedToOriginalDecorator(decorated)
+
+    def estimate(self, *args, **kwargs):
+        """Not passed on."""
+
+
 class TestResultDecorator(object):
     """General pass-through decorator.
 
