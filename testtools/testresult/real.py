@@ -1209,7 +1209,6 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
 
     def stopTest(self, test):
         self._tags = self._tags.parent
-        pass
 
     @property
     def current_tags(self):
