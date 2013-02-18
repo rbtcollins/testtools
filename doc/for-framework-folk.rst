@@ -194,6 +194,23 @@ is an ``IncompleteTestDetector`` in the processing chain within a single
 process, code can allow it to be responsible for detecting hung or crashed
 tests.
 
+StreamToDict
+------------
+
+A simplified API for dealing with ``StreamResult`` streams. Each test is
+buffered until it completes and then reported as a trivial dict. This makes
+writing analysers very easy - you can ignore all the plumbing and just work
+with the result. e.g.::
+
+    >>> from testtools import StreamToDict
+    >>> def handle_test(test_dict):
+    ...     print(test_dict['id'])
+    >>> result = StreamToDict(handle_test)
+    >>> result.startTestRun()
+    >>> # Run tests against result here.
+    >>> # At stopTestRun() any incomplete buffered tests are announced.
+    >>> result.stopTestRun()
+
 ThreadsafeStreamResult
 ----------------------
 
