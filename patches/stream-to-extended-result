@@ -1,5 +1,5 @@
 Bottom: ef3f5cc8efb9bce833be0fa3c18013a2c49e878a
-Top:    0daf82bfb9cf39d690c7a193e5fbdb56b504e686
+Top:    eb044ce2597eb7d172f189f084ffae4567457c84
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -88,10 +88,10 @@ index 45df0f2..8f93f15 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index ede2faf..b01f8b2 100644
+index ede2faf..fda4a5d 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -1183,6 +1183,22 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+@@ -1183,6 +1183,25 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
          self.__now = a_datetime
  
  
@@ -108,14 +108,17 @@ index ede2faf..b01f8b2 100644
 +    """
 +
 +    def __init__(self, decorated):
-+        self.decorated = decorated
++        self.decorated = ExtendedToOriginalDecorator(decorated)
++
++    def estimate(self, *args, **kwargs):
++        """Not passed on."""
 +
 +
  class TestResultDecorator(object):
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index c4f25ac..29dedab 100644
+index c4f25ac..3ed2da6 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -26,6 +26,7 @@ from testtools import (
@@ -126,7 +129,23 @@ index c4f25ac..29dedab 100644
      Tagger,
      TestCase,
      TestControl,
-@@ -565,6 +566,12 @@ class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
+@@ -461,6 +462,15 @@ class TestTestResultDecoratorContract(TestCase, StartTestRunContract):
+         return TestResultDecorator(TestResult())
+ 
+ 
++# DetailsContract because ExtendedToStreamDecorator follows Python for
++# uxsuccess handling.
++class TestStreamToExtendedContract(TestCase, DetailsContract):
++
++    def makeResult(self):
++        return ExtendedToStreamDecorator(
++            StreamToExtendedDecorator(ExtendedTestResult()))
++
++
+ class TestStreamResultContract(object):
+ 
+     def _make_result(self):
+@@ -565,6 +575,12 @@ class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
          return StreamSummary()
  
  
