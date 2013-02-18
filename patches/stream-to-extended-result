@@ -1,5 +1,5 @@
 Bottom: 42a9e530d5fd67f2b314c770a7d7a12223fff592
-Top:    eb742682b60bc1d3dac95696ed80d55db9bc4617
+Top:    6d11dd08dca898e4134a858e4aa3a5e214d3c86d
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -88,10 +88,10 @@ index 2827f0b..8f0fd76 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 98ec9d1..99daa54 100644
+index 98ec9d1..ea892bc 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -1251,6 +1251,25 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+@@ -1251,6 +1251,46 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
          self.__now = a_datetime
  
  
@@ -109,9 +109,30 @@ index 98ec9d1..99daa54 100644
 +
 +    def __init__(self, decorated):
 +        self.decorated = ExtendedToOriginalDecorator(decorated)
++        self.hook = StreamToDict(self._handle_tests)
 +
 +    def estimate(self, *args, **kwargs):
 +        """Not passed on."""
++
++    def file(self, *args, **kwargs):
++        self.hook.file(*args, **kwargs)
++
++    def status(self, test_id, test_status, *args, **kwargs):
++        if test_status == 'exists':
++            return
++        self.hook.status(test_id, test_status, *args, **kwargs)
++
++    def startTestRun(self):
++        self.decorated.startTestRun()
++        self.hook.startTestRun()
++
++    def stopTestRun(self):
++        self.hook.stopTestRun()
++        self.decorated.stopTestRun()
++
++    def _handle_tests(self, test_dict):
++        case = test_dict_to_case(test_dict)
++        case.run(self.decorated)
 +
 +
  class TestResultDecorator(object):
