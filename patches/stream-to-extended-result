@@ -1,5 +1,5 @@
 Bottom: ef3f5cc8efb9bce833be0fa3c18013a2c49e878a
-Top:    a5bd11c39b5adbe98cd736efb484fc8349f7224c
+Top:    0daf82bfb9cf39d690c7a193e5fbdb56b504e686
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -27,6 +27,25 @@ index d168452..891f2cd 100644
 +
  * New test support class ``testtools.testresult.doubles.StreamResult``, which
    captures all the StreamResult events. (Robert Collins)
+ 
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index 84c92e3..733f95d 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -170,6 +170,14 @@ This is useful when a ``StreamResult`` stream is desired, but you cannot
+ be sure that the tests which will run have been updated to the ``StreamResult``
+ API.
+ 
++StreamToExtendedDecorator
++-------------------------
++
++This is a simple converter that emits the ``ExtendedTestResult`` API in
++response to events from the ``StreamResult`` API. Useful when outputting
++``StreamResult`` events from a ``TestCase`` but the supplied ``TestResult``
++does not support the ``status`` and ``file`` methods.
++
+ ThreadsafeStreamResult
+ ----------------------
  
 diff --git a/testtools/__init__.py b/testtools/__init__.py
 index 1850162..8524221 100644
