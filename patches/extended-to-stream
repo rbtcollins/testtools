@@ -1,5 +1,5 @@
 Bottom: 0ae674457a2da0bb9a43d860a6be1ea88988e029
-Top:    42a9e530d5fd67f2b314c770a7d7a12223fff592
+Top:    b3b29f68fb97a86b02e46de51ddb4015b2dc6e20
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -93,7 +93,7 @@ index 435cb32..2827f0b 100644
      StreamFailfast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index af0d1f0..98ec9d1 100644
+index af0d1f0..6980cc3 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -113,7 +113,7 @@ index af0d1f0..98ec9d1 100644
  from testtools.content import (
      Content,
      text_content,
-@@ -1122,6 +1123,134 @@ class ExtendedToOriginalDecorator(object):
+@@ -1122,6 +1123,142 @@ class ExtendedToOriginalDecorator(object):
          return self.decorated.wasSuccessful()
  
  
@@ -129,15 +129,9 @@ index af0d1f0..98ec9d1 100644
 +
 +    def __init__(self, decorated):
 +        super(ExtendedToStreamDecorator, self).__init__([decorated])
-+        # Deal with failure to call startTestRun (old clients)
-+        # - XXX note that as this forwards events we should defer
-+        # this until a method / lookup is done without calling startTestRun and
-+        # then trigger startTestRun.
-+        self._tags = TagContext()
-+        self.__now = None
-+        StreamSummary.startTestRun(self)
 +        # Deal with mismatched base class constructors.
 +        TestControl.__init__(self)
++        self._started = False
 +
 +    def _get_failfast(self):
 +        return len(self.targets) == 2
@@ -151,6 +145,8 @@ index af0d1f0..98ec9d1 100644
 +    failfast = property(_get_failfast, _set_failfast)
 +
 +    def startTest(self, test):
++        if not self._started:
++            self.startTestRun()
 +        self.status(test.id(), 'inprogress', timestamp=self._now())
 +        self._tags = TagContext(self._tags)
 +
@@ -163,6 +159,8 @@ index af0d1f0..98ec9d1 100644
 +    addFailure=addError
 +
 +    def _convert(self, test, err, details, status, reason=None):
++        if not self._started:
++            self.startTestRun()
 +        test_id = test.id()
 +        now = self._now()
 +        if err is not None:
@@ -212,6 +210,11 @@ index af0d1f0..98ec9d1 100644
 +        self._tags = TagContext()
 +        self.shouldStop = False
 +        self.__now = None
++        self._started = True
++
++    def stopTestRun(self):
++        super(ExtendedToStreamDecorator, self).stopTestRun()
++        self._started = False
 +
 +    def stopTest(self, test):
 +        self._tags = self._tags.parent
@@ -244,12 +247,17 @@ index af0d1f0..98ec9d1 100644
 +    def time(self, a_datetime):
 +        self.__now = a_datetime
 +
++    def wasSuccessful(self):
++        if not self._started:
++            self.startTestRun()
++        return super(ExtendedToStreamDecorator, self).wasSuccessful()
++
 +
  class TestResultDecorator(object):
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index ac31635..f7ab6b2 100644
+index ac31635..9d5af0f 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -20,6 +20,7 @@ from extras import safe_hasattr
@@ -260,7 +268,37 @@ index ac31635..f7ab6b2 100644
      MultiTestResult,
      PlaceHolder,
      StreamFailfast,
-@@ -447,6 +448,12 @@ class TestAdaptedPython27TestResultContract(TestCase, DetailsContract):
+@@ -231,18 +232,21 @@ class TagsContract(Python27Contract):
+     def test_no_tags_by_default(self):
+         # Results initially have no tags.
+         result = self.makeResult()
++        result.startTestRun()
+         self.assertEqual(frozenset(), result.current_tags)
+ 
+     def test_adding_tags(self):
+         # Tags are added using 'tags' and thus become visible in
+         # 'current_tags'.
+         result = self.makeResult()
++        result.startTestRun()
+         result.tags(set(['foo']), set())
+         self.assertEqual(set(['foo']), result.current_tags)
+ 
+     def test_removing_tags(self):
+         # Tags are removed using 'tags'.
+         result = self.makeResult()
++        result.startTestRun()
+         result.tags(set(['foo']), set())
+         result.tags(set(), set(['foo']))
+         self.assertEqual(set(), result.current_tags)
+@@ -250,6 +254,7 @@ class TagsContract(Python27Contract):
+     def test_startTestRun_resets_tags(self):
+         # startTestRun makes a new test run, and thus clears all the tags.
+         result = self.makeResult()
++        result.startTestRun()
+         result.tags(set(['foo']), set())
+         result.startTestRun()
+         self.assertEqual(set(), result.current_tags)
+@@ -447,6 +452,12 @@ class TestAdaptedPython27TestResultContract(TestCase, DetailsContract):
          return ExtendedToOriginalDecorator(Python27TestResult())
  
  
@@ -273,7 +311,7 @@ index ac31635..f7ab6b2 100644
  class TestTestResultDecoratorContract(TestCase, StartTestRunContract):
  
      run_test_with = FullStackRunTest
-@@ -547,6 +554,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
+@@ -547,6 +558,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
          return LoggingStreamResult()
  
  
@@ -286,7 +324,7 @@ index ac31635..f7ab6b2 100644
  class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -708,6 +721,37 @@ class TestStreamToDict(TestCase):
+@@ -708,6 +725,37 @@ class TestStreamToDict(TestCase):
              "application/octet-stream", repr(details['another file'].content_type))
  
  
