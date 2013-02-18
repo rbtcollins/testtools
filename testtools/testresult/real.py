@@ -1272,7 +1272,10 @@ class StreamToExtendedDecorator(StreamResult):
     """
 
     def __init__(self, decorated):
+        # ExtendedToOriginalDecorator takes care of thunking details back to
+        # exceptions/reasons etc.
         self.decorated = ExtendedToOriginalDecorator(decorated)
+        # StreamToDict buffers and gives us individual tests.
         self.hook = StreamToDict(self._handle_tests)
 
     def estimate(self, *args, **kwargs):
