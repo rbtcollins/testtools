@@ -1135,15 +1135,9 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
 
     def __init__(self, decorated):
         super(ExtendedToStreamDecorator, self).__init__([decorated])
-        # Deal with failure to call startTestRun (old clients)
-        # - XXX note that as this forwards events we should defer
-        # this until a method / lookup is done without calling startTestRun and
-        # then trigger startTestRun.
-        self._tags = TagContext()
-        self.__now = None
-        StreamSummary.startTestRun(self)
         # Deal with mismatched base class constructors.
         TestControl.__init__(self)
+        self._started = False
 
     def _get_failfast(self):
         return len(self.targets) == 2
@@ -1157,6 +1151,8 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
     failfast = property(_get_failfast, _set_failfast)
 
     def startTest(self, test):
+        if not self._started:
+            self.startTestRun()
         self.status(test.id(), 'inprogress', timestamp=self._now())
         self._tags = TagContext(self._tags)
 
@@ -1169,6 +1165,8 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
     addFailure=addError
 
     def _convert(self, test, err, details, status, reason=None):
+        if not self._started:
+            self.startTestRun()
         test_id = test.id()
         now = self._now()
         if err is not None:
@@ -1218,6 +1216,11 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
         self._tags = TagContext()
         self.shouldStop = False
         self.__now = None
+        self._started = True
+
+    def stopTestRun(self):
+        super(ExtendedToStreamDecorator, self).stopTestRun()
+        self._started = False
 
     def stopTest(self, test):
         self._tags = self._tags.parent
@@ -1249,6 +1252,11 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
 
     def time(self, a_datetime):
         self.__now = a_datetime
+
+    def wasSuccessful(self):
+        if not self._started:
+            self.startTestRun()
+        return super(ExtendedToStreamDecorator, self).wasSuccessful()
 
 
 class TestResultDecorator(object):

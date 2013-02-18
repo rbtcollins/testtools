@@ -232,18 +232,21 @@ class TagsContract(Python27Contract):
     def test_no_tags_by_default(self):
         # Results initially have no tags.
         result = self.makeResult()
+        result.startTestRun()
         self.assertEqual(frozenset(), result.current_tags)
 
     def test_adding_tags(self):
         # Tags are added using 'tags' and thus become visible in
         # 'current_tags'.
         result = self.makeResult()
+        result.startTestRun()
         result.tags(set(['foo']), set())
         self.assertEqual(set(['foo']), result.current_tags)
 
     def test_removing_tags(self):
         # Tags are removed using 'tags'.
         result = self.makeResult()
+        result.startTestRun()
         result.tags(set(['foo']), set())
         result.tags(set(), set(['foo']))
         self.assertEqual(set(), result.current_tags)
@@ -251,6 +254,7 @@ class TagsContract(Python27Contract):
     def test_startTestRun_resets_tags(self):
         # startTestRun makes a new test run, and thus clears all the tags.
         result = self.makeResult()
+        result.startTestRun()
         result.tags(set(['foo']), set())
         result.startTestRun()
         self.assertEqual(set(), result.current_tags)
