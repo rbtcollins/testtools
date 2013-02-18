@@ -1265,9 +1265,30 @@ class StreamToExtendedDecorator(StreamResult):
 
     def __init__(self, decorated):
         self.decorated = ExtendedToOriginalDecorator(decorated)
+        self.hook = StreamToDict(self._handle_tests)
 
     def estimate(self, *args, **kwargs):
         """Not passed on."""
+
+    def file(self, *args, **kwargs):
+        self.hook.file(*args, **kwargs)
+
+    def status(self, test_id, test_status, *args, **kwargs):
+        if test_status == 'exists':
+            return
+        self.hook.status(test_id, test_status, *args, **kwargs)
+
+    def startTestRun(self):
+        self.decorated.startTestRun()
+        self.hook.startTestRun()
+
+    def stopTestRun(self):
+        self.hook.stopTestRun()
+        self.decorated.stopTestRun()
+
+    def _handle_tests(self, test_dict):
+        case = test_dict_to_case(test_dict)
+        case.run(self.decorated)
 
 
 class TestResultDecorator(object):
