@@ -23,6 +23,7 @@ from testtools import (
     MultiTestResult,
     PlaceHolder,
     StreamResult,
+    StreamToDict,
     Tagger,
     TestCase,
     TestResult,
@@ -53,6 +54,7 @@ from testtools.matchers import (
     Contains,
     DocTestMatches,
     Equals,
+    HasLength,
     MatchesAny,
     MatchesException,
     Raises,
@@ -531,6 +533,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
         return LoggingStreamResult()
 
 
+class TestStreamToDictContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        return StreamToDict(lambda x:None)
+
+
 class TestDoubleStreamResultEvents(TestCase):
 
     def test_startTestRun(self):
@@ -604,6 +612,59 @@ class TestCopyStreamResultCopies(TestCase):
             AllMatch(Equals([('startTestRun',),
                 ('status', 'foo', 'success', set(['tag']), False, 'abc', now)
                 ])))
+
+
+class TestStreamToDict(TestCase):
+
+    def test_hung_test(self):
+        tests = []
+        result = StreamToDict(tests.append)
+        result.startTestRun()
+        result.status('foo', 'inprogress')
+        self.assertEqual([], tests)
+        result.stopTestRun()
+        self.assertEqual([
+            {'id': 'foo', 'tags': set(), 'details': {}, 'status': 'inprogress'}
+            ], tests)
+
+    def test_all_terminal_states_reported(self):
+        tests = []
+        result = StreamToDict(tests.append)
+        result.startTestRun()
+        result.status('success', 'success')
+        result.status('skip', 'skip')
+        result.status('exists', 'exists')
+        result.status('fail', 'fail')
+        result.status('xfail', 'xfail')
+        result.status('uxsuccess', 'uxsuccess')
+        self.assertThat(tests, HasLength(6))
+        self.assertEqual(
+            ['success', 'skip', 'exists', 'fail', 'xfail', 'uxsuccess'],
+            [test['id'] for test in tests])
+        result.stopTestRun()
+        self.assertThat(tests, HasLength(6))
+
+    def test_files_reported(self):
+        tests = []
+        result = StreamToDict(tests.append)
+        result.startTestRun()
+        result.file("some log.txt", _b("1234 log message"), eof=True,
+            mime_type="text/plain; charset=utf8", test_id="foo.bar")
+        result.file("another file", _b("""Traceback..."""),
+            test_id="foo.bar")
+        result.stopTestRun()
+        self.assertThat(tests, HasLength(1))
+        test = tests[0]
+        self.assertEqual("foo.bar", test['id'])
+        self.assertEqual("unknown", test['status'])
+        details = test['details']
+        self.assertEqual(
+            _u("1234 log message"), details['some log.txt'].as_text())
+        self.assertEqual(
+            _b("Traceback..."),
+            _b('').join(details['another file'].iter_bytes()))
+        self.assertEqual(
+            "application/octet-stream", repr(details['another file'].content_type))
 
 
 class TestTestResult(TestCase):
