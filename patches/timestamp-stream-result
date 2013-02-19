@@ -1,5 +1,5 @@
 Bottom: 8e69b322cde926446d7c63ce367e089f2c061fb3
-Top:    8e69b322cde926446d7c63ce367e089f2c061fb3
+Top:    fe646af4189bc5d7b53f7073cba2265aa358ca83
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 21:19:25 +1300
 
@@ -12,4 +12,182 @@ it will be accurate enough.
 
 ---
 
-
+diff --git a/NEWS b/NEWS
+index 7de24c2..72aa272 100644
+--- a/NEWS
++++ b/NEWS
+@@ -16,6 +16,9 @@ Improvements
+ * New class ``StreamResult`` which defines the API for the new result type.
+   (Robert Collins)
+ 
++* New support class ``TimestampingStreamResult`` which adds a timestamp to
++  events with no timestamp. (Robert Collins)
++
+ * New support class ``CopyStreamResult`` which forwards events onto multiple
+   ``StreamResult`` objects (each of which receives all the events).
+   (Robert Collins)
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index 736beff..f4c9eaa 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -203,6 +203,15 @@ at once. Each method takes out a lock around the decorated result to prevent
+ race conditions. The ``startTestRun`` and ``stopTestRun`` methods are not
+ forwarded to prevent the decorated result having them called multiple times.
+ 
++TimestampingStreamResult
++------------------------
++
++This is a ``StreamResult`` decorator for adding timestamps to events that lack
++them. This allows writing the simplest possible generators of events and
++passing the events via this decorator to get timestamped data. As long as
++no buffering/queueing or blocking happen before the timestamper sees the event
++the timestamp will be as accurate as if the original event had it.
++
+ TestResult.addSkip
+ ------------------
+ 
+diff --git a/testtools/__init__.py b/testtools/__init__.py
+index 6a965cd..b8a8903 100644
+--- a/testtools/__init__.py
++++ b/testtools/__init__.py
+@@ -34,6 +34,7 @@ __all__ = [
+     'StreamToExtendedDecorator',
+     'TestControl',
+     'ThreadsafeForwardingResult',
++    'TimestampingStreamResult',
+     'try_import',
+     'try_imports',
+     ]
+@@ -88,6 +89,7 @@ else:
+         TestResultDecorator,
+         TextTestResult,
+         ThreadsafeForwardingResult,
++        TimestampingStreamResult,
+         )
+     from testtools.testsuite import (
+         ConcurrentTestSuite,
+diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
+index 8f0fd76..36830af 100644
+--- a/testtools/testresult/__init__.py
++++ b/testtools/testresult/__init__.py
+@@ -19,6 +19,7 @@ __all__ = [
+     'TestResultDecorator',
+     'TextTestResult',
+     'ThreadsafeForwardingResult',
++    'TimestampingStreamResult',
+     ]
+ 
+ from testtools.testresult.real import (
+@@ -38,4 +39,5 @@ from testtools.testresult.real import (
+     TestResultDecorator,
+     TextTestResult,
+     ThreadsafeForwardingResult,
++    TimestampingStreamResult,
+     )
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index cbb8edf..3e20211 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -16,6 +16,7 @@ __all__ = [
+     'TestResult',
+     'TestResultDecorator',
+     'ThreadsafeForwardingResult',
++    'TimestampingStreamResult',
+     ]
+ 
+ import datetime
+@@ -1466,6 +1467,30 @@ class TestByTestResult(TestResult):
+         self._details = details
+ 
+ 
++class TimestampingStreamResult(CopyStreamResult):
++    """A StreamResult decorator that assigns a timestamp when none is present.
++
++    This is convenient for ensuring events are timestamped.
++    """
++
++    def __init__(self, target):
++        super(TimestampingStreamResult, self).__init__([target])
++
++    def file(self, *args, **kwargs):
++        timestamp = kwargs.pop('timestamp', None)
++        if timestamp is None:
++            timestamp = datetime.datetime.now(utc)
++        super(TimestampingStreamResult, self).file(
++            *args, timestamp=timestamp, **kwargs)
++
++    def status(self, *args, **kwargs):
++        timestamp = kwargs.pop('timestamp', None)
++        if timestamp is None:
++            timestamp = datetime.datetime.now(utc)
++        super(TimestampingStreamResult, self).status(
++            *args, timestamp=timestamp, **kwargs)
++
++
+ class _StringException(Exception):
+     """An exception made from an arbitrary string."""
+ 
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index fb20884..84cfc70 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -36,6 +36,7 @@ from testtools import (
+     TestByTestResult,
+     TextTestResult,
+     ThreadsafeForwardingResult,
++    TimestampingStreamResult,
+     testresult,
+     )
+ from testtools.compat import (
+@@ -2613,6 +2614,51 @@ class TestTagger(TestCase):
+              ], result._events)
+ 
+ 
++class TestTimestampingStreamResult(TestCase):
++
++    def test_startTestRun(self):
++        result = TimestampingStreamResult(LoggingStreamResult())
++        result.startTestRun()
++        self.assertEqual([('startTestRun',)], result.targets[0]._events)
++
++    def test_stopTestRun(self):
++        result = TimestampingStreamResult(LoggingStreamResult())
++        result.stopTestRun()
++        self.assertEqual([('stopTestRun',)], result.targets[0]._events)
++
++    def test_file_no_timestamp(self):
++        result = TimestampingStreamResult(LoggingStreamResult())
++        result.file("A", "B", eof="C", mime_type="D", test_id="E", route_code="F")
++        events = result.targets[0]._events
++        self.assertThat(events, HasLength(1))
++        self.assertThat(events[0], HasLength(8))
++        self.assertEqual(
++            ("file", "A", "B", "C", "D", "E", "F"), events[0][:7])
++        self.assertNotEqual(None, events[0][7])
++        self.assertIsInstance(events[0][7], datetime.datetime)
++
++    def test_file_timestamp(self):
++        result = TimestampingStreamResult(LoggingStreamResult())
++        result.file("A", "B", timestamp="F")
++        self.assertEqual("F", result.targets[0]._events[0][7])
++
++    def test_status_no_timestamp(self):
++        result = TimestampingStreamResult(LoggingStreamResult())
++        result.status("A", "B", test_tags="C", runnable="D", route_code="E")
++        events = result.targets[0]._events
++        self.assertThat(events, HasLength(1))
++        self.assertThat(events[0], HasLength(7))
++        self.assertEqual(
++            ("status", "A", "B", "C", "D", "E"), events[0][:6])
++        self.assertNotEqual(None, events[0][6])
++        self.assertIsInstance(events[0][6], datetime.datetime)
++
++    def test_status_timestamp(self):
++        result = TimestampingStreamResult(LoggingStreamResult())
++        result.status("A", "B", timestamp="F")
++        self.assertEqual("F", result.targets[0]._events[0][6])
++
++
+ def test_suite():
+     from unittest import TestLoader
+     return TestLoader().loadTestsFromName(__name__)
