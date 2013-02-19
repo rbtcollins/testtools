@@ -1,5 +1,5 @@
 Bottom: c7e77de36b7c7cd8b0f19768cd8ae7d3af8b76b4
-Top:    811e03ecb2557253e4d730b9dcd0428ce62ae4d7
+Top:    7142312d69a8a3a5fdaedfbf53dba3da85536cfc
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 21:28:29 +1300
 
@@ -11,6 +11,19 @@ for most terminal filters.
 
 ---
 
+diff --git a/.travis.yml b/.travis.yml
+index 1bcce89..2a39c55 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -8,7 +8,7 @@ python:
+   - "pypy"
+ 
+ install:
+-  - pip install -q --use-mirrors fixtures extras
++  - pip install -q --use-mirrors fixtures extras python-mimeparse
+   - python setup.py -q install
+ 
+ script:
 diff --git a/NEWS b/NEWS
 index 01084dd..59073ef 100644
 --- a/NEWS
