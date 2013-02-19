@@ -153,8 +153,9 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
             semaphore = threading.Semaphore(1)
             for test, route_code in tests:
                 process_result = testtools.ExtendedToStreamDecorator(
+                    testtools.TimestampingStreamResult(
                     testtools.ThreadsafeStreamResult(
-                        result, semaphore, route_code))
+                        result, semaphore, route_code)))
                 reader_thread = threading.Thread(
                     target=self._run_test, args=(test, process_result, queue))
                 threads[test] = reader_thread, process_result

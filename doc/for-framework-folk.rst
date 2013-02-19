@@ -327,9 +327,9 @@ A variant of ConcurrentTestSuite that uses the new StreamResult API instead of
 the TestResult API. ConcurrentStreamTestSuite coordinates running some number
 of test/suites concurrently, with one ThreadsafeStreamResult per test/suite.
 
-Each test/suite gets given its own ExtendedToStreamDecorator wrapped
-ThreadsafeStreamResult instance, forwarding onto the StreamResult that
-ConcurrentStreamTestSuite.run was called with.
+Each test/suite gets given its own ExtendedToStreamDecorator +
+TimestampingStreamResult wrapped ThreadsafeStreamResult instance, forwarding
+onto the StreamResult that ConcurrentStreamTestSuite.run was called with.
 
 ConcurrentStreamTestSuite is a thin shim and it is easy to implement your own
 specialised form if that is needed.
