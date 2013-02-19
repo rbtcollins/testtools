@@ -659,14 +659,6 @@ class ThreadsafeStreamResult(StreamResult):
         self.semaphore = semaphore
         self.routing_code = routing_code
 
-    def estimate(self, count, route_code=None, timestamp=None):
-        self.semaphore.acquire()
-        try:
-            self.result.estimate(count, route_code=self.route_code(route_code),
-                timestamp=timestamp)
-        finally:
-            self.semaphore.release()
-
     def file(self, file_name, file_bytes, eof=False, mime_type=None,
         test_id=None, route_code=None, timestamp=None):
         self.semaphore.acquire()
