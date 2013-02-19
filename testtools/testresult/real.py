@@ -19,6 +19,7 @@ __all__ = [
     'TestResultDecorator',
     'ThreadsafeForwardingResult',
     'TimestampingStreamResult',
+    'ThreadsafeStreamResult',
     ]
 
 import datetime
@@ -638,6 +639,65 @@ class TestControl(object):
     def stop(self):
         """Indicate that tests should stop running."""
         self.shouldStop = True
+
+
+class ThreadsafeStreamResult(StreamResult):
+    """A StreamResult which ensures the target does not receive mixed up calls.
+
+    Multiple ``ThreadsafeStreamResult`` objects can forward to the same target
+    and that target result will only ever receive one event at a time.
+
+    This is enforced using a semaphore, which further guarantees that events
+    will be sent atomically even if the ``ThreadsafeStreamResult`` callers are
+    in different threads.
+
+    Events have their route code updated on the way through. A code of None
+    becomes the supplied code, any other code has is prefixed with the supplied
+    code hypen, old code.
+
+    startTestRun and stopTestRun are not forwarded (as otherwise the recipients
+    would have these events called multiple times). 
+
+    ``ThreadsafeStreamResult`` is typically used by
+    ``ConcurrentStreamTestSuite``, which creates one ``ThreadsafeStreamResult``
+    per thread, each of which wraps the StreamResult that
+    ``ConcurrentStreamTestSuite.run()`` is called with.
+
+    Unlike ThreadsafeForwardingResult which this supercedes, no buffering takes
+    place - any event supplied to a ThreadsafeStreamResult will be forwarded
+    as soon as the semaphore is obtained, and the semaphore is only held around
+    one call.
+    """
+
+    def __init__(self, target, semaphore, routing_code):
+        """Create a ThreadsafeStreamResult forwarding to target.
+
+        :param target: A ``StreamResult``.
+        :param semaphore: A ``threading.Semaphore`` with limit 1.
+        :param routing_code: The routing code to apply to messages.
+        """
+        super(ThreadsafeStreamResult, self).__init__()
+        self.result = target
+        self.semaphore = semaphore
+        self.routing_code = routing_code
+
+    def status(self, test_id=None, test_status=None, test_tags=None,
+        runnable=True, file_name=None, file_bytes=None, eof=False,
+        mime_type=None, route_code=None, timestamp=None):
+        self.semaphore.acquire()
+        try:
+            self.result.status(test_id=test_id, test_status=test_status,
+                test_tags=test_tags, runnable=runnable, file_name=file_name,
+                file_bytes=file_bytes, eof=eof, mime_type=mime_type,
+                route_code=self.route_code(route_code), timestamp=timestamp)
+        finally:
+            self.semaphore.release()
+
+    def route_code(self, route_code):
+        """Adjust route_code on the way through."""
+        if route_code is None:
+            return self.routing_code
+        return self.routing_code + _u("/") + route_code
 
 
 class MultiTestResult(TestResult):
