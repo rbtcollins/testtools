@@ -20,6 +20,7 @@ __all__ = [
     'TestResultDecorator',
     'TextTestResult',
     'ThreadsafeForwardingResult',
+    'ThreadsafeStreamResult',
     'TimestampingStreamResult',
     ]
 
@@ -41,5 +42,6 @@ from testtools.testresult.real import (
     TestResultDecorator,
     TextTestResult,
     ThreadsafeForwardingResult,
+    ThreadsafeStreamResult,
     TimestampingStreamResult,
     )
