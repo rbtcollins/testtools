@@ -129,9 +129,41 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
             ]), set(event[0:3] + (freeze(event[3]),) + event[4:6] + (None,)
                 for event in result._events))
 
+    def test_broken_runner(self):
+        # If the object called breaks, the stream is informed about it
+        # regardless.
+        class BrokenTest(object):
+            # broken - no result parameter!
+            def __call__(self):
+                pass
+            def run(self):
+                pass
+        result = LoggingStream()
+        original_suite = unittest.TestSuite([BrokenTest()])
+        suite = ConcurrentStreamTestSuite(original_suite, self.split_suite)
+        suite.run(result)
+        events = [event[0:6] + (None,) for event in result._events]
+        self.assertEqual([
+            ('status', "broken-runner-u'0'", 'inprogress', None, True, u'0', None),
+            ('file', 'traceback', """\
+Traceback (most recent call last):
+  File "testtools/testsuite.py", line 181, in _run_test
+    test.run(process_result)
+TypeError: run() takes exactly 1 argument (2 given)
+""",
+             False,
+             'text/x-traceback; charset="utf8"; language="python"',
+             "broken-runner-u'0'",
+             None),
+             ('file', 'traceback', '', True,
+              'text/x-traceback; charset="utf8"; language="python"',
+              "broken-runner-u'0'", None),
+             ('status', "broken-runner-u'0'", 'fail', set(), True, u'0', None)
+            ], events)
+
     def split_suite(self, suite):
-        tests = list(iterate_tests(suite))
-        return (tests[0], _u("0")), (tests[1], _u("1"))
+        tests = list(enumerate(iterate_tests(suite)))
+        return [(test, _u(str(pos))) for pos, test in tests]
 
 
 class TestFixtureSuite(TestCase):

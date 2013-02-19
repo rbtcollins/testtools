@@ -11,6 +11,7 @@ __all__ = [
   'sorted_tests',
   ]
 
+import sys
 import threading
 import unittest
 
@@ -157,7 +158,8 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
                     testtools.ThreadsafeStreamResult(
                         result, semaphore, route_code)))
                 reader_thread = threading.Thread(
-                    target=self._run_test, args=(test, process_result, queue))
+                    target=self._run_test,
+                    args=(test, process_result, queue, route_code))
                 threads[test] = reader_thread, process_result
                 reader_thread.start()
             while threads:
@@ -171,11 +173,18 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
                 process_result.stop()
             raise
 
-    def _run_test(self, test, process_result, queue):
+    def _run_test(self, test, process_result, queue, route_code):
         process_result.startTestRun()
         try:
             try:
-                test.run(process_result)
+                try:
+                    test.run(process_result)
+                except Exception as e:
+                    # The run logic itself failed.
+                    case = testtools.PlaceHolder(
+                        "broken-runner-%r" % (route_code,),
+                        outcome="addError", error=sys.exc_info())
+                    case.run(process_result)
             finally:
                 process_result.stopTestRun()
         finally:
