@@ -1,5 +1,5 @@
 Bottom: 93ab9c919cf332f06d26416850db3c97943ba045
-Top:    28dff88266c443015bfabe14996af2961a92fb09
+Top:    61338ff590b333a2c8900622fd4062162dbb6756
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -276,7 +276,7 @@ index e17416f..0994b99 100644
  
      def make_26_result(self):
 diff --git a/testtools/tests/test_testsuite.py b/testtools/tests/test_testsuite.py
-index d220709..8e842be 100644
+index d220709..2c7fbb7 100644
 --- a/testtools/tests/test_testsuite.py
 +++ b/testtools/tests/test_testsuite.py
 @@ -10,12 +10,15 @@ from extras import try_import
@@ -303,7 +303,7 @@ index d220709..8e842be 100644
  class TestConcurrentTestSuiteRun(TestCase):
  
      def test_trivial(self):
-@@ -73,6 +77,63 @@ class TestConcurrentTestSuiteRun(TestCase):
+@@ -73,6 +77,95 @@ class TestConcurrentTestSuiteRun(TestCase):
          return tests[0], tests[1]
  
  
@@ -359,19 +359,51 @@ index d220709..8e842be 100644
 +            ]), set(event[0:3] + (freeze(event[3]),) + event[4:6] + (None,)
 +                for event in result._events))
 +
++    def test_broken_runner(self):
++        # If the object called breaks, the stream is informed about it
++        # regardless.
++        class BrokenTest(object):
++            # broken - no result parameter!
++            def __call__(self):
++                pass
++            def run(self):
++                pass
++        result = LoggingStream()
++        original_suite = unittest.TestSuite([BrokenTest()])
++        suite = ConcurrentStreamTestSuite(original_suite, self.split_suite)
++        suite.run(result)
++        events = [event[0:6] + (None,) for event in result._events]
++        self.assertEqual([
++            ('status', "broken-runner-u'0'", 'inprogress', None, True, u'0', None),
++            ('file', 'traceback', """\
++Traceback (most recent call last):
++  File "testtools/testsuite.py", line 181, in _run_test
++    test.run(process_result)
++TypeError: run() takes exactly 1 argument (2 given)
++""",
++             False,
++             'text/x-traceback; charset="utf8"; language="python"',
++             "broken-runner-u'0'",
++             None),
++             ('file', 'traceback', '', True,
++              'text/x-traceback; charset="utf8"; language="python"',
++              "broken-runner-u'0'", None),
++             ('status', "broken-runner-u'0'", 'fail', set(), True, u'0', None)
++            ], events)
++
 +    def split_suite(self, suite):
-+        tests = list(iterate_tests(suite))
-+        return (tests[0], _u("0")), (tests[1], _u("1"))
++        tests = list(enumerate(iterate_tests(suite)))
++        return [(test, _u(str(pos))) for pos, test in tests]
 +
 +
  class TestFixtureSuite(TestCase):
  
      def setUp(self):
 diff --git a/testtools/testsuite.py b/testtools/testsuite.py
-index 39a68d7..8c6d84b 100644
+index 39a68d7..38fc32f 100644
 --- a/testtools/testsuite.py
 +++ b/testtools/testsuite.py
-@@ -5,6 +5,7 @@
+@@ -5,11 +5,13 @@
  __metaclass__ = type
  __all__ = [
    'ConcurrentTestSuite',
@@ -379,7 +411,13 @@ index 39a68d7..8c6d84b 100644
    'filter_by_ids',
    'iterate_tests',
    'sorted_tests',
-@@ -104,6 +105,83 @@ class ConcurrentTestSuite(unittest.TestSuite):
+   ]
+ 
++import sys
+ import threading
+ import unittest
+ 
+@@ -104,6 +106,91 @@ class ConcurrentTestSuite(unittest.TestSuite):
              queue.put(test)
  
  
@@ -435,7 +473,8 @@ index 39a68d7..8c6d84b 100644
 +                    testtools.ThreadsafeStreamResult(
 +                        result, semaphore, route_code)))
 +                reader_thread = threading.Thread(
-+                    target=self._run_test, args=(test, process_result, queue))
++                    target=self._run_test,
++                    args=(test, process_result, queue, route_code))
 +                threads[test] = reader_thread, process_result
 +                reader_thread.start()
 +            while threads:
@@ -449,11 +488,18 @@ index 39a68d7..8c6d84b 100644
 +                process_result.stop()
 +            raise
 +
-+    def _run_test(self, test, process_result, queue):
++    def _run_test(self, test, process_result, queue, route_code):
 +        process_result.startTestRun()
 +        try:
 +            try:
-+                test.run(process_result)
++                try:
++                    test.run(process_result)
++                except Exception as e:
++                    # The run logic itself failed.
++                    case = testtools.PlaceHolder(
++                        "broken-runner-%r" % (route_code,),
++                        outcome="addError", error=sys.exc_info())
++                    case.run(process_result)
 +            finally:
 +                process_result.stopTestRun()
 +        finally:
