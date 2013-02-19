@@ -1,5 +1,5 @@
 Bottom: c7e77de36b7c7cd8b0f19768cd8ae7d3af8b76b4
-Top:    90aed4c3644c20cc9c7b14490a253b8cefa4a8dd
+Top:    811e03ecb2557253e4d730b9dcd0428ce62ae4d7
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 21:28:29 +1300
 
@@ -55,15 +55,15 @@ index 3bb4222..d3b7c0f 100644
  ----------------------
  
 diff --git a/setup.py b/setup.py
-index 2e079bf..2ad6a62 100755
+index 2e079bf..4b9257d 100755
 --- a/setup.py
 +++ b/setup.py
 @@ -69,5 +69,7 @@ setup(name='testtools',
        zip_safe=False,
        install_requires=[
          'extras',
-+        # 'mimetype' has not been uploaded by the maintainer with Python3 compat
-+        'python-mimetype',
++        # 'mimeparse' has not been uploaded by the maintainer with Python3 compat
++        'python-mimeparse',
          ],
        )
 diff --git a/testtools/__init__.py b/testtools/__init__.py
