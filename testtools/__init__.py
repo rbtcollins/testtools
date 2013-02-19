@@ -6,6 +6,7 @@ __all__ = [
     'clone_test_with_new_id',
     'CopyStreamResult',
     'ConcurrentTestSuite',
+    'ConcurrentStreamTestSuite',
     'ErrorHolder',
     'ExpectedException',
     'ExtendedToOriginalDecorator',
@@ -34,6 +35,7 @@ __all__ = [
     'StreamToExtendedDecorator',
     'TestControl',
     'ThreadsafeForwardingResult',
+    'ThreadsafeStreamResult',
     'try_import',
     'try_imports',
     ]
@@ -88,9 +90,11 @@ else:
         TestResultDecorator,
         TextTestResult,
         ThreadsafeForwardingResult,
+        ThreadsafeStreamResult,
         )
     from testtools.testsuite import (
         ConcurrentTestSuite,
+        ConcurrentStreamTestSuite,
         FixtureSuite,
         iterate_tests,
         )
