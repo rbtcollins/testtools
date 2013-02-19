@@ -586,13 +586,6 @@ class TestCopyStreamResultCopies(TestCase):
         self.assertThat(self.targets,
             AllMatch(Equals([('startTestRun',), ('stopTestRun',)])))
 
-    def test_estimate(self):
-        self.result.startTestRun()
-        now = datetime.datetime.now(utc)
-        self.result.estimate(2, route_code='abc', timestamp=now)
-        self.assertThat(self.targets,
-            AllMatch(Equals([('startTestRun',), ('estimate', 2, 'abc', now)])))
-
     def test_file(self):
         self.result.startTestRun()
         now = datetime.datetime.now(utc)
