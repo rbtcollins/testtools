@@ -1,5 +1,5 @@
 Bottom: fe646af4189bc5d7b53f7073cba2265aa358ca83
-Top:    f37178121797e9626e50b57cee47dd45c73d593e
+Top:    ff366df14fc2a4b7cb1de5693f6dacd256163fed
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -33,7 +33,7 @@ index 72aa272..678604a 100644
    captures all the StreamResult events. (Robert Collins)
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index f4c9eaa..cd76ada 100644
+index f4c9eaa..a4b54d2 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -320,6 +320,20 @@ ConcurrentTestSuite uses the helper to get a number of separate runnable
@@ -47,9 +47,9 @@ index f4c9eaa..cd76ada 100644
 +the TestResult API. ConcurrentStreamTestSuite coordinates running some number
 +of test/suites concurrently, with one ThreadsafeStreamResult per test/suite.
 +
-+Each test/suite gets given its own ExtendedToStreamDecorator wrapped
-+ThreadsafeStreamResult instance, forwarding onto the StreamResult that
-+ConcurrentStreamTestSuite.run was called with.
++Each test/suite gets given its own ExtendedToStreamDecorator +
++TimestampingStreamResult wrapped ThreadsafeStreamResult instance, forwarding
++onto the StreamResult that ConcurrentStreamTestSuite.run was called with.
 +
 +ConcurrentStreamTestSuite is a thin shim and it is easy to implement your own
 +specialised form if that is needed.
@@ -391,7 +391,7 @@ index d220709..8e842be 100644
  
      def setUp(self):
 diff --git a/testtools/testsuite.py b/testtools/testsuite.py
-index 39a68d7..b45ecf5 100644
+index 39a68d7..8c6d84b 100644
 --- a/testtools/testsuite.py
 +++ b/testtools/testsuite.py
 @@ -5,6 +5,7 @@
@@ -402,7 +402,7 @@ index 39a68d7..b45ecf5 100644
    'filter_by_ids',
    'iterate_tests',
    'sorted_tests',
-@@ -104,6 +105,82 @@ class ConcurrentTestSuite(unittest.TestSuite):
+@@ -104,6 +105,83 @@ class ConcurrentTestSuite(unittest.TestSuite):
              queue.put(test)
  
  
@@ -454,8 +454,9 @@ index 39a68d7..b45ecf5 100644
 +            semaphore = threading.Semaphore(1)
 +            for test, route_code in tests:
 +                process_result = testtools.ExtendedToStreamDecorator(
++                    testtools.TimestampingStreamResult(
 +                    testtools.ThreadsafeStreamResult(
-+                        result, semaphore, route_code))
++                        result, semaphore, route_code)))
 +                reader_thread = threading.Thread(
 +                    target=self._run_test, args=(test, process_result, queue))
 +                threads[test] = reader_thread, process_result
