@@ -36,6 +36,7 @@ from testtools import (
     TestByTestResult,
     TextTestResult,
     ThreadsafeForwardingResult,
+    ThreadsafeStreamResult,
     TimestampingStreamResult,
     testresult,
     )
@@ -1598,6 +1599,53 @@ class TestMergeTags(TestCase):
         expected = set(['coming', 'present']), set(['missing'])
         self.assertEqual(
             expected, _merge_tags(current_tags, changing_tags))
+
+
+class TestThreadStreamResult(TestCase):
+
+    def make_result(self, target):
+        semaphore = threading.Semaphore(1)
+        return (ThreadsafeStreamResult(target, semaphore, "foo"),
+            semaphore)
+
+    def test_status(self):
+        class CallbackStream(object):
+            def status(stream, test_id=None, test_status=None, test_tags=None,
+                runnable=True, file_name=None, file_bytes=None, eof=False,
+                mime_type=None, route_code=None, timestamp=None):
+                self.assertFalse(semaphore.acquire(False))
+                self.assertEqual("test", test_id)
+                self.assertEqual("fail", test_status)
+                self.assertEqual(set(["quux"]), test_tags)
+                self.assertEqual(False, runnable)
+                self.assertEqual("file", file_name)
+                self.assertEqual(_b("content"), file_bytes)
+                self.assertEqual(True, eof)
+                self.assertEqual("quux", mime_type)
+                self.assertEqual("test", test_id)
+                self.assertEqual(expected_route, route_code)
+                self.assertEqual(expected_time, timestamp)
+        result, semaphore = self.make_result(CallbackStream())
+        expected_route = "foo"
+        expected_time = None
+        result.status("test", "fail", test_tags=set(["quux"]), runnable=False,
+            file_name="file", file_bytes=_b("content"), eof=True,
+            mime_type="quux", route_code=None, timestamp=None)
+        expected_route = "foo/bar"
+        expected_time = datetime.datetime.now(utc)
+        result.status("test", "fail", test_tags=set(["quux"]), runnable=False,
+            file_name="file", file_bytes=_b("content"), eof=True,
+            mime_type="quux", route_code="bar", timestamp=expected_time)
+
+    def testStartTestRun(self):
+        t = object()
+        result, semaphore = self.make_result(t)
+        result.startTestRun()
+
+    def testStopTestRun(self):
+        t = object()
+        result, semaphore = self.make_result(t)
+        result.startTestRun()
 
 
 class TestExtendedToOriginalResultDecoratorBase(TestCase):
