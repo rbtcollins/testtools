@@ -1,5 +1,5 @@
 Bottom: 12e7419973e486e7fbc0673b2caafbfc076f20e1
-Top:    84ca68bf6b204cfefcddb3ddc5d4580b870f86df
+Top:    fe71896990fca0107fda912bb7b89211913b0aaa
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:51:04 +1300
 
@@ -23,7 +23,7 @@ index 5d001ee..4030603 100644
  ~~~~~~
  
 diff --git a/testtools/testresult/doubles.py b/testtools/testresult/doubles.py
-index 1865e93..83c967e 100644
+index 1865e93..ede3c18 100644
 --- a/testtools/testresult/doubles.py
 +++ b/testtools/testresult/doubles.py
 @@ -6,6 +6,7 @@ __all__ = [
@@ -34,7 +34,7 @@ index 1865e93..83c967e 100644
      ]
  
  
-@@ -148,3 +149,32 @@ class ExtendedTestResult(Python27TestResult):
+@@ -148,3 +149,29 @@ class ExtendedTestResult(Python27TestResult):
  
      def wasSuccessful(self):
          return self._was_successful
@@ -55,9 +55,6 @@ index 1865e93..83c967e 100644
 +    def stopTestRun(self):
 +        self._events.append(('stopTestRun',))
 +
-+    def estimate(self, count, route_code=None, timestamp=None):
-+        self._events.append(('estimate', count, route_code, timestamp))
-+
 +    def file(self, file_name, file_bytes, eof=False, mime_type=None,
 +        test_id=None, route_code=None, timestamp=None):
 +        self._events.append(('file', file_name, file_bytes, eof, mime_type,
@@ -68,7 +65,7 @@ index 1865e93..83c967e 100644
 +        self._events.append(('status', test_id, test_status, test_tags,
 +            runnable, route_code, timestamp))
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 63464aa..3d160f9 100644
+index 63464aa..13e87e1 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -65,6 +65,7 @@ from testtools.testresult.doubles import (
@@ -79,7 +76,7 @@ index 63464aa..3d160f9 100644
      )
  from testtools.testresult.real import (
      _details_to_str,
-@@ -516,6 +517,56 @@ class TestBaseStreamResultContract(TestCase, TestStreamResultContract):
+@@ -516,6 +517,48 @@ class TestBaseStreamResultContract(TestCase, TestStreamResultContract):
          return StreamResult()
  
  
@@ -101,14 +98,6 @@ index 63464aa..3d160f9 100644
 +        result.startTestRun()
 +        result.stopTestRun()
 +        self.assertEqual([('startTestRun',), ('stopTestRun',)], result._events)
-+
-+    def test_estimate(self):
-+        result = LoggingStreamResult()
-+        result.startTestRun()
-+        now = datetime.datetime.now(utc)
-+        result.estimate(2, route_code='abc', timestamp=now)
-+        self.assertEqual(
-+            [('startTestRun',), ('estimate', 2, 'abc', now)], result._events)
 +
 +    def test_file(self):
 +        result = LoggingStreamResult()
