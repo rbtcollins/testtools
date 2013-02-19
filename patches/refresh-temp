@@ -1,0 +1,61 @@
+Bottom: 83b3fce5c1f13f56c277002e07a8020e8696550c
+Top:    12e7419973e486e7fbc0673b2caafbfc076f20e1
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-19 22:10:51 +1300
+
+Refresh of define-stream-result
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 22f3b1f..c451cfa 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -268,8 +268,8 @@ class StreamResult(object):
+     ----------------
+ 
+     StreamResult is built to process events that are emitted by tests during a
+-    test run. The test run may be running concurrently, and even be spread out
+-    across multiple machines.
++    test run or test enumeration. The test run may be running concurrently, and
++    even be spread out across multiple machines.
+ 
+     All events are timestamped to prevent network buffering or scheduling
+     latency causing false timing reports. Timestamps are datetime objects in
+@@ -303,14 +303,6 @@ class StreamResult(object):
+         considered failed-or-hung.
+         """
+ 
+-    def estimate(self, count, route_code=None, timestamp=None):
+-        """Provide an estimated count of tests that will be run.
+-
+-        This is intended to allow user interfaces that output progress
+-        indicators such as "30/120 tests complete". Each estimate given
+-        replaces any prior estimate.
+-        """
+-
+     def file(self, file_name, file_bytes, eof=False, mime_type=None,
+         test_id=None, route_code=None, timestamp=None):
+         """Inform the result about the contents of an attachment.
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index b79f288..63464aa 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -457,17 +457,6 @@ class TestStreamResultContract(object):
+         result.startTestRun()
+         result.stopTestRun()
+ 
+-    def test_estimate(self):
+-        result = self._make_result()
+-        result.startTestRun()
+-        self.addCleanup(result.stopTestRun)
+-        result.estimate(0)
+-        result.estimate(10)
+-        result.estimate(5, route_code=_u("1234"))
+-        now = datetime.datetime.now(utc)
+-        result.estimate(5, route_code=_u("1234"), timestamp=now)
+-        result.estimate(5, timestamp=now)
+-
+     def test_file(self):
+         result = self._make_result()
+         result.startTestRun()
