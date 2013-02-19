@@ -34,6 +34,7 @@ __all__ = [
     'StreamToExtendedDecorator',
     'TestControl',
     'ThreadsafeForwardingResult',
+    'ThreadsafeStreamResult',
     'try_import',
     'try_imports',
     ]
@@ -88,6 +89,7 @@ else:
         TestResultDecorator,
         TextTestResult,
         ThreadsafeForwardingResult,
+        ThreadsafeStreamResult,
         )
     from testtools.testsuite import (
         ConcurrentTestSuite,
