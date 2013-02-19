@@ -1,0 +1,22 @@
+Bottom: 9f362a5a3b59464ea0da7198570e48c500ef1058
+Top:    b9d2d2f4dc1ea636832d5a5ef99d54b8e0da2732
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-19 22:16:30 +1300
+
+Refresh of stream-to-extended-result
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 9a7dd41..33b634f 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -1266,9 +1266,6 @@ class StreamToExtendedDecorator(StreamResult):
+         # StreamToDict buffers and gives us individual tests.
+         self.hook = StreamToDict(self._handle_tests)
+ 
+-    def estimate(self, *args, **kwargs):
+-        """Not passed on."""
+-
+     def file(self, *args, **kwargs):
+         self.hook.file(*args, **kwargs)
