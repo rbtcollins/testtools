@@ -1266,9 +1266,6 @@ class StreamToExtendedDecorator(StreamResult):
         # StreamToDict buffers and gives us individual tests.
         self.hook = StreamToDict(self._handle_tests)
 
-    def estimate(self, *args, **kwargs):
-        """Not passed on."""
-
     def file(self, *args, **kwargs):
         self.hook.file(*args, **kwargs)
 
