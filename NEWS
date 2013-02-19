@@ -26,6 +26,9 @@ Improvements
 * New support class ``TimestampingStreamResult`` which adds a timestamp to
   events with no timestamp. (Robert Collins)
 
+* New support class ``ConcurrentStreamTestSuite`` for convenient construction
+  and utilisation of ``ThreadsafeStreamResult`` objects. (Robert Collins)
+
 * New support class ``CopyStreamResult`` which forwards events onto multiple
   ``StreamResult`` objects (each of which receives all the events).
   (Robert Collins)
@@ -57,6 +60,9 @@ Improvements
   ``StreamResult`` API calls into ``ExtendedTestResult`` (or any older
   ``TestResult``) calls. This permits using un-migrated result objects with
   new runners / tests. (Robert Collins)
+
+* New support class ``ThreadsafeStreamResult`` for sending messages to one
+  ``StreamResult`` from multiple threads. (Robert Collins)
 
 * New test support class ``testtools.testresult.doubles.StreamResult``, which
   captures all the StreamResult events. (Robert Collins)
