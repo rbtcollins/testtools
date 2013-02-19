@@ -1,5 +1,5 @@
-Bottom: 0ae674457a2da0bb9a43d860a6be1ea88988e029
-Top:    b3b29f68fb97a86b02e46de51ddb4015b2dc6e20
+Bottom: d31135a602b547ad42cc2b8ed337a338e8dd261f
+Top:    8aa04ad7788e0e33a5d0a4a71868c7f1ed7fd0cd
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -93,7 +93,7 @@ index 435cb32..2827f0b 100644
      StreamFailfast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index af0d1f0..6980cc3 100644
+index 2520dad..9d5c5e8 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -113,7 +113,7 @@ index af0d1f0..6980cc3 100644
  from testtools.content import (
      Content,
      text_content,
-@@ -1122,6 +1123,142 @@ class ExtendedToOriginalDecorator(object):
+@@ -1110,6 +1111,142 @@ class ExtendedToOriginalDecorator(object):
          return self.decorated.wasSuccessful()
  
  
@@ -257,7 +257,7 @@ index af0d1f0..6980cc3 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index ac31635..9d5af0f 100644
+index fc97646..821d8d9 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -20,6 +20,7 @@ from extras import safe_hasattr
@@ -311,7 +311,7 @@ index ac31635..9d5af0f 100644
  class TestTestResultDecoratorContract(TestCase, StartTestRunContract):
  
      run_test_with = FullStackRunTest
-@@ -547,6 +558,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
+@@ -536,6 +547,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
          return LoggingStreamResult()
  
  
@@ -324,7 +324,7 @@ index ac31635..9d5af0f 100644
  class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -708,6 +725,37 @@ class TestStreamToDict(TestCase):
+@@ -682,6 +699,37 @@ class TestStreamToDict(TestCase):
              "application/octet-stream", repr(details['another file'].content_type))
  
  
