@@ -6,6 +6,7 @@ __all__ = [
     'clone_test_with_new_id',
     'CopyStreamResult',
     'ConcurrentTestSuite',
+    'ConcurrentStreamTestSuite',
     'ErrorHolder',
     'ExpectedException',
     'ExtendedToOriginalDecorator',
@@ -93,6 +94,7 @@ else:
         )
     from testtools.testsuite import (
         ConcurrentTestSuite,
+        ConcurrentStreamTestSuite,
         FixtureSuite,
         iterate_tests,
         )
