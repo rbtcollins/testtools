@@ -1,5 +1,5 @@
-Bottom: 6e588b3ad709e66ccff5d18c4dcab08a1e55165a
-Top:    8315c09e2eae26949b3ae447b152c7908c111587
+Bottom: 90aed4c3644c20cc9c7b14490a253b8cefa4a8dd
+Top:    78ec58394ace77a5a45d24e8195438f043992751
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -67,7 +67,7 @@ index 789e617..29ee39d 100644
      Tagger,
      TestByTestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index a869ca2..8c382d6 100644
+index 91d0c93..2ae7ed7 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -7,6 +7,7 @@ __all__ = [
@@ -88,7 +88,7 @@ index a869ca2..8c382d6 100644
  
  # From http://docs.python.org/library/datetime.html
  _ZERO = datetime.timedelta(0)
-@@ -493,6 +497,106 @@ class StreamToDict(StreamResult):
+@@ -481,6 +485,106 @@ class StreamToDict(StreamResult):
          return key
  
  
@@ -196,7 +196,7 @@ index a869ca2..8c382d6 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 661916b..1b1f656 100644
+index e223117..1da62cd 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -23,6 +23,7 @@ from testtools import (
@@ -207,7 +207,7 @@ index 661916b..1b1f656 100644
      StreamToDict,
      Tagger,
      TestCase,
-@@ -544,6 +545,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
+@@ -533,6 +534,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
          return LoggingStreamResult()
  
  
@@ -220,7 +220,7 @@ index 661916b..1b1f656 100644
  class TestStreamToDictContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -693,6 +700,150 @@ class TestStreamToDict(TestCase):
+@@ -667,6 +674,150 @@ class TestStreamToDict(TestCase):
              "application/octet-stream", repr(details['another file'].content_type))
  
  
