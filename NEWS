@@ -48,6 +48,9 @@ Improvements
   ``TestResult``) calls. This permits using un-migrated result objects with
   new runners / tests. (Robert Collins)
 
+* New support class ``ThreadsafeStreamResult`` for sending messages to one
+  ``StreamResult`` from multiple threads. (Robert Collins)
+
 * New test support class ``testtools.testresult.doubles.StreamResult``, which
   captures all the StreamResult events. (Robert Collins)
 
