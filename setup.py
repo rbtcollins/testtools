@@ -69,7 +69,7 @@ setup(name='testtools',
       zip_safe=False,
       install_requires=[
         'extras',
-        # 'mimetype' has not been uploaded by the maintainer with Python3 compat
-        'python-mimetype',
+        # 'mimeparse' has not been uploaded by the maintainer with Python3 compat
+        'python-mimeparse',
         ],
       )
