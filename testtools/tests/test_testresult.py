@@ -457,17 +457,6 @@ class TestStreamResultContract(object):
         result.startTestRun()
         result.stopTestRun()
 
-    def test_estimate(self):
-        result = self._make_result()
-        result.startTestRun()
-        self.addCleanup(result.stopTestRun)
-        result.estimate(0)
-        result.estimate(10)
-        result.estimate(5, route_code=_u("1234"))
-        now = datetime.datetime.now(utc)
-        result.estimate(5, route_code=_u("1234"), timestamp=now)
-        result.estimate(5, timestamp=now)
-
     def test_file(self):
         result = self._make_result()
         result.startTestRun()

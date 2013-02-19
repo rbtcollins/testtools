@@ -268,8 +268,8 @@ class StreamResult(object):
     ----------------
 
     StreamResult is built to process events that are emitted by tests during a
-    test run. The test run may be running concurrently, and even be spread out
-    across multiple machines.
+    test run or test enumeration. The test run may be running concurrently, and
+    even be spread out across multiple machines.
 
     All events are timestamped to prevent network buffering or scheduling
     latency causing false timing reports. Timestamps are datetime objects in
@@ -301,14 +301,6 @@ class StreamResult(object):
         This informs the result that no more test updates will be received. At
         this point any test ids that have started and not completed can be
         considered failed-or-hung.
-        """
-
-    def estimate(self, count, route_code=None, timestamp=None):
-        """Provide an estimated count of tests that will be run.
-
-        This is intended to allow user interfaces that output progress
-        indicators such as "30/120 tests complete". Each estimate given
-        replaces any prior estimate.
         """
 
     def file(self, file_name, file_bytes, eof=False, mime_type=None,
