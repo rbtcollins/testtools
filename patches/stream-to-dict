@@ -1,5 +1,5 @@
-Bottom: 4f35743e52fc2ca919510d9ef6531e33ea0f066a
-Top:    6e588b3ad709e66ccff5d18c4dcab08a1e55165a
+Bottom: c7e77de36b7c7cd8b0f19768cd8ae7d3af8b76b4
+Top:    90aed4c3644c20cc9c7b14490a253b8cefa4a8dd
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 21:28:29 +1300
 
@@ -107,7 +107,7 @@ index f1ec047..789e617 100644
      TestByTestResult,
      TestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 4e045a5..a869ca2 100644
+index ab872f8..91d0c93 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -7,6 +7,7 @@ __all__ = [
@@ -134,7 +134,7 @@ index 4e045a5..a869ca2 100644
  from testtools.tags import TagContext
  
  # From http://docs.python.org/library/datetime.html
-@@ -409,6 +413,86 @@ class CopyStreamResult(StreamResult):
+@@ -397,6 +401,86 @@ class CopyStreamResult(StreamResult):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  
@@ -222,7 +222,7 @@ index 4e045a5..a869ca2 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 2abfdff..661916b 100644
+index 9900db5..e223117 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -23,6 +23,7 @@ from testtools import (
@@ -241,7 +241,7 @@ index 2abfdff..661916b 100644
      MatchesAny,
      MatchesException,
      Raises,
-@@ -542,6 +544,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
+@@ -531,6 +533,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
          return LoggingStreamResult()
  
  
@@ -254,7 +254,7 @@ index 2abfdff..661916b 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -632,6 +640,59 @@ class TestCopyStreamResultCopies(TestCase):
+@@ -606,6 +614,59 @@ class TestCopyStreamResultCopies(TestCase):
                  ])))
  
  
