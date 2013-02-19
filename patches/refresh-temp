@@ -1,0 +1,42 @@
+Bottom: 84ca68bf6b204cfefcddb3ddc5d4580b870f86df
+Top:    fe71896990fca0107fda912bb7b89211913b0aaa
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-19 22:14:28 +1300
+
+Refresh of double-streamresult
+
+---
+
+diff --git a/testtools/testresult/doubles.py b/testtools/testresult/doubles.py
+index 83c967e..ede3c18 100644
+--- a/testtools/testresult/doubles.py
++++ b/testtools/testresult/doubles.py
+@@ -166,9 +166,6 @@ class StreamResult(object):
+     def stopTestRun(self):
+         self._events.append(('stopTestRun',))
+ 
+-    def estimate(self, count, route_code=None, timestamp=None):
+-        self._events.append(('estimate', count, route_code, timestamp))
+-
+     def file(self, file_name, file_bytes, eof=False, mime_type=None,
+         test_id=None, route_code=None, timestamp=None):
+         self._events.append(('file', file_name, file_bytes, eof, mime_type,
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index 3d160f9..13e87e1 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -536,14 +536,6 @@ class TestDoubleStreamResultEvents(TestCase):
+         result.stopTestRun()
+         self.assertEqual([('startTestRun',), ('stopTestRun',)], result._events)
+ 
+-    def test_estimate(self):
+-        result = LoggingStreamResult()
+-        result.startTestRun()
+-        now = datetime.datetime.now(utc)
+-        result.estimate(2, route_code='abc', timestamp=now)
+-        self.assertEqual(
+-            [('startTestRun',), ('estimate', 2, 'abc', now)], result._events)
+-
+     def test_file(self):
+         result = LoggingStreamResult()
+         result.startTestRun()
