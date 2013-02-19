@@ -1,5 +1,5 @@
 Bottom: fe71896990fca0107fda912bb7b89211913b0aaa
-Top:    db41d01452eb991368fd0e375ee4801feeeb5cf3
+Top:    c7e77de36b7c7cd8b0f19768cd8ae7d3af8b76b4
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:48:03 +1300
 
@@ -66,7 +66,7 @@ index bd1104f..f1ec047 100644
      MultiTestResult,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index c451cfa..ea4a776 100644
+index c451cfa..ab872f8 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -14,6 +14,7 @@ __all__ = [
@@ -77,7 +77,7 @@ index c451cfa..ea4a776 100644
  import sys
  import unittest
  
-@@ -365,6 +366,41 @@ class StreamResult(object):
+@@ -365,6 +366,37 @@ class StreamResult(object):
          """
  
  
@@ -103,10 +103,6 @@ index c451cfa..ea4a776 100644
 +        super(CopyStreamResult, self).stopTestRun()
 +        domap(methodcaller('stopTestRun'), self.targets)
 +
-+    def estimate(self, *args, **kwargs):
-+        super(CopyStreamResult, self).estimate(*args, **kwargs)
-+        domap(methodcaller('estimate', *args, **kwargs), self.targets)
-+
 +    def file(self, *args, **kwargs):
 +        super(CopyStreamResult, self).file(*args, **kwargs)
 +        domap(methodcaller('file', *args, **kwargs), self.targets)
@@ -120,7 +116,7 @@ index c451cfa..ea4a776 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 13e87e1..4291457 100644
+index 13e87e1..9900db5 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -18,6 +18,7 @@ import warnings
@@ -152,7 +148,7 @@ index 13e87e1..4291457 100644
  class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -559,6 +567,52 @@ class TestDoubleStreamResultEvents(TestCase):
+@@ -559,6 +567,45 @@ class TestDoubleStreamResultEvents(TestCase):
              result._events)
  
  
@@ -174,13 +170,6 @@ index 13e87e1..4291457 100644
 +        self.result.stopTestRun()
 +        self.assertThat(self.targets,
 +            AllMatch(Equals([('startTestRun',), ('stopTestRun',)])))
-+
-+    def test_estimate(self):
-+        self.result.startTestRun()
-+        now = datetime.datetime.now(utc)
-+        self.result.estimate(2, route_code='abc', timestamp=now)
-+        self.assertThat(self.targets,
-+            AllMatch(Equals([('startTestRun',), ('estimate', 2, 'abc', now)])))
 +
 +    def test_file(self):
 +        self.result.startTestRun()
