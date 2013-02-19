@@ -1,12 +1,12 @@
 Version: 1
-Previous: 3cd42ca18aeaa687461e5b125c470d12833c5cdc
-Head: 701d21a7fc9cd84eda8fe550729d27d6a0bd40f2
+Previous: ef4513b37ff589fdeb4c94c3da6b57cee4ead017
+Head: 7f0246a79f873863b0d6c87b4ab69f948c35d56c
 Applied:
   content-type-repr: e42bfb41ed439074666dcad6c9157fcd3c6d933b
   define-stream-result: 80d1511f321bdadda47bb4d45d166d0474e51ffd
   double-streamresult: 701d21a7fc9cd84eda8fe550729d27d6a0bd40f2
+  copy-stream: 7f0246a79f873863b0d6c87b4ab69f948c35d56c
 Unapplied:
-  copy-stream: fd555d54b885573be6bd9df0530fbbebf0e60f01
   stream-to-dict: ecc9530cdb85108e2f33d99df3adcfb77de2ac57
   stream-summary: 9338742be85f5b445358a0d59513f1a217f0240e
   test-control: 69517e810e8e0b8ce2b75c793a401ea607c80a5e
