@@ -1,5 +1,5 @@
 Bottom: 8aa04ad7788e0e33a5d0a4a71868c7f1ed7fd0cd
-Top:    9f362a5a3b59464ea0da7198570e48c500ef1058
+Top:    b9d2d2f4dc1ea636832d5a5ef99d54b8e0da2732
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -88,10 +88,10 @@ index 2827f0b..8f0fd76 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 9d5c5e8..9a7dd41 100644
+index 9d5c5e8..33b634f 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -1247,6 +1247,49 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+@@ -1247,6 +1247,46 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
          return super(ExtendedToStreamDecorator, self).wasSuccessful()
  
  
@@ -113,9 +113,6 @@ index 9d5c5e8..9a7dd41 100644
 +        self.decorated = ExtendedToOriginalDecorator(decorated)
 +        # StreamToDict buffers and gives us individual tests.
 +        self.hook = StreamToDict(self._handle_tests)
-+
-+    def estimate(self, *args, **kwargs):
-+        """Not passed on."""
 +
 +    def file(self, *args, **kwargs):
 +        self.hook.file(*args, **kwargs)
