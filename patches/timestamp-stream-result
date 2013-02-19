@@ -1,0 +1,15 @@
+Bottom: 8e69b322cde926446d7c63ce367e089f2c061fb3
+Top:    8e69b322cde926446d7c63ce367e089f2c061fb3
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-19 21:19:25 +1300
+
+Add a timestamping StreamResult.
+
+This allows event generators to ignore the timestamp field, it can be added
+into the stream - as long as it is before any buffering/queueing/blocking occur
+it will be accurate enough.
+
+
+---
+
+
