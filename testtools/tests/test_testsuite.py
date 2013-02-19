@@ -10,12 +10,15 @@ from extras import try_import
 
 from testtools import (
     ConcurrentTestSuite,
+    ConcurrentStreamTestSuite,
     iterate_tests,
     PlaceHolder,
     TestCase,
     )
+from testtools.compat import _u
 from testtools.testsuite import FixtureSuite, iterate_tests, sorted_tests
 from testtools.tests.helpers import LoggingResult
+from testtools.testresult.doubles import StreamResult as LoggingStream
 
 FunctionFixture = try_import('fixtures.FunctionFixture')
 
@@ -26,6 +29,7 @@ class Sample(TestCase):
         pass
     def test_method2(self):
         pass
+
 
 class TestConcurrentTestSuiteRun(TestCase):
 
@@ -71,6 +75,63 @@ class TestConcurrentTestSuiteRun(TestCase):
     def split_suite(self, suite):
         tests = list(iterate_tests(suite))
         return tests[0], tests[1]
+
+
+class TestConcurrentStreamTestSuiteRun(TestCase):
+
+    def test_trivial(self):
+        result = LoggingStream()
+        test1 = Sample('test_method1')
+        test2 = Sample('test_method2')
+        original_suite = unittest.TestSuite([test1, test2])
+        suite = ConcurrentStreamTestSuite(original_suite, self.split_suite)
+        suite.run(result)
+        def freeze(set_or_none):
+            if set_or_none is None:
+                return set_or_none
+            return frozenset(set_or_none)
+        # Ignore event order: we're testing the code is all glued together,
+        # which just means we can pump events through and they get route codes
+        # added appropriately.
+        self.assertEqual(set([
+            ('status',
+             'testtools.tests.test_testsuite.Sample.test_method1',
+             'inprogress',
+             None,
+             True,
+             '0',
+             None,
+             ),
+            ('status',
+             'testtools.tests.test_testsuite.Sample.test_method1',
+             'success',
+             frozenset(),
+             True,
+             '0',
+             None,
+             ),
+            ('status',
+             'testtools.tests.test_testsuite.Sample.test_method2',
+             'inprogress',
+             None,
+             True,
+             '1',
+             None,
+             ),
+            ('status',
+             'testtools.tests.test_testsuite.Sample.test_method2',
+             'success',
+             frozenset(),
+             True,
+             '1',
+             None,
+             ),
+            ]), set(event[0:3] + (freeze(event[3]),) + event[4:6] + (None,)
+                for event in result._events))
+
+    def split_suite(self, suite):
+        tests = list(iterate_tests(suite))
+        return (tests[0], _u("0")), (tests[1], _u("1"))
 
 
 class TestFixtureSuite(TestCase):
