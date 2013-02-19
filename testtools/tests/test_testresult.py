@@ -536,14 +536,6 @@ class TestDoubleStreamResultEvents(TestCase):
         result.stopTestRun()
         self.assertEqual([('startTestRun',), ('stopTestRun',)], result._events)
 
-    def test_estimate(self):
-        result = LoggingStreamResult()
-        result.startTestRun()
-        now = datetime.datetime.now(utc)
-        result.estimate(2, route_code='abc', timestamp=now)
-        self.assertEqual(
-            [('startTestRun',), ('estimate', 2, 'abc', now)], result._events)
-
     def test_file(self):
         result = LoggingStreamResult()
         result.startTestRun()

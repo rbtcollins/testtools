@@ -166,9 +166,6 @@ class StreamResult(object):
     def stopTestRun(self):
         self._events.append(('stopTestRun',))
 
-    def estimate(self, count, route_code=None, timestamp=None):
-        self._events.append(('estimate', count, route_code, timestamp))
-
     def file(self, file_name, file_bytes, eof=False, mime_type=None,
         test_id=None, route_code=None, timestamp=None):
         self._events.append(('file', file_name, file_bytes, eof, mime_type,
