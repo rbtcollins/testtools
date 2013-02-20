@@ -1,5 +1,5 @@
 Bottom: e574312fda7217302cb5664bcd8c584f13e1a530
-Top:    10c0e2f4e802569f66233969aeca976d4d49caff
+Top:    05e697a134b7b4d558b77b1f2075abe0b9f6b732
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -276,7 +276,7 @@ index e17416f..0994b99 100644
  
      def make_26_result(self):
 diff --git a/testtools/tests/test_testsuite.py b/testtools/tests/test_testsuite.py
-index d220709..2c7fbb7 100644
+index d220709..98754f4 100644
 --- a/testtools/tests/test_testsuite.py
 +++ b/testtools/tests/test_testsuite.py
 @@ -10,12 +10,15 @@ from extras import try_import
@@ -374,7 +374,7 @@ index d220709..2c7fbb7 100644
 +        suite.run(result)
 +        events = [event[0:6] + (None,) for event in result._events]
 +        self.assertEqual([
-+            ('status', "broken-runner-u'0'", 'inprogress', None, True, u'0', None),
++            ('status', "broken-runner-u'0'", 'inprogress', None, True, _u('0'), None),
 +            ('file', 'traceback', """\
 +Traceback (most recent call last):
 +  File "testtools/testsuite.py", line 181, in _run_test
@@ -388,7 +388,7 @@ index d220709..2c7fbb7 100644
 +             ('file', 'traceback', '', True,
 +              'text/x-traceback; charset="utf8"; language="python"',
 +              "broken-runner-u'0'", None),
-+             ('status', "broken-runner-u'0'", 'fail', set(), True, u'0', None)
++             ('status', "broken-runner-u'0'", 'fail', set(), True, _u('0'), None)
 +            ], events)
 +
 +    def split_suite(self, suite):
