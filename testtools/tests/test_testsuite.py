@@ -144,7 +144,7 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
         suite.run(result)
         events = [event[0:6] + (None,) for event in result._events]
         self.assertEqual([
-            ('status', "broken-runner-u'0'", 'inprogress', None, True, u'0', None),
+            ('status', "broken-runner-u'0'", 'inprogress', None, True, _u('0'), None),
             ('file', 'traceback', """\
 Traceback (most recent call last):
   File "testtools/testsuite.py", line 181, in _run_test
@@ -158,7 +158,7 @@ TypeError: run() takes exactly 1 argument (2 given)
              ('file', 'traceback', '', True,
               'text/x-traceback; charset="utf8"; language="python"',
               "broken-runner-u'0'", None),
-             ('status', "broken-runner-u'0'", 'fail', set(), True, u'0', None)
+             ('status', "broken-runner-u'0'", 'fail', set(), True, _u('0'), None)
             ], events)
 
     def split_suite(self, suite):
