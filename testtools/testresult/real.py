@@ -19,8 +19,8 @@ from operator import methodcaller
 import sys
 import unittest
 
-from extras import safe_hasattr
-from mimeparse import parse_mime_type
+from extras import safe_hasattr, try_import
+parse_mime_type = try_import('mimeparse.parse_mime_type')
 
 from testtools.compat import all, str_is_unicode, _u
 from testtools.content import (
@@ -426,6 +426,8 @@ class StreamToDict(StreamResult):
         """
         super(StreamToDict, self).__init__()
         self.on_test = on_test
+        if parse_mime_type is None:
+            raise ImportError("mimeparse module missing.")
 
     def startTestRun(self):
         super(StreamToDict, self).startTestRun()
