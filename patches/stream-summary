@@ -1,5 +1,5 @@
-Bottom: 7142312d69a8a3a5fdaedfbf53dba3da85536cfc
-Top:    70022e2006484d36bc007bdad38555dbb7ba5403
+Bottom: 9c8a8ac0f918bd84f62a46116504677aa7ec72e9
+Top:    e339138838cdb68108bf810cea872894a3a55fbc
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -67,7 +67,7 @@ index 789e617..29ee39d 100644
      Tagger,
      TestByTestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 91d0c93..2ae7ed7 100644
+index 48bf9dd..26e326f 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -7,6 +7,7 @@ __all__ = [
@@ -88,7 +88,7 @@ index 91d0c93..2ae7ed7 100644
  
  # From http://docs.python.org/library/datetime.html
  _ZERO = datetime.timedelta(0)
-@@ -481,6 +485,106 @@ class StreamToDict(StreamResult):
+@@ -483,6 +487,106 @@ class StreamToDict(StreamResult):
          return key
  
  

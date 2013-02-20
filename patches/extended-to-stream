@@ -1,5 +1,5 @@
-Bottom: 5d058c2b56682b434d249ff2eb2636045f2e4b1f
-Top:    d2a8627bc7830a424e50029e87d4ed6b5c0a562d
+Bottom: 4ccd30f4a8f9501a8d88148b33c53ac348b3e0aa
+Top:    d0b3de3c5748b4929c473a0e10c4439ba0bd0194
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -93,7 +93,7 @@ index 435cb32..2827f0b 100644
      StreamFailfast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 2520dad..9d5c5e8 100644
+index 56823ef..2f04d2b 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -105,15 +105,15 @@ index 2520dad..9d5c5e8 100644
      'StreamFailfast',
      'StreamResult',
 @@ -25,7 +26,7 @@ import unittest
- from extras import safe_hasattr
- from mimeparse import parse_mime_type
+ from extras import safe_hasattr, try_import
+ parse_mime_type = try_import('mimeparse.parse_mime_type')
  
 -from testtools.compat import all, str_is_unicode, _u
 +from testtools.compat import all, str_is_unicode, _u, _b
  from testtools.content import (
      Content,
      text_content,
-@@ -1110,6 +1111,142 @@ class ExtendedToOriginalDecorator(object):
+@@ -1112,6 +1113,142 @@ class ExtendedToOriginalDecorator(object):
          return self.decorated.wasSuccessful()
  
  

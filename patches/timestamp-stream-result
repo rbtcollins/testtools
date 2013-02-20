@@ -1,5 +1,5 @@
-Bottom: 3c768a443cab8ca234e8b9570c80e4261f47d86c
-Top:    93ab9c919cf332f06d26416850db3c97943ba045
+Bottom: a65ac920370f1d0f4d9367386cc3f1634e4fb806
+Top:    e574312fda7217302cb5664bcd8c584f13e1a530
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 21:19:25 +1300
 
@@ -85,7 +85,7 @@ index 8f0fd76..36830af 100644
 +    TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 33b634f..3ebf4d2 100644
+index cc3ad1a..a6e4bbc 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -16,6 +16,7 @@ __all__ = [
@@ -96,7 +96,7 @@ index 33b634f..3ebf4d2 100644
      ]
  
  import datetime
-@@ -1451,6 +1452,30 @@ class TestByTestResult(TestResult):
+@@ -1453,6 +1454,30 @@ class TestByTestResult(TestResult):
          self._details = details
  
  
