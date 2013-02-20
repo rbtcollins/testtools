@@ -1,0 +1,33 @@
+Bottom: 7142312d69a8a3a5fdaedfbf53dba3da85536cfc
+Top:    9c8a8ac0f918bd84f62a46116504677aa7ec72e9
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-20 18:48:53 +1300
+
+Refresh of stream-to-dict
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 91d0c93..48bf9dd 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -19,8 +19,8 @@ from operator import methodcaller
+ import sys
+ import unittest
+ 
+-from extras import safe_hasattr
+-from mimeparse import parse_mime_type
++from extras import safe_hasattr, try_import
++parse_mime_type = try_import('mimeparse.parse_mime_type')
+ 
+ from testtools.compat import all, str_is_unicode, _u
+ from testtools.content import (
+@@ -426,6 +426,8 @@ class StreamToDict(StreamResult):
+         """
+         super(StreamToDict, self).__init__()
+         self.on_test = on_test
++        if parse_mime_type is None:
++            raise ImportError("mimeparse module missing.")
+ 
+     def startTestRun(self):
+         super(StreamToDict, self).startTestRun()
