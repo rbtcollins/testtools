@@ -1,5 +1,5 @@
 Bottom: c7e77de36b7c7cd8b0f19768cd8ae7d3af8b76b4
-Top:    7142312d69a8a3a5fdaedfbf53dba3da85536cfc
+Top:    9c8a8ac0f918bd84f62a46116504677aa7ec72e9
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 21:28:29 +1300
 
@@ -120,7 +120,7 @@ index f1ec047..789e617 100644
      TestByTestResult,
      TestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index ab872f8..91d0c93 100644
+index ab872f8..48bf9dd 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -7,6 +7,7 @@ __all__ = [
@@ -131,11 +131,13 @@ index ab872f8..91d0c93 100644
      'Tagger',
      'TestResult',
      'TestResultDecorator',
-@@ -19,12 +20,15 @@ import sys
+@@ -18,13 +19,16 @@ from operator import methodcaller
+ import sys
  import unittest
  
- from extras import safe_hasattr
-+from mimeparse import parse_mime_type
+-from extras import safe_hasattr
++from extras import safe_hasattr, try_import
++parse_mime_type = try_import('mimeparse.parse_mime_type')
  
  from testtools.compat import all, str_is_unicode, _u
  from testtools.content import (
@@ -147,7 +149,7 @@ index ab872f8..91d0c93 100644
  from testtools.tags import TagContext
  
  # From http://docs.python.org/library/datetime.html
-@@ -397,6 +401,86 @@ class CopyStreamResult(StreamResult):
+@@ -397,6 +401,88 @@ class CopyStreamResult(StreamResult):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  
@@ -176,6 +178,8 @@ index ab872f8..91d0c93 100644
 +        """
 +        super(StreamToDict, self).__init__()
 +        self.on_test = on_test
++        if parse_mime_type is None:
++            raise ImportError("mimeparse module missing.")
 +
 +    def startTestRun(self):
 +        super(StreamToDict, self).startTestRun()
