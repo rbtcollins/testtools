@@ -1,5 +1,5 @@
 Bottom: 623943bd8f0e4e63c4bd7d4b65cf8b617e22218d
-Top:    623943bd8f0e4e63c4bd7d4b65cf8b617e22218d
+Top:    d0827885742f4354c2dc8176ce267c429ec766d0
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -8,4 +8,513 @@ Add a StreamResult decorator safe for use in threaded/concurrent code.
 
 ---
 
-
+diff --git a/NEWS b/NEWS
+index 4f5d21a..0b9de9d 100644
+--- a/NEWS
++++ b/NEWS
+@@ -26,6 +26,9 @@ Improvements
+ * New support class ``TimestampingStreamResult`` which adds a timestamp to
+   events with no timestamp. (Robert Collins)
+ 
++* New support class ``ConcurrentStreamTestSuite`` for convenient construction
++  and utilisation of ``ThreadsafeStreamResult`` objects. (Robert Collins)
++
+ * New support class ``CopyStreamResult`` which forwards events onto multiple
+   ``StreamResult`` objects (each of which receives all the events).
+   (Robert Collins)
+@@ -58,6 +61,9 @@ Improvements
+   ``TestResult``) calls. This permits using un-migrated result objects with
+   new runners / tests. (Robert Collins)
+ 
++* New support class ``ThreadsafeStreamResult`` for sending messages to one
++  ``StreamResult`` from multiple threads. (Robert Collins)
++
+ * New test support class ``testtools.testresult.doubles.StreamResult``, which
+   captures all the StreamResult events. (Robert Collins)
+ 
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index f4c9eaa..a4b54d2 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -320,6 +320,20 @@ ConcurrentTestSuite uses the helper to get a number of separate runnable
+ objects with a run(result), runs them all in threads using the
+ ThreadsafeForwardingResult to coalesce their activity.
+ 
++ConcurrentStreamTestSuite
++-------------------------
++
++A variant of ConcurrentTestSuite that uses the new StreamResult API instead of
++the TestResult API. ConcurrentStreamTestSuite coordinates running some number
++of test/suites concurrently, with one ThreadsafeStreamResult per test/suite.
++
++Each test/suite gets given its own ExtendedToStreamDecorator +
++TimestampingStreamResult wrapped ThreadsafeStreamResult instance, forwarding
++onto the StreamResult that ConcurrentStreamTestSuite.run was called with.
++
++ConcurrentStreamTestSuite is a thin shim and it is easy to implement your own
++specialised form if that is needed.
++
+ FixtureSuite
+ ------------
+ 
+diff --git a/testtools/__init__.py b/testtools/__init__.py
+index b8a8903..a56200d 100644
+--- a/testtools/__init__.py
++++ b/testtools/__init__.py
+@@ -6,6 +6,7 @@ __all__ = [
+     'clone_test_with_new_id',
+     'CopyStreamResult',
+     'ConcurrentTestSuite',
++    'ConcurrentStreamTestSuite',
+     'ErrorHolder',
+     'ExpectedException',
+     'ExtendedToOriginalDecorator',
+@@ -34,6 +35,7 @@ __all__ = [
+     'StreamToExtendedDecorator',
+     'TestControl',
+     'ThreadsafeForwardingResult',
++    'ThreadsafeStreamResult',
+     'TimestampingStreamResult',
+     'try_import',
+     'try_imports',
+@@ -89,10 +91,12 @@ else:
+         TestResultDecorator,
+         TextTestResult,
+         ThreadsafeForwardingResult,
++        ThreadsafeStreamResult,
+         TimestampingStreamResult,
+         )
+     from testtools.testsuite import (
+         ConcurrentTestSuite,
++        ConcurrentStreamTestSuite,
+         FixtureSuite,
+         iterate_tests,
+         )
+diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
+index 36830af..940846d 100644
+--- a/testtools/testresult/__init__.py
++++ b/testtools/testresult/__init__.py
+@@ -19,6 +19,7 @@ __all__ = [
+     'TestResultDecorator',
+     'TextTestResult',
+     'ThreadsafeForwardingResult',
++    'ThreadsafeStreamResult',
+     'TimestampingStreamResult',
+     ]
+ 
+@@ -39,5 +40,6 @@ from testtools.testresult.real import (
+     TestResultDecorator,
+     TextTestResult,
+     ThreadsafeForwardingResult,
++    ThreadsafeStreamResult,
+     TimestampingStreamResult,
+     )
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index a6e4bbc..12ddb2f 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -17,6 +17,7 @@ __all__ = [
+     'TestResultDecorator',
+     'ThreadsafeForwardingResult',
+     'TimestampingStreamResult',
++    'ThreadsafeStreamResult',
+     ]
+ 
+ import datetime
+@@ -620,6 +621,73 @@ class TestControl(object):
+         self.shouldStop = True
+ 
+ 
++class ThreadsafeStreamResult(StreamResult):
++    """A StreamResult which ensures the target does not receive mixed up calls.
++
++    Multiple ``ThreadsafeStreamResult`` objects can forward to the same target
++    and that target result will only ever receive one event at a time.
++
++    This is enforced using a semaphore, which further guarantees that events
++    will be sent atomically even if the ``ThreadsafeStreamResult`` callers are
++    in different threads.
++
++    Events have their route code updated on the way through. A code of None
++    becomes the supplied code, any other code has is prefixed with the supplied
++    code hypen, old code.
++
++    startTestRun and stopTestRun are not forwarded (as otherwise the recipients
++    would have these events called multiple times). 
++
++    ``ThreadsafeStreamResult`` is typically used by
++    ``ConcurrentStreamTestSuite``, which creates one ``ThreadsafeStreamResult``
++    per thread, each of which wraps the StreamResult that
++    ``ConcurrentStreamTestSuite.run()`` is called with.
++
++    Unlike ThreadsafeForwardingResult which this supercedes, no buffering takes
++    place - any event supplied to a ThreadsafeStreamResult will be forwarded
++    as soon as the semaphore is obtained, and the semaphore is only held around
++    one call.
++    """
++
++    def __init__(self, target, semaphore, routing_code):
++        """Create a ThreadsafeStreamResult forwarding to target.
++
++        :param target: A ``StreamResult``.
++        :param semaphore: A ``threading.Semaphore`` with limit 1.
++        :param routing_code: The routing code to apply to messages.
++        """
++        super(ThreadsafeStreamResult, self).__init__()
++        self.result = target
++        self.semaphore = semaphore
++        self.routing_code = routing_code
++
++    def file(self, file_name, file_bytes, eof=False, mime_type=None,
++        test_id=None, route_code=None, timestamp=None):
++        self.semaphore.acquire()
++        try:
++            self.result.file(file_name, file_bytes, eof=eof,
++                mime_type=mime_type, test_id=test_id,
++                route_code=self.route_code(route_code), timestamp=timestamp)
++        finally:
++            self.semaphore.release()
++
++    def status(self, test_id, test_status, test_tags=None, runnable=True,
++        route_code=None, timestamp=None):
++        self.semaphore.acquire()
++        try:
++            self.result.status(test_id, test_status, test_tags=test_tags,
++                runnable=runnable, route_code=self.route_code(route_code),
++                timestamp=timestamp)
++        finally:
++            self.semaphore.release()
++
++    def route_code(self, route_code):
++        """Adjust route_code on the way through."""
++        if route_code is None:
++            return self.routing_code
++        return self.routing_code + _u("/") + route_code
++
++
+ class MultiTestResult(TestResult):
+     """A test result that dispatches to many test results."""
+ 
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index e17416f..0994b99 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -36,6 +36,7 @@ from testtools import (
+     TestByTestResult,
+     TextTestResult,
+     ThreadsafeForwardingResult,
++    ThreadsafeStreamResult,
+     TimestampingStreamResult,
+     testresult,
+     )
+@@ -1595,6 +1596,67 @@ class TestMergeTags(TestCase):
+             expected, _merge_tags(current_tags, changing_tags))
+ 
+ 
++class TestThreadStreamResult(TestCase):
++
++    def make_result(self, target):
++        semaphore = threading.Semaphore(1)
++        return (ThreadsafeStreamResult(target, semaphore, "foo"),
++            semaphore)
++
++    def test_file(self):
++        class CallbackStream(object):
++            def file(stream, file_name, file_bytes, eof=False, mime_type=None,
++                test_id=None, route_code=None, timestamp=None):
++                self.assertFalse(semaphore.acquire(False))
++                self.assertEqual("file", file_name)
++                self.assertEqual(_b("content"), file_bytes)
++                self.assertEqual(True, eof)
++                self.assertEqual("quux", mime_type)
++                self.assertEqual("test", test_id)
++                self.assertEqual(expected_route, route_code)
++                self.assertEqual(expected_time, timestamp)
++        result, semaphore = self.make_result(CallbackStream())
++        expected_route = "foo"
++        expected_time = None
++        result.file("file", _b("content"), eof=True, mime_type="quux",
++            test_id="test", route_code=None, timestamp=None)
++        expected_route = "foo/bar"
++        expected_time = datetime.datetime.now(utc)
++        result.file("file", _b("content"), eof=True, mime_type="quux",
++            test_id="test", route_code="bar", timestamp=expected_time)
++
++    def test_status(self):
++        class CallbackStream(object):
++            def status(stream, test_id, test_status, test_tags=None, runnable=True,
++                route_code=None, timestamp=None):
++                self.assertFalse(semaphore.acquire(False))
++                self.assertEqual("test", test_id)
++                self.assertEqual("fail", test_status)
++                self.assertEqual(set(["quux"]), test_tags)
++                self.assertEqual(False, runnable)
++                self.assertEqual(expected_route, route_code)
++                self.assertEqual(expected_time, timestamp)
++        result, semaphore = self.make_result(CallbackStream())
++        expected_route = "foo"
++        expected_time = None
++        result.status("test", "fail", test_tags=set(["quux"]), runnable=False,
++            route_code=None, timestamp=None)
++        expected_route = "foo/bar"
++        expected_time = datetime.datetime.now(utc)
++        result.status("test", "fail", test_tags=set(["quux"]), runnable=False,
++            route_code="bar", timestamp=expected_time)
++
++    def testStartTestRun(self):
++        t = object()
++        result, semaphore = self.make_result(t)
++        result.startTestRun()
++
++    def testStopTestRun(self):
++        t = object()
++        result, semaphore = self.make_result(t)
++        result.startTestRun()
++
++
+ class TestExtendedToOriginalResultDecoratorBase(TestCase):
+ 
+     def make_26_result(self):
+diff --git a/testtools/tests/test_testsuite.py b/testtools/tests/test_testsuite.py
+index 289beb9..163889c 100644
+--- a/testtools/tests/test_testsuite.py
++++ b/testtools/tests/test_testsuite.py
+@@ -4,6 +4,7 @@
+ 
+ __metaclass__ = type
+ 
++import doctest
+ import sys
+ import unittest
+ 
+@@ -11,14 +12,17 @@ from extras import try_import
+ 
+ from testtools import (
+     ConcurrentTestSuite,
++    ConcurrentStreamTestSuite,
+     iterate_tests,
+     PlaceHolder,
+     TestByTestResult,
+     TestCase,
+     )
+-from testtools.compat import _u
++from testtools.compat import _b, _u
++from testtools.matchers import DocTestMatches
+ from testtools.testsuite import FixtureSuite, iterate_tests, sorted_tests
+ from testtools.tests.helpers import LoggingResult
++from testtools.testresult.doubles import StreamResult as LoggingStream
+ 
+ FunctionFixture = try_import('fixtures.FunctionFixture')
+ 
+@@ -30,6 +34,7 @@ class Sample(TestCase):
+     def test_method2(self):
+         pass
+ 
++
+ class TestConcurrentTestSuiteRun(TestCase):
+ 
+     def test_broken_test(self):
+@@ -89,6 +94,99 @@ class TestConcurrentTestSuiteRun(TestCase):
+         return list(iterate_tests(suite))
+ 
+ 
++class TestConcurrentStreamTestSuiteRun(TestCase):
++
++    def test_trivial(self):
++        result = LoggingStream()
++        test1 = Sample('test_method1')
++        test2 = Sample('test_method2')
++        original_suite = unittest.TestSuite([test1, test2])
++        suite = ConcurrentStreamTestSuite(original_suite, self.split_suite)
++        suite.run(result)
++        def freeze(set_or_none):
++            if set_or_none is None:
++                return set_or_none
++            return frozenset(set_or_none)
++        # Ignore event order: we're testing the code is all glued together,
++        # which just means we can pump events through and they get route codes
++        # added appropriately.
++        self.assertEqual(set([
++            ('status',
++             'testtools.tests.test_testsuite.Sample.test_method1',
++             'inprogress',
++             None,
++             True,
++             '0',
++             None,
++             ),
++            ('status',
++             'testtools.tests.test_testsuite.Sample.test_method1',
++             'success',
++             frozenset(),
++             True,
++             '0',
++             None,
++             ),
++            ('status',
++             'testtools.tests.test_testsuite.Sample.test_method2',
++             'inprogress',
++             None,
++             True,
++             '1',
++             None,
++             ),
++            ('status',
++             'testtools.tests.test_testsuite.Sample.test_method2',
++             'success',
++             frozenset(),
++             True,
++             '1',
++             None,
++             ),
++            ]), set(event[0:3] + (freeze(event[3]),) + event[4:6] + (None,)
++                for event in result._events))
++
++    def test_broken_runner(self):
++        # If the object called breaks, the stream is informed about it
++        # regardless.
++        class BrokenTest(object):
++            # broken - no result parameter!
++            def __call__(self):
++                pass
++            def run(self):
++                pass
++        result = LoggingStream()
++        original_suite = unittest.TestSuite([BrokenTest()])
++        suite = ConcurrentStreamTestSuite(original_suite, self.split_suite)
++        suite.run(result)
++        events = result._events
++        # Check the traceback loosely.
++        self.assertThat(events[1][2].decode('utf8'), DocTestMatches("""\
++Traceback (most recent call last):
++  File "...testtools/testsuite.py", line 181, in _run_test
++    test.run(process_result)
++TypeError: run() takes exactly 1 ...argument (2 given)
++""", doctest.ELLIPSIS))
++        events = [event[0:6] + (None,) for event in events]
++        events[1] = events[1][:2] + (None,) + events[1][3:]
++        self.assertEqual([
++            ('status', "broken-runner-'0'", 'inprogress', None, True, _u('0'), None),
++            ('file', 'traceback', None,
++             False,
++             'text/x-traceback; charset="utf8"; language="python"',
++             "broken-runner-'0'",
++             None),
++             ('file', 'traceback', _b(''), True,
++              'text/x-traceback; charset="utf8"; language="python"',
++              "broken-runner-'0'", None),
++             ('status', "broken-runner-'0'", 'fail', set(), True, _u('0'), None)
++            ], events)
++
++    def split_suite(self, suite):
++        tests = list(enumerate(iterate_tests(suite)))
++        return [(test, _u(str(pos))) for pos, test in tests]
++
++
+ class TestFixtureSuite(TestCase):
+ 
+     def setUp(self):
+diff --git a/testtools/testsuite.py b/testtools/testsuite.py
+index 0ffe6f3..808af0c 100644
+--- a/testtools/testsuite.py
++++ b/testtools/testsuite.py
+@@ -5,6 +5,7 @@
+ __metaclass__ = type
+ __all__ = [
+   'ConcurrentTestSuite',
++  'ConcurrentStreamTestSuite',
+   'filter_by_ids',
+   'iterate_tests',
+   'sorted_tests',
+@@ -112,6 +113,91 @@ class ConcurrentTestSuite(unittest.TestSuite):
+             queue.put(test)
+ 
+ 
++class ConcurrentStreamTestSuite(unittest.TestSuite):
++    """A TestSuite whose run() parallelises."""
++
++    def __init__(self, suite, make_tests):
++        """Create a ConcurrentTestSuite to execute suite.
++
++        :param suite: A suite to run concurrently. Each test will be run in its
++            own thread.
++        :param make_tests: A helper function to split the tests in the
++            ConcurrentTestSuite into some number of concurrently executing
++            sub-suites. make_tests must take a suite, and return an iterable
++            of tuples. Each tuple must be of the form (case, route_code), where
++            case is a TestCase-like object with a run(result) mthod, and
++            route_code is either None or a unicode string.
++        """
++        super(ConcurrentStreamTestSuite, self).__init__([suite])
++        self.make_tests = make_tests
++
++    def run(self, result):
++        """Run the tests concurrently.
++
++        This calls out to the provided make_tests helper to determine the
++        concurrency to use and to assign routing codes to each worker. It
++        is possible to also decorate or alter the tests in make_tests if
++        desired (though that can also be done at construction time).
++
++        ConcurrentTestSuite provides no special mechanism to stop the tests
++        returned by make_tests, it is up to the made tests to honour the
++        shouldStop attribute on the result object they are run with, which will
++        be set if an exception is raised in the thread which
++        ConcurrentTestSuite.run is called in.
++
++        The tests are run with an ExtendedToStreamDecorator wrapped around a
++        ThreadsafeStreamResult forwarding to result. Tests can therefore be
++        either original unittest tests (or compatible tests), or new tests
++        that emit StreamResult events directly.
++
++        :param result: A StreamResult instance. The caller is responsible for
++            calling startTestRun on this instance prior to invoking suite.run,
++            and stopTestRun subsequent to the run method returning.
++        """
++        tests = self.make_tests(self)
++        try:
++            threads = {}
++            queue = Queue()
++            semaphore = threading.Semaphore(1)
++            for test, route_code in tests:
++                process_result = testtools.ExtendedToStreamDecorator(
++                    testtools.TimestampingStreamResult(
++                    testtools.ThreadsafeStreamResult(
++                        result, semaphore, route_code)))
++                reader_thread = threading.Thread(
++                    target=self._run_test,
++                    args=(test, process_result, queue, route_code))
++                threads[test] = reader_thread, process_result
++                reader_thread.start()
++            while threads:
++                finished_test = queue.get()
++                threads[finished_test][0].join()
++                del threads[finished_test]
++        except:
++            for thread, process_result in threads.values():
++                # Signal to each TestControl in the ExtendedToStreamDecorator
++                # that the thread should stop running tests and cleanup
++                process_result.stop()
++            raise
++
++    def _run_test(self, test, process_result, queue, route_code):
++        process_result.startTestRun()
++        try:
++            try:
++                try:
++                    test.run(process_result)
++                except Exception as e:
++                    # The run logic itself failed.
++                    case = testtools.ErrorHolder(
++                        "broken-runner-'%s'" % (route_code,),
++                        error=sys.exc_info())
++                    case.run(process_result)
++            finally:
++                process_result.stopTestRun()
++        finally:
++            queue.put(test)
++
++
+ class FixtureSuite(unittest.TestSuite):
+ 
+     def __init__(self, fixture, tests):
