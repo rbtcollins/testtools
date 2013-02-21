@@ -1,7 +1,7 @@
-Bottom: dbe2fa7fde61a7a78146698c81e5a935137615b5
-Top:    9c6f7292840b0c93a7ba1293c24bce8e1d05f86a
+Bottom: 85fae5ddcfbb4d588e5a6cd1997b28a6ff65b450
+Top:    78a6fbec56b2adbce515b9f13fcb87bc45066ef1
 Author: Robert Collins <robertc@robertcollins.net>
-Date:   2013-02-17 22:48:44 +1300
+Date:   2013-02-21 14:08:55 +1300
 
 The ContentType repr() incorrectly used , instead of ;.
 
@@ -9,10 +9,10 @@ The ContentType repr() incorrectly used , instead of ;.
 ---
 
 diff --git a/NEWS b/NEWS
-index 0c6b7f5..99895e9 100644
+index 963e951..223f5ac 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -11,6 +11,12 @@ NEXT
+@@ -21,6 +21,12 @@ Improvements
  
  A simple bug fix, and better error messages when you don't up-call.
  
