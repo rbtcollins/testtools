@@ -4,6 +4,7 @@
 
 __metaclass__ = type
 
+import doctest
 import unittest
 
 from extras import try_import
@@ -15,7 +16,8 @@ from testtools import (
     PlaceHolder,
     TestCase,
     )
-from testtools.compat import _u
+from testtools.compat import _b, _u
+from testtools.matchers import DocTestMatches
 from testtools.testsuite import FixtureSuite, iterate_tests, sorted_tests
 from testtools.tests.helpers import LoggingResult
 from testtools.testresult.doubles import StreamResult as LoggingStream
@@ -142,23 +144,27 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
         original_suite = unittest.TestSuite([BrokenTest()])
         suite = ConcurrentStreamTestSuite(original_suite, self.split_suite)
         suite.run(result)
-        events = [event[0:6] + (None,) for event in result._events]
-        self.assertEqual([
-            ('status', "broken-runner-u'0'", 'inprogress', None, True, _u('0'), None),
-            ('file', 'traceback', """\
+        events = result._events
+        # Check the traceback loosely.
+        self.assertThat(events[1][2].decode('utf8'), DocTestMatches("""\
 Traceback (most recent call last):
-  File "testtools/testsuite.py", line 181, in _run_test
+  File "...testtools/testsuite.py", line 181, in _run_test
     test.run(process_result)
-TypeError: run() takes exactly 1 argument (2 given)
-""",
+TypeError: run() takes exactly 1 ...argument (2 given)
+""", doctest.ELLIPSIS))
+        events = [event[0:6] + (None,) for event in events]
+        events[1] = events[1][:2] + (None,) + events[1][3:]
+        self.assertEqual([
+            ('status', "broken-runner-'0'", 'inprogress', None, True, _u('0'), None),
+            ('file', 'traceback', None,
              False,
              'text/x-traceback; charset="utf8"; language="python"',
-             "broken-runner-u'0'",
+             "broken-runner-'0'",
              None),
-             ('file', 'traceback', '', True,
+             ('file', 'traceback', _b(''), True,
               'text/x-traceback; charset="utf8"; language="python"',
-              "broken-runner-u'0'", None),
-             ('status', "broken-runner-u'0'", 'fail', set(), True, _u('0'), None)
+              "broken-runner-'0'", None),
+             ('status', "broken-runner-'0'", 'fail', set(), True, _u('0'), None)
             ], events)
 
     def split_suite(self, suite):

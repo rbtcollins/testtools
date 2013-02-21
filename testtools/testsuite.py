@@ -181,9 +181,9 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
                     test.run(process_result)
                 except Exception as e:
                     # The run logic itself failed.
-                    case = testtools.PlaceHolder(
-                        "broken-runner-%r" % (route_code,),
-                        outcome="addError", error=sys.exc_info())
+                    case = testtools.ErrorHolder(
+                        "broken-runner-'%s'" % (route_code,),
+                        error=sys.exc_info())
                     case.run(process_result)
             finally:
                 process_result.stopTestRun()
