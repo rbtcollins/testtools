@@ -25,6 +25,7 @@ __all__ = [
     'skip',
     'skipIf',
     'skipUnless',
+    'StreamResult',
     'ThreadsafeForwardingResult',
     'try_import',
     'try_imports',
@@ -66,6 +67,7 @@ else:
     from testtools.testresult import (
         ExtendedToOriginalDecorator,
         MultiTestResult,
+        StreamResult,
         Tagger,
         TestByTestResult,
         TestResult,
