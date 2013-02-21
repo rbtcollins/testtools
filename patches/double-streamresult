@@ -1,5 +1,5 @@
-Bottom: 12e7419973e486e7fbc0673b2caafbfc076f20e1
-Top:    fe71896990fca0107fda912bb7b89211913b0aaa
+Bottom: c953b88ac6152f039f2d09176e43e40ac64fe400
+Top:    23e79b2e323ee1192ec060b4ce45485b39f423b0
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:51:04 +1300
 
@@ -9,10 +9,10 @@ Adds a recording StreamResult for writing tests with.
 ---
 
 diff --git a/NEWS b/NEWS
-index 5d001ee..4030603 100644
+index 22b3122..f4f39e7 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -16,6 +16,9 @@ Improvements
+@@ -23,6 +23,9 @@ Improvements
  * New class ``StreamResult`` which defines the API for the new result type.
    (Robert Collins)
  

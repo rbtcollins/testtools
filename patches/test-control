@@ -1,5 +1,5 @@
-Bottom: e339138838cdb68108bf810cea872894a3a55fbc
-Top:    4ccd30f4a8f9501a8d88148b33c53ac348b3e0aa
+Bottom: 87bf7a47277e617f1ac0f4b93bec32d468810f61
+Top:    e7c52821cf8e64f777d108f1567a79f40db56972
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-17 16:12:38 +1300
 
@@ -9,10 +9,10 @@ Add a dedicated interface for controlling an in-progress TestRun.
 ---
 
 diff --git a/NEWS b/NEWS
-index 4fd368c..7290e1f 100644
+index b73cbef..cbe2258 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -27,6 +27,12 @@ Improvements
+@@ -34,6 +34,12 @@ Improvements
    series of dicts describing a test. Useful for writing trivial stream
    analysers. (Robert Collins)
  

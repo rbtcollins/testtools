@@ -1,5 +1,5 @@
-Bottom: a65ac920370f1d0f4d9367386cc3f1634e4fb806
-Top:    e574312fda7217302cb5664bcd8c584f13e1a530
+Bottom: d49921c07ffc6cbfc0c887038b95903b80f8e191
+Top:    623943bd8f0e4e63c4bd7d4b65cf8b617e22218d
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 21:19:25 +1300
 
@@ -13,10 +13,10 @@ it will be accurate enough.
 ---
 
 diff --git a/NEWS b/NEWS
-index 7de24c2..72aa272 100644
+index 9f8a734..4f5d21a 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -16,6 +16,9 @@ Improvements
+@@ -23,6 +23,9 @@ Improvements
  * New class ``StreamResult`` which defines the API for the new result type.
    (Robert Collins)
  
