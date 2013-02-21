@@ -5,6 +5,7 @@
 __metaclass__ = type
 __all__ = [
   'ConcurrentTestSuite',
+  'ConcurrentStreamTestSuite',
   'filter_by_ids',
   'iterate_tests',
   'sorted_tests',
@@ -108,6 +109,91 @@ class ConcurrentTestSuite(unittest.TestSuite):
                     "broken-runner",
                     error=sys.exc_info())
                 case.run(process_result)
+        finally:
+            queue.put(test)
+
+
+class ConcurrentStreamTestSuite(unittest.TestSuite):
+    """A TestSuite whose run() parallelises."""
+
+    def __init__(self, suite, make_tests):
+        """Create a ConcurrentTestSuite to execute suite.
+
+        :param suite: A suite to run concurrently. Each test will be run in its
+            own thread.
+        :param make_tests: A helper function to split the tests in the
+            ConcurrentTestSuite into some number of concurrently executing
+            sub-suites. make_tests must take a suite, and return an iterable
+            of tuples. Each tuple must be of the form (case, route_code), where
+            case is a TestCase-like object with a run(result) mthod, and
+            route_code is either None or a unicode string.
+        """
+        super(ConcurrentStreamTestSuite, self).__init__([suite])
+        self.make_tests = make_tests
+
+    def run(self, result):
+        """Run the tests concurrently.
+
+        This calls out to the provided make_tests helper to determine the
+        concurrency to use and to assign routing codes to each worker. It
+        is possible to also decorate or alter the tests in make_tests if
+        desired (though that can also be done at construction time).
+
+        ConcurrentTestSuite provides no special mechanism to stop the tests
+        returned by make_tests, it is up to the made tests to honour the
+        shouldStop attribute on the result object they are run with, which will
+        be set if an exception is raised in the thread which
+        ConcurrentTestSuite.run is called in.
+
+        The tests are run with an ExtendedToStreamDecorator wrapped around a
+        ThreadsafeStreamResult forwarding to result. Tests can therefore be
+        either original unittest tests (or compatible tests), or new tests
+        that emit StreamResult events directly.
+
+        :param result: A StreamResult instance. The caller is responsible for
+            calling startTestRun on this instance prior to invoking suite.run,
+            and stopTestRun subsequent to the run method returning.
+        """
+        tests = self.make_tests(self)
+        try:
+            threads = {}
+            queue = Queue()
+            semaphore = threading.Semaphore(1)
+            for test, route_code in tests:
+                process_result = testtools.ExtendedToStreamDecorator(
+                    testtools.TimestampingStreamResult(
+                    testtools.ThreadsafeStreamResult(
+                        result, semaphore, route_code)))
+                reader_thread = threading.Thread(
+                    target=self._run_test,
+                    args=(test, process_result, queue, route_code))
+                threads[test] = reader_thread, process_result
+                reader_thread.start()
+            while threads:
+                finished_test = queue.get()
+                threads[finished_test][0].join()
+                del threads[finished_test]
+        except:
+            for thread, process_result in threads.values():
+                # Signal to each TestControl in the ExtendedToStreamDecorator
+                # that the thread should stop running tests and cleanup
+                process_result.stop()
+            raise
+
+    def _run_test(self, test, process_result, queue, route_code):
+        process_result.startTestRun()
+        try:
+            try:
+                try:
+                    test.run(process_result)
+                except Exception as e:
+                    # The run logic itself failed.
+                    case = testtools.ErrorHolder(
+                        "broken-runner-'%s'" % (route_code,),
+                        error=sys.exc_info())
+                    case.run(process_result)
+            finally:
+                process_result.stopTestRun()
         finally:
             queue.put(test)
 
