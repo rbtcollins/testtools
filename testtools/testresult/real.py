@@ -416,6 +416,100 @@ class StreamFailfast(StreamResult):
             self.callback()
 
 
+class StreamResultRouter(StreamResult):
+    """A StreamResult that routes events.
+
+    StreamResultRouter forwards received events to another StreamResult object,
+    selected by a dynamic forwarding policy. Events where no destination is
+    found are forwarded to the fallback StreamResult, or an error is raised.
+
+    Typical use is to construct a router with a fallback and then either
+    create up front mapping rules, or create them as-needed from the fallback
+    handler::
+
+      >>> router = StreamResultRouter()
+      >>> sink = doubles.StreamResult()
+      >>> router.map(sink, 'route_code_prefix', route_prefix='0',
+      ...     consume_route=True)
+      >>> router.status(test_id='foo', route_code='0/1', test_status='uxsuccess')
+
+    StreamResultRouter has no buffering and startTestRun and stopTestRun are
+    no-ops: they are neither forwarded (because some map targets might be
+    called multiple times), nor have any effect on StreamResultRouter itself.
+
+    There is no a-priori defined lookup order for routes: if they are ambiguous
+    the behaviour is undefined. Only a single route is chosen for any event.
+    """
+
+    policies = {}
+
+    def __init__(self, fallback=None):
+        """Construct a StreamResultRouter with optional fallback.
+
+        :param fallback: A StreamResult to forward events to when no route
+            exists for them.
+        """
+        self.fallback = fallback
+        self._route_code_prefixes = {}
+        self._test_ids = {}
+
+    def status(self, **kwargs):
+        route_code = kwargs.get('route_code', None)
+        test_id = kwargs.get('test_id', None)
+        if route_code is not None:
+            prefix = route_code.split('/')[0]
+        else:
+            prefix = route_code
+        if prefix in self._route_code_prefixes:
+            target, consume_route = self._route_code_prefixes[prefix]
+            if route_code is not None and consume_route:
+                route_code = route_code[len(prefix) + 1:]
+                if not route_code:
+                    route_code = None
+                kwargs['route_code'] = route_code
+        elif test_id in self._test_ids:
+            target = self._test_ids[test_id]
+        else:
+            target = self.fallback
+        target.status(**kwargs)
+
+    def map(self, sink, policy, **policy_args):
+        """Route events to sink when they match a given policy.
+
+        :param sink: A StreamResult to receive events.
+        :param policy: A routing policy. Valid policies are
+            'route_code_prefix' and 'test_id'.
+
+        route_code_prefix routes events based on a prefix of the route code in
+        the event. It takes the following arguments::
+        :param route_prefix: A prefix to match on - e.g. '0'.
+        :param consume_route: If True, remove the prefix from the route_code
+            when forwarding events.
+
+        test_id routes events based on the test id::
+        :param test_id: The test id to route on. Use None to select non-test
+            events.
+
+        map may raise errors::
+        :raises: ValueError if the policy is unknown
+        :raises: TypeError if the policy is given arguments it cannot handle.
+        """
+        policy_method = StreamResultRouter.policies.get(policy, None)
+        if not policy_method:
+            raise ValueError("bad policy %r" % (policy,))
+        policy_method(self, sink, **policy_args)
+
+    def _map_route_code_prefix(self, sink, route_prefix, consume_route=False):
+        if '/' in route_prefix:
+            raise TypeError(
+                "%r is more than one route step long" % (route_prefix,))
+        self._route_code_prefixes[route_prefix] = (sink, consume_route)
+    policies['route_code_prefix'] = _map_route_code_prefix
+
+    def _map_test_id(self, sink, test_id):
+        self._test_ids[test_id] = sink
+    policies['test_id'] = _map_test_id
+
 class StreamToDict(StreamResult):
     """A specialised StreamResult that emits a callback as tests complete.
 
