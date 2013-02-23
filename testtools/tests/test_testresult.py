@@ -25,6 +25,7 @@ from testtools import (
     PlaceHolder,
     StreamFailfast,
     StreamResult,
+    StreamResultRouter,
     StreamSummary,
     StreamToDict,
     StreamToExtendedDecorator,
@@ -587,6 +588,12 @@ class TestStreamFailfastContract(TestCase, TestStreamResultContract):
 
     def _make_result(self):
         return StreamFailfast(lambda:None)
+
+
+class TestStreamResultRouterContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        return StreamResultRouter(StreamResult())
 
 
 class TestDoubleStreamResultEvents(TestCase):
@@ -1631,6 +1638,100 @@ class TestMergeTags(TestCase):
         expected = set(['coming', 'present']), set(['missing'])
         self.assertEqual(
             expected, _merge_tags(current_tags, changing_tags))
+
+
+class TestStreamResultRouter(TestCase):
+
+    def test_no_fallback_errors(self):
+        self.assertRaises(Exception, StreamResultRouter().status, test_id='f')
+
+    def test_fallback_calls(self):
+        fallback = LoggingStreamResult()
+        StreamResultRouter(fallback).status(test_id='foo')
+        self.assertEqual([
+            ('status', 'foo', None, None, True, None, None, False, None, None,
+             None)],
+            fallback._events)
+
+    def test_map_bad_policy(self):
+        router = StreamResultRouter()
+        target = LoggingStreamResult()
+        self.assertRaises(ValueError, router.map, target, 'route_code_prefixa',
+            route_prefix='0')
+
+    def test_map_extra_policy_arg(self):
+        router = StreamResultRouter()
+        target = LoggingStreamResult()
+        self.assertRaises(TypeError, router.map, target, 'route_code_prefix',
+            route_prefix='0', foo=1)
+
+    def test_map_missing_prefix(self):
+        router = StreamResultRouter()
+        target = LoggingStreamResult()
+        self.assertRaises(TypeError, router.map, target, 'route_code_prefix')
+
+    def test_map_slash_in_prefix(self):
+        router = StreamResultRouter()
+        target = LoggingStreamResult()
+        self.assertRaises(TypeError, router.map, target, 'route_code_prefix',
+            route_prefix='0/')
+
+    def test_map_route_code_consume_False(self):
+        fallback = LoggingStreamResult()
+        target = LoggingStreamResult()
+        router = StreamResultRouter(fallback)
+        router.map(target, 'route_code_prefix', route_prefix='0')
+        router.status(test_id='foo', route_code='0')
+        router.status(test_id='foo', route_code='0/1')
+        router.status(test_id='foo')
+        self.assertEqual([
+            ('status', 'foo', None, None, True, None, None, False, None, '0',
+             None),
+            ('status', 'foo', None, None, True, None, None, False, None, '0/1',
+             None),
+            ],
+            target._events)
+        self.assertEqual([
+            ('status', 'foo', None, None, True, None, None, False, None, None,
+             None),
+            ],
+            fallback._events)
+
+    def test_map_route_code_consume_True(self):
+        fallback = LoggingStreamResult()
+        target = LoggingStreamResult()
+        router = StreamResultRouter(fallback)
+        router.map(
+            target, 'route_code_prefix', route_prefix='0', consume_route=True)
+        router.status(test_id='foo', route_code='0') # -> None
+        router.status(test_id='foo', route_code='0/1') # -> 1
+        router.status(test_id='foo', route_code='1') # -> fallback as-is.
+        self.assertEqual([
+            ('status', 'foo', None, None, True, None, None, False, None, None,
+             None),
+            ('status', 'foo', None, None, True, None, None, False, None, '1',
+             None),
+            ],
+            target._events)
+        self.assertEqual([
+            ('status', 'foo', None, None, True, None, None, False, None, '1',
+             None),
+            ],
+            fallback._events)
+
+    def test_map_test_id(self):
+        nontest = LoggingStreamResult()
+        test = LoggingStreamResult()
+        router = StreamResultRouter(test)
+        router.map(nontest, 'test_id', test_id=None)
+        router.status(test_id='foo', file_name="bar", file_bytes=b'')
+        router.status(file_name="bar", file_bytes=b'')
+        self.assertEqual([
+            ('status', 'foo', None, None, True, 'bar', b'', False, None, None,
+             None),], test._events)
+        self.assertEqual([
+            ('status', None, None, None, True, 'bar', b'', False, None, None,
+             None),], nontest._events)
 
 
 class TestThreadStreamResult(TestCase):
