@@ -1159,14 +1159,14 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
             for name, content in details.items():
                 mime_type = repr(content.content_type)
                 for file_bytes in content.iter_bytes():
-                    self.file(name, file_bytes,
+                    self.status(file_name=name, file_bytes=file_bytes,
                         mime_type=mime_type, test_id=test_id, timestamp=now)
-                self.file(name, _b(""), eof=True,
+                self.status(file_name=name, file_bytes=_b(""), eof=True,
                     mime_type=mime_type, test_id=test_id, timestamp=now)
         if reason is not None:
-            self.file('reason', reason.encode('utf8'), eof=True,
-                mime_type="text/plain; charset=utf8", test_id=test_id,
-                timestamp=now)
+            self.status(file_name='reason', file_bytes=reason.encode('utf8'),
+                eof=True, mime_type="text/plain; charset=utf8",
+                test_id=test_id, timestamp=now)
         self.status(test_id, status, test_tags=self.current_tags,
             timestamp=now)
 
