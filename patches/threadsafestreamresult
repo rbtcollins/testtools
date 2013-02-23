@@ -1,5 +1,5 @@
 Bottom: 8b54a6de9cc623a27b0f03d4689f8e4f9b687b2a
-Top:    89db281a37a1e201a4bbf75627667670096cc589
+Top:    157256fe1ec0b129293d7284b24508f4c58cdc02
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -110,7 +110,7 @@ index 36830af..940846d 100644
      TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 38781ee..1b17d99 100644
+index 38781ee..231085e 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -17,6 +17,7 @@ __all__ = [
@@ -121,7 +121,7 @@ index 38781ee..1b17d99 100644
      ]
  
  import datetime
-@@ -612,6 +613,73 @@ class TestControl(object):
+@@ -612,6 +613,65 @@ class TestControl(object):
          self.shouldStop = True
  
  
@@ -165,23 +165,15 @@ index 38781ee..1b17d99 100644
 +        self.semaphore = semaphore
 +        self.routing_code = routing_code
 +
-+    def file(self, file_name, file_bytes, eof=False, mime_type=None,
-+        test_id=None, route_code=None, timestamp=None):
++    def status(self, test_id=None, test_status=None, test_tags=None,
++        runnable=True, file_name=None, file_bytes=None, eof=False,
++        mime_type=None, route_code=None, timestamp=None):
 +        self.semaphore.acquire()
 +        try:
-+            self.result.file(file_name, file_bytes, eof=eof,
-+                mime_type=mime_type, test_id=test_id,
++            self.result.status(test_id=test_id, test_status=test_status,
++                test_tags=test_tags, runnable=runnable, file_name=file_name,
++                file_bytes=file_bytes, eof=eof, mime_type=mime_type,
 +                route_code=self.route_code(route_code), timestamp=timestamp)
-+        finally:
-+            self.semaphore.release()
-+
-+    def status(self, test_id, test_status, test_tags=None, runnable=True,
-+        route_code=None, timestamp=None):
-+        self.semaphore.acquire()
-+        try:
-+            self.result.status(test_id, test_status, test_tags=test_tags,
-+                runnable=runnable, route_code=self.route_code(route_code),
-+                timestamp=timestamp)
 +        finally:
 +            self.semaphore.release()
 +
@@ -196,7 +188,7 @@ index 38781ee..1b17d99 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index d917ad2..a4f8748 100644
+index d917ad2..cc21d7d 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -36,6 +36,7 @@ from testtools import (
@@ -207,7 +199,7 @@ index d917ad2..a4f8748 100644
      TimestampingStreamResult,
      testresult,
      )
-@@ -1600,6 +1601,67 @@ class TestMergeTags(TestCase):
+@@ -1600,6 +1601,53 @@ class TestMergeTags(TestCase):
              expected, _merge_tags(current_tags, changing_tags))
  
  
@@ -218,11 +210,16 @@ index d917ad2..a4f8748 100644
 +        return (ThreadsafeStreamResult(target, semaphore, "foo"),
 +            semaphore)
 +
-+    def test_file(self):
++    def test_status(self):
 +        class CallbackStream(object):
-+            def file(stream, file_name, file_bytes, eof=False, mime_type=None,
-+                test_id=None, route_code=None, timestamp=None):
++            def status(stream, test_id=None, test_status=None, test_tags=None,
++                runnable=True, file_name=None, file_bytes=None, eof=False,
++                mime_type=None, route_code=None, timestamp=None):
 +                self.assertFalse(semaphore.acquire(False))
++                self.assertEqual("test", test_id)
++                self.assertEqual("fail", test_status)
++                self.assertEqual(set(["quux"]), test_tags)
++                self.assertEqual(False, runnable)
 +                self.assertEqual("file", file_name)
 +                self.assertEqual(_b("content"), file_bytes)
 +                self.assertEqual(True, eof)
@@ -233,33 +230,14 @@ index d917ad2..a4f8748 100644
 +        result, semaphore = self.make_result(CallbackStream())
 +        expected_route = "foo"
 +        expected_time = None
-+        result.file("file", _b("content"), eof=True, mime_type="quux",
-+            test_id="test", route_code=None, timestamp=None)
-+        expected_route = "foo/bar"
-+        expected_time = datetime.datetime.now(utc)
-+        result.file("file", _b("content"), eof=True, mime_type="quux",
-+            test_id="test", route_code="bar", timestamp=expected_time)
-+
-+    def test_status(self):
-+        class CallbackStream(object):
-+            def status(stream, test_id, test_status, test_tags=None, runnable=True,
-+                route_code=None, timestamp=None):
-+                self.assertFalse(semaphore.acquire(False))
-+                self.assertEqual("test", test_id)
-+                self.assertEqual("fail", test_status)
-+                self.assertEqual(set(["quux"]), test_tags)
-+                self.assertEqual(False, runnable)
-+                self.assertEqual(expected_route, route_code)
-+                self.assertEqual(expected_time, timestamp)
-+        result, semaphore = self.make_result(CallbackStream())
-+        expected_route = "foo"
-+        expected_time = None
 +        result.status("test", "fail", test_tags=set(["quux"]), runnable=False,
-+            route_code=None, timestamp=None)
++            file_name="file", file_bytes=_b("content"), eof=True,
++            mime_type="quux", route_code=None, timestamp=None)
 +        expected_route = "foo/bar"
 +        expected_time = datetime.datetime.now(utc)
 +        result.status("test", "fail", test_tags=set(["quux"]), runnable=False,
-+            route_code="bar", timestamp=expected_time)
++            file_name="file", file_bytes=_b("content"), eof=True,
++            mime_type="quux", route_code="bar", timestamp=expected_time)
 +
 +    def testStartTestRun(self):
 +        t = object()
@@ -276,7 +254,7 @@ index d917ad2..a4f8748 100644
  
      def make_26_result(self):
 diff --git a/testtools/tests/test_testsuite.py b/testtools/tests/test_testsuite.py
-index 289beb9..85988d1 100644
+index 289beb9..57f79f9 100644
 --- a/testtools/tests/test_testsuite.py
 +++ b/testtools/tests/test_testsuite.py
 @@ -4,6 +4,7 @@
@@ -314,7 +292,7 @@ index 289beb9..85988d1 100644
  class TestConcurrentTestSuiteRun(TestCase):
  
      def test_broken_test(self):
-@@ -89,6 +94,99 @@ class TestConcurrentTestSuiteRun(TestCase):
+@@ -89,6 +94,114 @@ class TestConcurrentTestSuiteRun(TestCase):
          return list(iterate_tests(suite))
  
  
@@ -340,6 +318,10 @@ index 289beb9..85988d1 100644
 +             'inprogress',
 +             None,
 +             True,
++             None,
++             None,
++             False,
++             None,
 +             '0',
 +             None,
 +             ),
@@ -348,6 +330,10 @@ index 289beb9..85988d1 100644
 +             'success',
 +             frozenset(),
 +             True,
++             None,
++             None,
++             False,
++             None,
 +             '0',
 +             None,
 +             ),
@@ -356,6 +342,10 @@ index 289beb9..85988d1 100644
 +             'inprogress',
 +             None,
 +             True,
++             None,
++             None,
++             False,
++             None,
 +             '1',
 +             None,
 +             ),
@@ -364,10 +354,14 @@ index 289beb9..85988d1 100644
 +             'success',
 +             frozenset(),
 +             True,
++             None,
++             None,
++             False,
++             None,
 +             '1',
 +             None,
 +             ),
-+            ]), set(event[0:3] + (freeze(event[3]),) + event[4:6] + (None,)
++            ]), set(event[0:3] + (freeze(event[3]),) + event[4:10] + (None,)
 +                for event in result._events))
 +
 +    def test_broken_runner(self):
@@ -385,25 +379,24 @@ index 289beb9..85988d1 100644
 +        suite.run(result)
 +        events = result._events
 +        # Check the traceback loosely.
-+        self.assertThat(events[1][2].decode('utf8'), DocTestMatches("""\
++        self.assertThat(events[1][6].decode('utf8'), DocTestMatches("""\
 +Traceback (most recent call last):
 +  File "...testtools/testsuite.py", line 188, in _run_test
 +    test.run(process_result)
 +TypeError: run() takes ...1 ...argument (2 given)
 +""", doctest.ELLIPSIS))
-+        events = [event[0:6] + (None,) for event in events]
-+        events[1] = events[1][:2] + (None,) + events[1][3:]
++        events = [event[0:10] + (None,) for event in events]
++        events[1] = events[1][:6] + (None,) + events[1][7:]
 +        self.assertEqual([
-+            ('status', "broken-runner-'0'", 'inprogress', None, True, _u('0'), None),
-+            ('file', 'traceback', None,
++            ('status', "broken-runner-'0'", 'inprogress', None, True, None, None, False, None, _u('0'), None),
++            ('status', "broken-runner-'0'", None, None, True, 'traceback', None,
 +             False,
 +             'text/x-traceback; charset="utf8"; language="python"',
-+             "broken-runner-'0'",
++             '0',
 +             None),
-+             ('file', 'traceback', _b(''), True,
-+              'text/x-traceback; charset="utf8"; language="python"',
-+              "broken-runner-'0'", None),
-+             ('status', "broken-runner-'0'", 'fail', set(), True, _u('0'), None)
++             ('status', "broken-runner-'0'", None, None, True, 'traceback', b'', True,
++              'text/x-traceback; charset="utf8"; language="python"', '0', None),
++             ('status', "broken-runner-'0'", 'fail', set(), True, None, None, False, None, _u('0'), None)
 +            ], events)
 +
 +    def split_suite(self, suite):
