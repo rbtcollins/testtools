@@ -457,7 +457,7 @@ class TestStreamResultContract(object):
         result.startTestRun()
         result.stopTestRun()
 
-    def test_file(self):
+    def test_files(self):
         result = self._make_result()
         result.startTestRun()
         self.addCleanup(result.stopTestRun)
@@ -471,10 +471,10 @@ class TestStreamResultContract(object):
             ).items())
         param_dicts = self._permute(inputs)
         for kwargs in param_dicts:
-            result.file(_u("foo"), _b(""), **kwargs)
-            result.file(_u("foo"), _b("bar"), **kwargs)
+            result.status(file_name=_u("foo"), file_bytes=_b(""), **kwargs)
+            result.status(file_name=_u("foo"), file_bytes=_b("bar"), **kwargs)
 
-    def test_status(self):
+    def test_test_status(self):
         result = self._make_result()
         result.startTestRun()
         self.addCleanup(result.stopTestRun)
@@ -490,7 +490,7 @@ class TestStreamResultContract(object):
         param_dicts = self._permute(inputs)
         for kwargs in param_dicts:
             for arg in args:
-                result.status(*arg, **kwargs)
+                result.status(test_id=arg[0], test_status=arg[1], **kwargs)
 
     def _permute(self, inputs):
         param_dicts = [{}]

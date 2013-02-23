@@ -303,36 +303,13 @@ class StreamResult(object):
         considered failed-or-hung.
         """
 
-    def file(self, file_name, file_bytes, eof=False, mime_type=None,
-        test_id=None, route_code=None, timestamp=None):
-        """Inform the result about the contents of an attachment.
-        
-        Attachments may be related to a test (by setting test_info to
-        non-None), or are otherwise global to the test run.
-        
-        :param file_name: The name of the attachment. Any unicode string may
-            be used. While there is no semantic value attached to the name
-            of any attachment, the names 'stdout' and 'stderr' and 'traceback'
-            are recommended for use only for output sent to stdout, stderr and
-            tracebacks of exceptions.
-        :param file_bytes: A bytes object containing content for the named
-            file. This can just be a single chunk of the file - emitting
-            another file event with more later.
-        :param eof: This chunk is the last chunk of the file, any additional
-            chunks with the same name should be treated as an error and 
-            discarded.
-        :param mime_type: An optional MIME type for the file. stdout and
-            stderr will generally be "text/plain; charset=utf8". If None,
-            defaults to application/octet-stream.
-        :param test_id: The test that this file is related to. If None, no test
-            is associated with the file.
-        """
-
-    def status(self, test_id, test_status, test_tags=None, runnable=True,
-        route_code=None, timestamp=None):
+    def status(self, test_id=None, test_status=None, test_tags=None,
+        runnable=True, file_name=None, file_bytes=None, eof=False,
+        mime_type=None, route_code=None, timestamp=None):
         """Inform the result about a test status.
 
-        :param test_id: The test whose status is being reported.
+        :param test_id: The test whose status is being reported. None to 
+            report status about the test run as a whole.
         :param test_status: The status for the test. There are two sorts of
             status - interim and final status events. As many interim events
             can be generated as desired, but only one final event. After a
@@ -340,6 +317,9 @@ class StreamResult(object):
             same test_id+route_code may be discarded or associated with a new
             test by the StreamResult. (But no exception will be thrown).
             Interim states:
+            * None - no particular status is being reported, or status being
+              reported is not associated with a test (e.g. when reporting on
+              stdout / stderr chatter).
             * inprogress - the test is currently running. Emitted by tests when
               they start running and at any intermediary point they might
               choose to indicate their continual operation.
@@ -362,6 +342,23 @@ class StreamResult(object):
         :param runnable: Allows status reports to mark that they are for
             tests which are not able to be explicitly run. For instance,
             subtests will report themselves as non-runnable.
+        :param file_name: The name for the file_bytes. Any unicode string may
+            be used. While there is no semantic value attached to the name
+            of any attachment, the names 'stdout' and 'stderr' and 'traceback'
+            are recommended for use only for output sent to stdout, stderr and
+            tracebacks of exceptions. When file_name is supplied, file_bytes
+            must be a bytes instance.
+        :param file_bytes: A bytes object containing content for the named
+            file. This can just be a single chunk of the file - emitting
+            another file event with more later. Must be None unleses a
+            file_name is supplied.
+        :param eof: This chunk is the last chunk of the file, any additional
+            chunks with the same name should be treated as an error and 
+            discarded. Ignored unless file_name has been supplied.
+        :param mime_type: An optional MIME type for the file. stdout and
+            stderr will generally be "text/plain; charset=utf8". If None,
+            defaults to application/octet-stream. Ignores unless file_name
+            has been supplied.
         """
 
 
