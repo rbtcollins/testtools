@@ -1,11 +1,10 @@
 Version: 1
-Previous: 4d5dee789b9bdb468f32be7b9d1771453a31dc5d
-Head: 8c8e0b62743e3632664f4eb707faaae2cd1c94ff
+Previous: ee634167e00afe48f9c82228dbb036e068971bcb
+Head: a6743cb1f25d591af1ef3b189d5e4663397ab43f
 Applied:
   content-type-repr: c998408b3ff69c5472e2cf8bd9a93a7d08518810
   define-stream-result: 64f5a19e1bb0e95e81cb42827ec797986fdf7eea
-  double-streamresult: cb375e58463dd9f69b1a4048a445c8be43d03026
-  refresh-temp: 8c8e0b62743e3632664f4eb707faaae2cd1c94ff
+  double-streamresult: a6743cb1f25d591af1ef3b189d5e4663397ab43f
 Unapplied:
   copy-stream: 4f1de998828f820747aa4bd0cb449fc8f87a885b
   stream-to-dict: bdc28d939d435a6502af8a1f0c6ee24c007339ac
