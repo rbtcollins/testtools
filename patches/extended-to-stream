@@ -1,5 +1,5 @@
 Bottom: 724236f29637b821a957f07991853e3429c51c43
-Top:    2cd2531779446444de24991b34f35e1b50b0972b
+Top:    649a3279adb311dec84a64134482a70b91571d4f
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -93,7 +93,7 @@ index 435cb32..2827f0b 100644
      StreamFailfast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 1f361c6..0357e18 100644
+index 1f361c6..c46150e 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -171,14 +171,14 @@ index 1f361c6..0357e18 100644
 +            for name, content in details.items():
 +                mime_type = repr(content.content_type)
 +                for file_bytes in content.iter_bytes():
-+                    self.file(name, file_bytes,
++                    self.status(file_name=name, file_bytes=file_bytes,
 +                        mime_type=mime_type, test_id=test_id, timestamp=now)
-+                self.file(name, _b(""), eof=True,
++                self.status(file_name=name, file_bytes=_b(""), eof=True,
 +                    mime_type=mime_type, test_id=test_id, timestamp=now)
 +        if reason is not None:
-+            self.file('reason', reason.encode('utf8'), eof=True,
-+                mime_type="text/plain; charset=utf8", test_id=test_id,
-+                timestamp=now)
++            self.status(file_name='reason', file_bytes=reason.encode('utf8'),
++                eof=True, mime_type="text/plain; charset=utf8",
++                test_id=test_id, timestamp=now)
 +        self.status(test_id, status, test_tags=self.current_tags,
 +            timestamp=now)
 +
@@ -257,7 +257,7 @@ index 1f361c6..0357e18 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index cb069ee..1b69a86 100644
+index cb069ee..56a84a6 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -20,6 +20,7 @@ from extras import safe_hasattr
@@ -324,7 +324,7 @@ index cb069ee..1b69a86 100644
  class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -676,6 +693,37 @@ class TestStreamToDict(TestCase):
+@@ -676,6 +693,45 @@ class TestStreamToDict(TestCase):
              "application/octet-stream", repr(details['another file'].content_type))
  
  
@@ -348,12 +348,20 @@ index cb069ee..1b69a86 100644
 +             None,
 +             True,
 +             None,
++             None,
++             False,
++             None,
++             None,
 +             now),
 +            ('status',
 +             'testtools.tests.test_testresult.TestExtendedToStreamDecorator.test_explicit_time',
 +             'success',
 +              set(),
 +              True,
++              None,
++              None,
++              False,
++              None,
 +              None,
 +              now),
 +             ('stopTestRun',)], log._events)
