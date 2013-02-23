@@ -1,5 +1,5 @@
 Bottom: 6feed81e2cb7df77dc525b33e69e892a9289d185
-Top:    27f217996d88c33a3cf75d35ceae1c1051d69115
+Top:    c430bf7df71254f30bb140b77d53cf80f139086d
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -196,7 +196,7 @@ index c94c4c6..e0049b0 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 008aa20..20ea333 100644
+index 008aa20..20a974f 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -23,6 +23,7 @@ from testtools import (
@@ -220,7 +220,7 @@ index 008aa20..20ea333 100644
  class TestStreamToDictContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -661,6 +668,150 @@ class TestStreamToDict(TestCase):
+@@ -661,6 +668,153 @@ class TestStreamToDict(TestCase):
              "application/octet-stream", repr(details['another file'].content_type))
  
  
@@ -307,7 +307,8 @@ index 008aa20..20ea333 100644
 +        # from the 'reason' file attachment if any.
 +        result = StreamSummary()
 +        result.startTestRun()
-+        result.file("reason", _b("Missing dependency"), eof=True,
++        result.status(file_name="reason",
++            file_bytes=_b("Missing dependency"), eof=True,
 +            mime_type="text/plain; charset=utf8", test_id="foo.bar")
 +        result.status("foo.bar", "skip")
 +        self.assertThat(result.skipped, HasLength(1))
@@ -315,9 +316,11 @@ index 008aa20..20ea333 100644
 +        self.assertEqual(_u("Missing dependency"), result.skipped[0][1])
 +
 +    def _report_files(self, result):
-+        result.file("some log.txt", _b("1234 log message"), eof=True,
++        result.status(file_name="some log.txt",
++            file_bytes=_b("1234 log message"), eof=True,
 +            mime_type="text/plain; charset=utf8", test_id="foo.bar")
-+        result.file("traceback", _b("""Traceback (most recent call last):
++        result.status(file_name="traceback",
++            file_bytes=_b("""Traceback (most recent call last):
 +  File "testtools/tests/test_testresult.py", line 607, in test_stopTestRun
 +      AllMatch(Equals([('startTestRun',), ('stopTestRun',)])))
 +testtools.matchers._impl.MismatchError: Differences: [
