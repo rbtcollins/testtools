@@ -1,5 +1,5 @@
-Bottom: e7c52821cf8e64f777d108f1567a79f40db56972
-Top:    30cb8c2b0184f8472297e5aab3a3df83e74425e4
+Bottom: 724236f29637b821a957f07991853e3429c51c43
+Top:    2cd2531779446444de24991b34f35e1b50b0972b
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -93,7 +93,7 @@ index 435cb32..2827f0b 100644
      StreamFailfast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 56823ef..2f04d2b 100644
+index 1f361c6..0357e18 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -113,7 +113,7 @@ index 56823ef..2f04d2b 100644
  from testtools.content import (
      Content,
      text_content,
-@@ -1112,6 +1113,142 @@ class ExtendedToOriginalDecorator(object):
+@@ -1104,6 +1105,142 @@ class ExtendedToOriginalDecorator(object):
          return self.decorated.wasSuccessful()
  
  
@@ -257,7 +257,7 @@ index 56823ef..2f04d2b 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index fc97646..821d8d9 100644
+index cb069ee..1b69a86 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -20,6 +20,7 @@ from extras import safe_hasattr
@@ -324,7 +324,7 @@ index fc97646..821d8d9 100644
  class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -682,6 +699,37 @@ class TestStreamToDict(TestCase):
+@@ -676,6 +693,37 @@ class TestStreamToDict(TestCase):
              "application/octet-stream", repr(details['another file'].content_type))
  
  
