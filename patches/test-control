@@ -1,5 +1,5 @@
-Bottom: 87bf7a47277e617f1ac0f4b93bec32d468810f61
-Top:    e7c52821cf8e64f777d108f1567a79f40db56972
+Bottom: c430bf7df71254f30bb140b77d53cf80f139086d
+Top:    c0b3a470b18562262277af43f3671de115eec44c
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-17 16:12:38 +1300
 
@@ -105,7 +105,7 @@ index 29ee39d..435cb32 100644
      TestResultDecorator,
      TextTestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 26e326f..56823ef 100644
+index e0049b0..ebbee7e 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,10 +6,12 @@ __metaclass__ = type
@@ -121,7 +121,7 @@ index 26e326f..56823ef 100644
      'TestResult',
      'TestResultDecorator',
      'ThreadsafeForwardingResult',
-@@ -405,6 +407,18 @@ class CopyStreamResult(StreamResult):
+@@ -398,6 +400,18 @@ class CopyStreamResult(StreamResult):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  
@@ -140,7 +140,7 @@ index 26e326f..56823ef 100644
  class StreamToDict(StreamResult):
      """A specialised StreamResult that emits a callback as tests complete.
  
-@@ -587,6 +601,23 @@ class StreamSummary(StreamToDict):
+@@ -578,6 +592,23 @@ class StreamSummary(StreamToDict):
          self.unexpectedSuccesses.append(case)
  
  
@@ -165,7 +165,7 @@ index 26e326f..56823ef 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 1da62cd..fc97646 100644
+index 20a974f..cb069ee 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -22,11 +22,13 @@ from testtools import (
@@ -195,7 +195,7 @@ index 1da62cd..fc97646 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -674,6 +682,47 @@ class TestStreamToDict(TestCase):
+@@ -668,6 +676,47 @@ class TestStreamToDict(TestCase):
              "application/octet-stream", repr(details['another file'].content_type))
  
  
@@ -243,7 +243,7 @@ index 1da62cd..fc97646 100644
  class TestStreamSummary(TestCase):
  
      def test_attributes(self):
-@@ -818,6 +867,17 @@ testtools.matchers._impl.MismatchError: Differences: [
+@@ -815,6 +864,17 @@ testtools.matchers._impl.MismatchError: Differences: [
          self.assertEqual("foo.bar", result.unexpectedSuccesses[0].id())
  
  
