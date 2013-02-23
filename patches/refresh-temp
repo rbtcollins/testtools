@@ -1,0 +1,37 @@
+Bottom: 27f217996d88c33a3cf75d35ceae1c1051d69115
+Top:    c430bf7df71254f30bb140b77d53cf80f139086d
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-23 23:06:55 +1300
+
+Refresh of stream-summary
+
+---
+
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index 20ea333..20a974f 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -751,7 +751,8 @@ class TestStreamSummary(TestCase):
+         # from the 'reason' file attachment if any.
+         result = StreamSummary()
+         result.startTestRun()
+-        result.file("reason", _b("Missing dependency"), eof=True,
++        result.status(file_name="reason",
++            file_bytes=_b("Missing dependency"), eof=True,
+             mime_type="text/plain; charset=utf8", test_id="foo.bar")
+         result.status("foo.bar", "skip")
+         self.assertThat(result.skipped, HasLength(1))
+@@ -759,9 +760,11 @@ class TestStreamSummary(TestCase):
+         self.assertEqual(_u("Missing dependency"), result.skipped[0][1])
+ 
+     def _report_files(self, result):
+-        result.file("some log.txt", _b("1234 log message"), eof=True,
++        result.status(file_name="some log.txt",
++            file_bytes=_b("1234 log message"), eof=True,
+             mime_type="text/plain; charset=utf8", test_id="foo.bar")
+-        result.file("traceback", _b("""Traceback (most recent call last):
++        result.status(file_name="traceback",
++            file_bytes=_b("""Traceback (most recent call last):
+   File "testtools/tests/test_testresult.py", line 607, in test_stopTestRun
+       AllMatch(Equals([('startTestRun',), ('stopTestRun',)])))
+ testtools.matchers._impl.MismatchError: Differences: [
