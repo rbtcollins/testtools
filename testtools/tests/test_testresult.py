@@ -1608,11 +1608,16 @@ class TestThreadStreamResult(TestCase):
         return (ThreadsafeStreamResult(target, semaphore, "foo"),
             semaphore)
 
-    def test_file(self):
+    def test_status(self):
         class CallbackStream(object):
-            def file(stream, file_name, file_bytes, eof=False, mime_type=None,
-                test_id=None, route_code=None, timestamp=None):
+            def status(stream, test_id=None, test_status=None, test_tags=None,
+                runnable=True, file_name=None, file_bytes=None, eof=False,
+                mime_type=None, route_code=None, timestamp=None):
                 self.assertFalse(semaphore.acquire(False))
+                self.assertEqual("test", test_id)
+                self.assertEqual("fail", test_status)
+                self.assertEqual(set(["quux"]), test_tags)
+                self.assertEqual(False, runnable)
                 self.assertEqual("file", file_name)
                 self.assertEqual(_b("content"), file_bytes)
                 self.assertEqual(True, eof)
@@ -1623,33 +1628,14 @@ class TestThreadStreamResult(TestCase):
         result, semaphore = self.make_result(CallbackStream())
         expected_route = "foo"
         expected_time = None
-        result.file("file", _b("content"), eof=True, mime_type="quux",
-            test_id="test", route_code=None, timestamp=None)
-        expected_route = "foo/bar"
-        expected_time = datetime.datetime.now(utc)
-        result.file("file", _b("content"), eof=True, mime_type="quux",
-            test_id="test", route_code="bar", timestamp=expected_time)
-
-    def test_status(self):
-        class CallbackStream(object):
-            def status(stream, test_id, test_status, test_tags=None, runnable=True,
-                route_code=None, timestamp=None):
-                self.assertFalse(semaphore.acquire(False))
-                self.assertEqual("test", test_id)
-                self.assertEqual("fail", test_status)
-                self.assertEqual(set(["quux"]), test_tags)
-                self.assertEqual(False, runnable)
-                self.assertEqual(expected_route, route_code)
-                self.assertEqual(expected_time, timestamp)
-        result, semaphore = self.make_result(CallbackStream())
-        expected_route = "foo"
-        expected_time = None
         result.status("test", "fail", test_tags=set(["quux"]), runnable=False,
-            route_code=None, timestamp=None)
+            file_name="file", file_bytes=_b("content"), eof=True,
+            mime_type="quux", route_code=None, timestamp=None)
         expected_route = "foo/bar"
         expected_time = datetime.datetime.now(utc)
         result.status("test", "fail", test_tags=set(["quux"]), runnable=False,
-            route_code="bar", timestamp=expected_time)
+            file_name="file", file_bytes=_b("content"), eof=True,
+            mime_type="quux", route_code="bar", timestamp=expected_time)
 
     def testStartTestRun(self):
         t = object()

@@ -116,6 +116,10 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
              'inprogress',
              None,
              True,
+             None,
+             None,
+             False,
+             None,
              '0',
              None,
              ),
@@ -124,6 +128,10 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
              'success',
              frozenset(),
              True,
+             None,
+             None,
+             False,
+             None,
              '0',
              None,
              ),
@@ -132,6 +140,10 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
              'inprogress',
              None,
              True,
+             None,
+             None,
+             False,
+             None,
              '1',
              None,
              ),
@@ -140,10 +152,14 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
              'success',
              frozenset(),
              True,
+             None,
+             None,
+             False,
+             None,
              '1',
              None,
              ),
-            ]), set(event[0:3] + (freeze(event[3]),) + event[4:6] + (None,)
+            ]), set(event[0:3] + (freeze(event[3]),) + event[4:10] + (None,)
                 for event in result._events))
 
     def test_broken_runner(self):
@@ -161,25 +177,24 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
         suite.run(result)
         events = result._events
         # Check the traceback loosely.
-        self.assertThat(events[1][2].decode('utf8'), DocTestMatches("""\
+        self.assertThat(events[1][6].decode('utf8'), DocTestMatches("""\
 Traceback (most recent call last):
   File "...testtools/testsuite.py", line 188, in _run_test
     test.run(process_result)
 TypeError: run() takes ...1 ...argument (2 given)
 """, doctest.ELLIPSIS))
-        events = [event[0:6] + (None,) for event in events]
-        events[1] = events[1][:2] + (None,) + events[1][3:]
+        events = [event[0:10] + (None,) for event in events]
+        events[1] = events[1][:6] + (None,) + events[1][7:]
         self.assertEqual([
-            ('status', "broken-runner-'0'", 'inprogress', None, True, _u('0'), None),
-            ('file', 'traceback', None,
+            ('status', "broken-runner-'0'", 'inprogress', None, True, None, None, False, None, _u('0'), None),
+            ('status', "broken-runner-'0'", None, None, True, 'traceback', None,
              False,
              'text/x-traceback; charset="utf8"; language="python"',
-             "broken-runner-'0'",
+             '0',
              None),
-             ('file', 'traceback', _b(''), True,
-              'text/x-traceback; charset="utf8"; language="python"',
-              "broken-runner-'0'", None),
-             ('status', "broken-runner-'0'", 'fail', set(), True, _u('0'), None)
+             ('status', "broken-runner-'0'", None, None, True, 'traceback', b'', True,
+              'text/x-traceback; charset="utf8"; language="python"', '0', None),
+             ('status', "broken-runner-'0'", 'fail', set(), True, None, None, False, None, _u('0'), None)
             ], events)
 
     def split_suite(self, suite):

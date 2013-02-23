@@ -653,23 +653,15 @@ class ThreadsafeStreamResult(StreamResult):
         self.semaphore = semaphore
         self.routing_code = routing_code
 
-    def file(self, file_name, file_bytes, eof=False, mime_type=None,
-        test_id=None, route_code=None, timestamp=None):
+    def status(self, test_id=None, test_status=None, test_tags=None,
+        runnable=True, file_name=None, file_bytes=None, eof=False,
+        mime_type=None, route_code=None, timestamp=None):
         self.semaphore.acquire()
         try:
-            self.result.file(file_name, file_bytes, eof=eof,
-                mime_type=mime_type, test_id=test_id,
+            self.result.status(test_id=test_id, test_status=test_status,
+                test_tags=test_tags, runnable=runnable, file_name=file_name,
+                file_bytes=file_bytes, eof=eof, mime_type=mime_type,
                 route_code=self.route_code(route_code), timestamp=timestamp)
-        finally:
-            self.semaphore.release()
-
-    def status(self, test_id, test_status, test_tags=None, runnable=True,
-        route_code=None, timestamp=None):
-        self.semaphore.acquire()
-        try:
-            self.result.status(test_id, test_status, test_tags=test_tags,
-                runnable=runnable, route_code=self.route_code(route_code),
-                timestamp=timestamp)
         finally:
             self.semaphore.release()
 
