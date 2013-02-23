@@ -90,6 +90,10 @@ Improvements
   test that accidentally depended on the CPython repr for object().
   (Jonathan Lange)
 
+* ``StreamResultRouter`` added. This is useful for demultiplexing - e.g. for
+  partitioning analysis of events or sending feedback encapsulated in
+  StreamResult events back to their source. (Robert Collins)
+
 0.9.29
 ~~~~~~
 
