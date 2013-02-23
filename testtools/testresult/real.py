@@ -1260,13 +1260,11 @@ class StreamToExtendedDecorator(StreamResult):
         # StreamToDict buffers and gives us individual tests.
         self.hook = StreamToDict(self._handle_tests)
 
-    def file(self, *args, **kwargs):
-        self.hook.file(*args, **kwargs)
-
-    def status(self, test_id, test_status, *args, **kwargs):
+    def status(self, test_id=None, test_status=None, *args, **kwargs):
         if test_status == 'exists':
             return
-        self.hook.status(test_id, test_status, *args, **kwargs)
+        self.hook.status(
+            test_id=test_id, test_status=test_status, *args, **kwargs)
 
     def startTestRun(self):
         self.decorated.startTestRun()
