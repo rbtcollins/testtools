@@ -1,5 +1,5 @@
 Bottom: c430bf7df71254f30bb140b77d53cf80f139086d
-Top:    c0b3a470b18562262277af43f3671de115eec44c
+Top:    724236f29637b821a957f07991853e3429c51c43
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-17 16:12:38 +1300
 
@@ -105,7 +105,7 @@ index 29ee39d..435cb32 100644
      TestResultDecorator,
      TextTestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index e0049b0..ebbee7e 100644
+index e0049b0..1f361c6 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,10 +6,12 @@ __metaclass__ = type
@@ -121,7 +121,7 @@ index e0049b0..ebbee7e 100644
      'TestResult',
      'TestResultDecorator',
      'ThreadsafeForwardingResult',
-@@ -398,6 +400,18 @@ class CopyStreamResult(StreamResult):
+@@ -398,6 +400,19 @@ class CopyStreamResult(StreamResult):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  
@@ -131,8 +131,9 @@ index e0049b0..ebbee7e 100644
 +    def __init__(self, callback):
 +        self.callback = callback
 +
-+    def status(self, test_id, test_status, test_tags=None, runnable=True,
-+        route_code=None, timestamp=None):
++    def status(self, test_id=None, test_status=None, test_tags=None,
++        runnable=True, file_name=None, file_bytes=None, eof=False,
++        mime_type=None, route_code=None, timestamp=None):
 +        if test_status in ('uxsuccess', 'fail'):
 +            self.callback()
 +
@@ -140,7 +141,7 @@ index e0049b0..ebbee7e 100644
  class StreamToDict(StreamResult):
      """A specialised StreamResult that emits a callback as tests complete.
  
-@@ -578,6 +592,23 @@ class StreamSummary(StreamToDict):
+@@ -578,6 +593,23 @@ class StreamSummary(StreamToDict):
          self.unexpectedSuccesses.append(case)
  
  
