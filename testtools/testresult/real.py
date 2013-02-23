@@ -1453,13 +1453,6 @@ class TimestampingStreamResult(CopyStreamResult):
     def __init__(self, target):
         super(TimestampingStreamResult, self).__init__([target])
 
-    def file(self, *args, **kwargs):
-        timestamp = kwargs.pop('timestamp', None)
-        if timestamp is None:
-            timestamp = datetime.datetime.now(utc)
-        super(TimestampingStreamResult, self).file(
-            *args, timestamp=timestamp, **kwargs)
-
     def status(self, *args, **kwargs):
         timestamp = kwargs.pop('timestamp', None)
         if timestamp is None:

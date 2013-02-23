@@ -2605,37 +2605,24 @@ class TestTimestampingStreamResult(TestCase):
         result.stopTestRun()
         self.assertEqual([('stopTestRun',)], result.targets[0]._events)
 
-    def test_file_no_timestamp(self):
-        result = TimestampingStreamResult(LoggingStreamResult())
-        result.file("A", "B", eof="C", mime_type="D", test_id="E", route_code="F")
-        events = result.targets[0]._events
-        self.assertThat(events, HasLength(1))
-        self.assertThat(events[0], HasLength(8))
-        self.assertEqual(
-            ("file", "A", "B", "C", "D", "E", "F"), events[0][:7])
-        self.assertNotEqual(None, events[0][7])
-        self.assertIsInstance(events[0][7], datetime.datetime)
-
-    def test_file_timestamp(self):
-        result = TimestampingStreamResult(LoggingStreamResult())
-        result.file("A", "B", timestamp="F")
-        self.assertEqual("F", result.targets[0]._events[0][7])
-
     def test_status_no_timestamp(self):
         result = TimestampingStreamResult(LoggingStreamResult())
-        result.status("A", "B", test_tags="C", runnable="D", route_code="E")
+        result.status(test_id="A", test_status="B", test_tags="C",
+            runnable="D", file_name="E", file_bytes=b"F", eof=True,
+            mime_type="G", route_code="H")
         events = result.targets[0]._events
         self.assertThat(events, HasLength(1))
-        self.assertThat(events[0], HasLength(7))
+        self.assertThat(events[0], HasLength(11))
         self.assertEqual(
-            ("status", "A", "B", "C", "D", "E"), events[0][:6])
-        self.assertNotEqual(None, events[0][6])
-        self.assertIsInstance(events[0][6], datetime.datetime)
+            ("status", "A", "B", "C", "D", "E", b"F", True, "G", "H"),
+            events[0][:10])
+        self.assertNotEqual(None, events[0][10])
+        self.assertIsInstance(events[0][10], datetime.datetime)
 
     def test_status_timestamp(self):
         result = TimestampingStreamResult(LoggingStreamResult())
-        result.status("A", "B", timestamp="F")
-        self.assertEqual("F", result.targets[0]._events[0][6])
+        result.status(timestamp="F")
+        self.assertEqual("F", result.targets[0]._events[0][10])
 
 
 def test_suite():
