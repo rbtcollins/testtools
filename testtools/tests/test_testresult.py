@@ -586,23 +586,16 @@ class TestCopyStreamResultCopies(TestCase):
         self.assertThat(self.targets,
             AllMatch(Equals([('startTestRun',), ('stopTestRun',)])))
 
-    def test_file(self):
-        self.result.startTestRun()
-        now = datetime.datetime.now(utc)
-        self.result.file("foo", "bar", eof=True, mime_type="text/json",
-            test_id="id", route_code='abc', timestamp=now)
-        self.assertThat(self.targets,
-            AllMatch(Equals([('startTestRun',),
-                ('file', 'foo', 'bar', True, 'text/json', 'id', 'abc', now)])))
-
     def test_status(self):
         self.result.startTestRun()
         now = datetime.datetime.now(utc)
         self.result.status("foo", "success", test_tags=set(['tag']),
-            runnable=False, route_code='abc', timestamp=now)
+            runnable=False, file_name="foo", file_bytes=b'bar', eof=True,
+            mime_type="text/json", route_code='abc', timestamp=now)
         self.assertThat(self.targets,
             AllMatch(Equals([('startTestRun',),
-                ('status', 'foo', 'success', set(['tag']), False, 'abc', now)
+                ('status', 'foo', 'success', set(['tag']), False, "foo",
+                 b'bar', True, "text/json", 'abc', now)
                 ])))
 
 

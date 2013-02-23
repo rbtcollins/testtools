@@ -385,10 +385,6 @@ class CopyStreamResult(StreamResult):
         super(CopyStreamResult, self).stopTestRun()
         domap(methodcaller('stopTestRun'), self.targets)
 
-    def file(self, *args, **kwargs):
-        super(CopyStreamResult, self).file(*args, **kwargs)
-        domap(methodcaller('file', *args, **kwargs), self.targets)
-
     def status(self, *args, **kwargs):
         super(CopyStreamResult, self).status(*args, **kwargs)
         domap(methodcaller('status', *args, **kwargs), self.targets)
