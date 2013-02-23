@@ -540,11 +540,11 @@ class TestDoubleStreamResultEvents(TestCase):
         result = LoggingStreamResult()
         result.startTestRun()
         now = datetime.datetime.now(utc)
-        result.file("foo", "bar", eof=True, mime_type="text/json",
+        result.status(file_name="foo", file_bytes="bar", eof=True, mime_type="text/json",
             test_id="id", route_code='abc', timestamp=now)
         self.assertEqual(
             [('startTestRun',),
-             ('file', 'foo', 'bar', True, 'text/json', 'id', 'abc', now)],
+             ('status', 'id', None, None, True, 'foo', 'bar', True, 'text/json', 'abc', now)],
             result._events)
 
     def test_status(self):
@@ -555,7 +555,7 @@ class TestDoubleStreamResultEvents(TestCase):
             runnable=False, route_code='abc', timestamp=now)
         self.assertEqual(
             [('startTestRun',),
-             ('status', 'foo', 'success', set(['tag']), False, 'abc', now)],
+             ('status', 'foo', 'success', set(['tag']), False, None, None, False, None, 'abc', now)],
             result._events)
 
 
