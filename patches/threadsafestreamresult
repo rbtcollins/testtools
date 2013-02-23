@@ -1,5 +1,5 @@
-Bottom: 623943bd8f0e4e63c4bd7d4b65cf8b617e22218d
-Top:    2fbd40adc069aea64f45509151bd476440fc3c3d
+Bottom: 8b54a6de9cc623a27b0f03d4689f8e4f9b687b2a
+Top:    89db281a37a1e201a4bbf75627667670096cc589
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -110,7 +110,7 @@ index 36830af..940846d 100644
      TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index a6e4bbc..12ddb2f 100644
+index 38781ee..1b17d99 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -17,6 +17,7 @@ __all__ = [
@@ -121,7 +121,7 @@ index a6e4bbc..12ddb2f 100644
      ]
  
  import datetime
-@@ -620,6 +621,73 @@ class TestControl(object):
+@@ -612,6 +613,73 @@ class TestControl(object):
          self.shouldStop = True
  
  
@@ -196,7 +196,7 @@ index a6e4bbc..12ddb2f 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index e17416f..0994b99 100644
+index d917ad2..a4f8748 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -36,6 +36,7 @@ from testtools import (
@@ -207,7 +207,7 @@ index e17416f..0994b99 100644
      TimestampingStreamResult,
      testresult,
      )
-@@ -1595,6 +1596,67 @@ class TestMergeTags(TestCase):
+@@ -1600,6 +1601,67 @@ class TestMergeTags(TestCase):
              expected, _merge_tags(current_tags, changing_tags))
  
  
