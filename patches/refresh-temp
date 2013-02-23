@@ -1,0 +1,30 @@
+Bottom: 822970b458d84352f333563d7f8d18d382ee4022
+Top:    1ed53f76b8fba83232401be92305abf5f64046c7
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-24 00:10:24 +1300
+
+Refresh of stream-to-extended-result
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 4618148..33a07b9 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -1260,13 +1260,11 @@ class StreamToExtendedDecorator(StreamResult):
+         # StreamToDict buffers and gives us individual tests.
+         self.hook = StreamToDict(self._handle_tests)
+ 
+-    def file(self, *args, **kwargs):
+-        self.hook.file(*args, **kwargs)
+-
+-    def status(self, test_id, test_status, *args, **kwargs):
++    def status(self, test_id=None, test_status=None, *args, **kwargs):
+         if test_status == 'exists':
+             return
+-        self.hook.status(test_id, test_status, *args, **kwargs)
++        self.hook.status(
++            test_id=test_id, test_status=test_status, *args, **kwargs)
+ 
+     def startTestRun(self):
+         self.decorated.startTestRun()
