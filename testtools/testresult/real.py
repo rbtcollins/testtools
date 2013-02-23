@@ -406,8 +406,9 @@ class StreamFailfast(StreamResult):
     def __init__(self, callback):
         self.callback = callback
 
-    def status(self, test_id, test_status, test_tags=None, runnable=True,
-        route_code=None, timestamp=None):
+    def status(self, test_id=None, test_status=None, test_tags=None,
+        runnable=True, file_name=None, file_bytes=None, eof=False,
+        mime_type=None, route_code=None, timestamp=None):
         if test_status in ('uxsuccess', 'fail'):
             self.callback()
 
