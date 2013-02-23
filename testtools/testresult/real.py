@@ -426,14 +426,21 @@ class StreamToDict(StreamResult):
         super(StreamToDict, self).startTestRun()
         self._inprogress = {}
 
-    def file(self, file_name, file_bytes, eof=False, mime_type=None,
-        test_id=None, route_code=None, timestamp=None):
-        super(StreamToDict, self).file(file_name, file_bytes, eof=eof,
-            mime_type=mime_type, test_id=test_id, route_code=route_code,
-            timestamp=timestamp)
+    def status(self, test_id=None, test_status=None, test_tags=None,
+        runnable=True, file_name=None, file_bytes=None, eof=False,
+        mime_type=None, route_code=None, timestamp=None):
+        super(StreamToDict, self).status(test_id, test_status,
+            test_tags=test_tags, runnable=runnable, file_name=file_name,
+            file_bytes=file_bytes, eof=eof, mime_type=mime_type,
+            route_code=route_code, timestamp=timestamp)
         key = self._ensure_key(test_id, route_code)
-        if key:
-            case = self._inprogress[key]
+        # update fields
+        if not key:
+            return
+        if test_status is not None:
+            self._inprogress[key]['status'] = test_status
+        case = self._inprogress[key]
+        if file_name is not None:
             if file_name not in case['details']:
                 if mime_type is None:
                     mime_type = 'application/octet-stream'
@@ -443,19 +450,10 @@ class StreamToDict(StreamResult):
                 case['details'][file_name] = Content(
                     content_type, lambda:content_bytes)
             case['details'][file_name].iter_bytes().append(file_bytes)
-    
-    def status(self, test_id, test_status, test_tags=None, runnable=True,
-        route_code=None, timestamp=None):
-        super(StreamToDict, self).status(test_id, test_status,
-            test_tags=test_tags, runnable=runnable, route_code=route_code,
-            timestamp=timestamp)
-        key = self._ensure_key(test_id, route_code)
-        # update fields
-        self._inprogress[key]['status'] = test_status
         if test_tags is not None:
             self._inprogress[key]['tags'] = test_tags
         # notify completed tests.
-        if test_status != 'inprogress':
+        if test_status not in (None, 'inprogress'):
             self.on_test(self._inprogress.pop(key))
     
     def stopTestRun(self):

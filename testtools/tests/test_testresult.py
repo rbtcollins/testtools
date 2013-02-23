@@ -641,10 +641,11 @@ class TestStreamToDict(TestCase):
         tests = []
         result = StreamToDict(tests.append)
         result.startTestRun()
-        result.file("some log.txt", _b("1234 log message"), eof=True,
+        result.status(file_name="some log.txt",
+            file_bytes=_b("1234 log message"), eof=True,
             mime_type="text/plain; charset=utf8", test_id="foo.bar")
-        result.file("another file", _b("""Traceback..."""),
-            test_id="foo.bar")
+        result.status(file_name="another file",
+            file_bytes=_b("""Traceback..."""), test_id="foo.bar")
         result.stopTestRun()
         self.assertThat(tests, HasLength(1))
         test = tests[0]
