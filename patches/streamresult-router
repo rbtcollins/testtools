@@ -1,0 +1,15 @@
+Bottom: 157256fe1ec0b129293d7284b24508f4c58cdc02
+Top:    157256fe1ec0b129293d7284b24508f4c58cdc02
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-24 12:38:02 +1300
+
+Add a StreamResult Router.
+
+The router dispatches packets to another StreamResult based on their
+route_code, stripping the matching section. Unroutable events are forwarded to
+a fallback stream.
+
+
+---
+
+
