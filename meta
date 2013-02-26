@@ -1,5 +1,5 @@
 Version: 1
-Previous: eabef20689f36dfaabaf23a92dff7f1e8cdcd9e5
+Previous: 808248c778522e24b21c19d54c686cef9a8ca39a
 Head: b8cd07d91f68654bfd83464c08bf0e5dad1fe65e
 Applied:
   content-type-repr: c998408b3ff69c5472e2cf8bd9a93a7d08518810
@@ -14,6 +14,6 @@ Applied:
   stream-to-extended-result: ebe67bba689af940f508919668633a885d098fa5
   timestamp-stream-result: d80f817ab7bc4cef972654cd4f4b0378d615bb96
   threadsafestreamresult: 017a44958601bf9d637cf4eebd9a4d3773c5d54e
+  streamresult-router: b8cd07d91f68654bfd83464c08bf0e5dad1fe65e
 Unapplied:
-  streamresult-router: 6da6e28e4434df0263b30310616a61094f469c7f
 Hidden:
