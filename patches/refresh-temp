@@ -1,0 +1,57 @@
+Bottom: 6feed81e2cb7df77dc525b33e69e892a9289d185
+Top:    06d46bc8061c510aa88c8327536714ba69b8df90
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-26 16:24:37 +1300
+
+Refresh of stream-to-dict
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index c94c4c6..913268a 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -445,6 +445,13 @@ class StreamToDict(StreamResult):
+                 if mime_type is None:
+                     mime_type = 'application/octet-stream'
+                 primary, sub, parameters = parse_mime_type(mime_type)
++                if 'charset' in parameters:
++                    if ',' in parameters['charset']:
++                        # testtools was emitting a bad encoding, workaround it,
++                        # Though this does lose data - probably want to drop
++                        # this in a few releases.
++                        parameters['charset'] = parameters['charset'][
++                            :parameters['charset'].find(',')]
+                 content_type = ContentType(primary, sub, parameters)
+                 content_bytes = []
+                 case['details'][file_name] = Content(
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index 008aa20..55f946c 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -660,6 +660,25 @@ class TestStreamToDict(TestCase):
+         self.assertEqual(
+             "application/octet-stream", repr(details['another file'].content_type))
+ 
++    def test_bad_mime(self):
++        # Testtools was making bad mime types, this tests that the specific
++        # corruption is catered for.
++        tests = []
++        result = StreamToDict(tests.append)
++        result.startTestRun()
++        result.status(file_name="file", file_bytes=b'a',
++            mime_type='text/plain; charset=utf8, language=python',
++            test_id='id')
++        result.stopTestRun()
++        self.assertThat(tests, HasLength(1))
++        test = tests[0]
++        self.assertEqual("id", test['id'])
++        details = test['details']
++        self.assertEqual(_u("a"), details['file'].as_text())
++        self.assertEqual(
++            "text/plain; charset=\"utf8\"",
++            repr(details['file'].content_type))
++
+ 
+ class TestTestResult(TestCase):
+     """Tests for 'TestResult'."""
