@@ -1,5 +1,5 @@
-Bottom: 07480b969d7b0ad95a04e5d9bd4e70fd1e87a210
-Top:    65a396663c2cd8b5a34a1c9b21d07551f50a5a86
+Bottom: 38f8dfd69ce7b862ec6e488fab0d2efc0f9b192f
+Top:    eecb47df3b30954f9e7ee3cc453d0784c0ba3364
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-17 16:12:38 +1300
 
@@ -105,7 +105,7 @@ index 29ee39d..435cb32 100644
      TestResultDecorator,
      TextTestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index f449c9b..9ece8ba 100644
+index 1e8f097..7f0f899 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,10 +6,12 @@ __metaclass__ = type
