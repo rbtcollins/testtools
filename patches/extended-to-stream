@@ -1,5 +1,5 @@
-Bottom: 65a396663c2cd8b5a34a1c9b21d07551f50a5a86
-Top:    1b1f10f585345b1c38f74821adbc56e938a3af05
+Bottom: eecb47df3b30954f9e7ee3cc453d0784c0ba3364
+Top:    071ebb00f54c1dee55db54d39753b6d152593d72
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -93,7 +93,7 @@ index 435cb32..2827f0b 100644
      StreamFailfast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 9ece8ba..2117d72 100644
+index 7f0f899..02caf4d 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@

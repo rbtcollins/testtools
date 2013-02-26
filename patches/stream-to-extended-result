@@ -1,5 +1,5 @@
-Bottom: 1b1f10f585345b1c38f74821adbc56e938a3af05
-Top:    57eae3d201ddce4cd8e0ecfd4adfd58352df14bc
+Bottom: 071ebb00f54c1dee55db54d39753b6d152593d72
+Top:    ca2635b25bcc338f540c73adc68ad1bea10b6fd5
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -88,7 +88,7 @@ index 2827f0b..8f0fd76 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 2117d72..404b7dd 100644
+index 02caf4d..b48a49f 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -1248,6 +1248,44 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
