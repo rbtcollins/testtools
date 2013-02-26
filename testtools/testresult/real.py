@@ -445,6 +445,13 @@ class StreamToDict(StreamResult):
                 if mime_type is None:
                     mime_type = 'application/octet-stream'
                 primary, sub, parameters = parse_mime_type(mime_type)
+                if 'charset' in parameters:
+                    if ',' in parameters['charset']:
+                        # testtools was emitting a bad encoding, workaround it,
+                        # Though this does lose data - probably want to drop
+                        # this in a few releases.
+                        parameters['charset'] = parameters['charset'][
+                            :parameters['charset'].find(',')]
                 content_type = ContentType(primary, sub, parameters)
                 content_bytes = []
                 case['details'][file_name] = Content(

@@ -660,6 +660,25 @@ class TestStreamToDict(TestCase):
         self.assertEqual(
             "application/octet-stream", repr(details['another file'].content_type))
 
+    def test_bad_mime(self):
+        # Testtools was making bad mime types, this tests that the specific
+        # corruption is catered for.
+        tests = []
+        result = StreamToDict(tests.append)
+        result.startTestRun()
+        result.status(file_name="file", file_bytes=b'a',
+            mime_type='text/plain; charset=utf8, language=python',
+            test_id='id')
+        result.stopTestRun()
+        self.assertThat(tests, HasLength(1))
+        test = tests[0]
+        self.assertEqual("id", test['id'])
+        details = test['details']
+        self.assertEqual(_u("a"), details['file'].as_text())
+        self.assertEqual(
+            "text/plain; charset=\"utf8\"",
+            repr(details['file'].content_type))
+
 
 class TestTestResult(TestCase):
     """Tests for 'TestResult'."""
