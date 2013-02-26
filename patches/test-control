@@ -1,5 +1,5 @@
-Bottom: 35b9ad04ca193d3a3ecb401688a2c160674a9c1b
-Top:    3eda8b3a4c5a0d782ff424a85a1dbf0acd311eaa
+Bottom: 07480b969d7b0ad95a04e5d9bd4e70fd1e87a210
+Top:    65a396663c2cd8b5a34a1c9b21d07551f50a5a86
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-17 16:12:38 +1300
 
@@ -9,7 +9,7 @@ Add a dedicated interface for controlling an in-progress TestRun.
 ---
 
 diff --git a/NEWS b/NEWS
-index b73cbef..cbe2258 100644
+index 0503b61..e9a53c0 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -34,6 +34,12 @@ Improvements

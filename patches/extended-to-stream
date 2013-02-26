@@ -1,5 +1,5 @@
-Bottom: 3eda8b3a4c5a0d782ff424a85a1dbf0acd311eaa
-Top:    2c6defa6442cecb512aea77f4c0a6a4965e82f40
+Bottom: 65a396663c2cd8b5a34a1c9b21d07551f50a5a86
+Top:    1b1f10f585345b1c38f74821adbc56e938a3af05
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -12,7 +12,7 @@ with a StreamResult.
 ---
 
 diff --git a/NEWS b/NEWS
-index cbe2258..a2b6724 100644
+index e9a53c0..4b77070 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -40,6 +40,16 @@ Improvements

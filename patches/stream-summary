@@ -1,5 +1,5 @@
-Bottom: 06d46bc8061c510aa88c8327536714ba69b8df90
-Top:    35b9ad04ca193d3a3ecb401688a2c160674a9c1b
+Bottom: db7850ff708749a7ede6f3a30999dd1b5c58df80
+Top:    07480b969d7b0ad95a04e5d9bd4e70fd1e87a210
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -13,7 +13,7 @@ generating them).
 ---
 
 diff --git a/NEWS b/NEWS
-index 604651b..b73cbef 100644
+index f122973..0503b61 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -27,6 +27,9 @@ Improvements
