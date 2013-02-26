@@ -508,7 +508,7 @@ def test_dict_to_case(test_dict):
         from testtools.testcase import PlaceHolder
     outcome = _status_map[test_dict['status']]
     return PlaceHolder(test_dict['id'], outcome=outcome,
-        details=test_dict['details'])
+        details=test_dict['details'], tags=test_dict['tags'])
 
 
 class StreamSummary(StreamToDict):
