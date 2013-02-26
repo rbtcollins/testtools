@@ -1,5 +1,5 @@
 Bottom: 78a6fbec56b2adbce515b9f13fcb87bc45066ef1
-Top:    78a6fbec56b2adbce515b9f13fcb87bc45066ef1
+Top:    0bca8494602eac5b725db296feb316e4355c7732
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-26 19:37:42 +1300
 
@@ -8,4 +8,16 @@ Placeholder couldn't hold tags, which limits its use.
 
 ---
 
-
+diff --git a/NEWS b/NEWS
+index 223f5ac..6ccf3f5 100644
+--- a/NEWS
++++ b/NEWS
+@@ -16,6 +16,9 @@ Improvements
+   create a synthetic test recording any such exception.
+   (Robert Collins, #1130429)
+ 
++* ``PlaceHolder`` can now hold tags, and applies them before, and removes them
++  after, the test. (Robert Collins)
++
+ 0.9.29
+ ~~~~~~
