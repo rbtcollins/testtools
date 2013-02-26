@@ -1706,6 +1706,20 @@ class TestStreamResultRouter(TestCase):
             ],
             fallback._events)
 
+    def test_map_test_id(self):
+        nontest = LoggingStreamResult()
+        test = LoggingStreamResult()
+        router = StreamResultRouter(test)
+        router.map(nontest, 'test_id', test_id=None)
+        router.status(test_id='foo', file_name="bar", file_bytes=b'')
+        router.status(file_name="bar", file_bytes=b'')
+        self.assertEqual([
+            ('status', 'foo', None, None, True, 'bar', b'', False, None, None,
+             None),], test._events)
+        self.assertEqual([
+            ('status', None, None, None, True, 'bar', b'', False, None, None,
+             None),], nontest._events)
+
 
 class TestThreadStreamResult(TestCase):
 
