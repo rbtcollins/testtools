@@ -70,6 +70,10 @@ Improvements
 * ``PlaceHolder`` can now hold tags, and applies them before, and removes them
   after, the test. (Robert Collins)
 
+* ``StreamResultRouter`` added. This is useful for demultiplexing - e.g. for
+  partitioning analysis of events or sending feedback encapsulated in
+  StreamResult events back to their source. (Robert Collins)
+
 0.9.29
 ~~~~~~
 
