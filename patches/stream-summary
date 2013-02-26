@@ -1,5 +1,5 @@
 Bottom: db7850ff708749a7ede6f3a30999dd1b5c58df80
-Top:    07480b969d7b0ad95a04e5d9bd4e70fd1e87a210
+Top:    260ba81cacfe7821911e950c95af6e2ef252590c
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -67,7 +67,7 @@ index 789e617..29ee39d 100644
      Tagger,
      TestByTestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 913268a..f449c9b 100644
+index 913268a..1e8f097 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -7,6 +7,7 @@ __all__ = [
@@ -115,7 +115,7 @@ index 913268a..f449c9b 100644
 +        from testtools.testcase import PlaceHolder
 +    outcome = _status_map[test_dict['status']]
 +    return PlaceHolder(test_dict['id'], outcome=outcome,
-+        details=test_dict['details'])
++        details=test_dict['details'], tags=test_dict['tags'])
 +
 +
 +class StreamSummary(StreamToDict):
