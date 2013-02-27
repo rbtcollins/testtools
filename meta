@@ -1,6 +1,6 @@
 Version: 1
-Previous: c67e69736e865db7f06199424a1bc5c1c0a18394
-Head: 1bc6ca2b36096ba1c5351e676c3f07db156d72cc
+Previous: 640fc552675321c30375b04590f3392ebea4e974
+Head: 0203970cc27a1ef41d78420b0dc7919b581b1f21
 Applied:
   content-type-repr: c998408b3ff69c5472e2cf8bd9a93a7d08518810
   placeholder-tags: 5e70eb6403b1a1094e46ff11555d7fde19d8bb1d
@@ -8,6 +8,7 @@ Applied:
   double-streamresult: 8ed2556a1b7201c02b78b12bbc5c06d610a9e769
   copy-stream: 160945c41773fdcb9a92f314473f9a2faede8314
   stream-to-dict: 0203970cc27a1ef41d78420b0dc7919b581b1f21
+Unapplied:
   stream-summary: 10c3dc0f6efa2377dea2d7845430506f8bd4c7ed
   test-control: 8493746096d4114eb70837f6744fcebe91ade5ef
   extended-to-stream: 67af921227be9ada1bf5f955946619824ad3e6a4
@@ -15,5 +16,4 @@ Applied:
   timestamp-stream-result: d80f817ab7bc4cef972654cd4f4b0378d615bb96
   threadsafestreamresult: 017a44958601bf9d637cf4eebd9a4d3773c5d54e
   streamresult-router: 1bc6ca2b36096ba1c5351e676c3f07db156d72cc
-Unapplied:
 Hidden:
