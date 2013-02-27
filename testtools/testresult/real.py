@@ -11,6 +11,7 @@ __all__ = [
     'StreamResult',
     'StreamSummary',
     'StreamToDict',
+    'StreamToExtendedDecorator',
     'Tagger',
     'TestControl',
     'TestResult',
@@ -532,7 +533,8 @@ def test_dict_to_case(test_dict):
         from testtools.testcase import PlaceHolder
     outcome = _status_map[test_dict['status']]
     return PlaceHolder(test_dict['id'], outcome=outcome,
-        details=test_dict['details'], tags=test_dict['tags'])
+        details=test_dict['details'], tags=test_dict['tags'],
+        timestamps=test_dict['timestamps'])
 
 
 class StreamSummary(StreamToDict):
