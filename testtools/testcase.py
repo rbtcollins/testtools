@@ -616,7 +616,7 @@ class PlaceHolder(object):
     failureException = None
 
     def __init__(self, test_id, short_description=None, details=None,
-        outcome='addSuccess', error=None, tags=None):
+        outcome='addSuccess', error=None, tags=None, timestamps=(None, None)):
         """Construct a `PlaceHolder`.
 
         :param test_id: The id of the placeholder test.
@@ -625,6 +625,8 @@ class PlaceHolder(object):
         :param details: Outcome details as accepted by addSuccess etc.
         :param outcome: The outcome to call. Defaults to 'addSuccess'.
         :param tags: Tags to report for the test.
+        :param timestamps: A two-tuple of timestamps for the test start and
+            finish. Each timestamp may be None to undicate it is not known.
         """
         self._test_id = test_id
         self._short_description = short_description
@@ -633,6 +635,7 @@ class PlaceHolder(object):
         if error is not None:
             self._details['traceback'] = content.TracebackContent(error, self)
         self._tags = tags or set()
+        self._timestamps = timestamps
 
     def __call__(self, result=None):
         return self.run(result=result)
@@ -666,8 +669,12 @@ class PlaceHolder(object):
 
     def run(self, result=None):
         result = self._result(result)
+        if self._timestamps[0] is not None:
+            result.time(self._timestamps[0])
         result.tags(self._tags, set())
         result.startTest(self)
+        if self._timestamps[1] is not None:
+            result.time(self._timestamps[1])
         outcome = getattr(result, self._outcome)
         outcome(self, details=self._details)
         result.stopTest(self)
