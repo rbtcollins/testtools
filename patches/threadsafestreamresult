@@ -1,5 +1,5 @@
-Bottom: 7e32b224c6e6e8b0230cee816eefba7b4fa83344
-Top:    7690412bfcdefa1fb7a93b39f414716f7e5b09b1
+Bottom: d729d6aa7f75386c49be51bb4e41eb561dab9f0e
+Top:    19e84b78e8390047568b682cfbbf0018a35320c5
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -9,7 +9,7 @@ Add a StreamResult decorator safe for use in threaded/concurrent code.
 ---
 
 diff --git a/NEWS b/NEWS
-index 9e029fb..4ee593d 100644
+index 2ef0667..d640a83 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -26,6 +26,9 @@ Improvements
@@ -110,10 +110,10 @@ index 36830af..940846d 100644
      TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index a0a5bcb..b83bf0e 100644
+index 3ed1a0a..afa0da6 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -17,6 +17,7 @@ __all__ = [
+@@ -18,6 +18,7 @@ __all__ = [
      'TestResultDecorator',
      'ThreadsafeForwardingResult',
      'TimestampingStreamResult',
@@ -121,7 +121,7 @@ index a0a5bcb..b83bf0e 100644
      ]
  
  import datetime
-@@ -627,6 +628,65 @@ class TestControl(object):
+@@ -629,6 +630,65 @@ class TestControl(object):
          self.shouldStop = True
  
  

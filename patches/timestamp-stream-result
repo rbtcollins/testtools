@@ -1,5 +1,5 @@
-Bottom: d53878f25b996afba97df6328f2c663ba3784cc1
-Top:    7e32b224c6e6e8b0230cee816eefba7b4fa83344
+Bottom: 336612f39e4c0c17e74f0e46902cb456102fc56f
+Top:    d729d6aa7f75386c49be51bb4e41eb561dab9f0e
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 21:19:25 +1300
 
@@ -13,7 +13,7 @@ it will be accurate enough.
 ---
 
 diff --git a/NEWS b/NEWS
-index 3e239a6..9e029fb 100644
+index c0ac15d..2ef0667 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -23,6 +23,9 @@ Improvements
@@ -85,10 +85,10 @@ index 8f0fd76..36830af 100644
 +    TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 5738fbf..a0a5bcb 100644
+index d37cbce..3ed1a0a 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -16,6 +16,7 @@ __all__ = [
+@@ -17,6 +17,7 @@ __all__ = [
      'TestResult',
      'TestResultDecorator',
      'ThreadsafeForwardingResult',
@@ -96,7 +96,7 @@ index 5738fbf..a0a5bcb 100644
      ]
  
  import datetime
-@@ -1458,6 +1459,23 @@ class TestByTestResult(TestResult):
+@@ -1460,6 +1461,23 @@ class TestByTestResult(TestResult):
          self._details = details
  
  
