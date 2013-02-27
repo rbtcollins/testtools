@@ -1,5 +1,5 @@
-Bottom: f8d9d114efe72b5a88b13f10d772ab399d70d3ad
-Top:    98f904627cc6522e0ceae75b07d539c76f92a424
+Bottom: b84a9795c8d9261e28cf35d1b9cee406f88ddaa1
+Top:    f28de35bf77af78e81b7a6379aa7c2012124cdb8
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 21:28:29 +1300
 
@@ -25,7 +25,7 @@ index 1bcce89..2a39c55 100644
  
  script:
 diff --git a/NEWS b/NEWS
-index 68440e2..f122973 100644
+index c8d024e..7ead55f 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -27,6 +27,10 @@ Improvements

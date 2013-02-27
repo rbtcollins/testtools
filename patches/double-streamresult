@@ -1,5 +1,5 @@
-Bottom: 6959d71a32700ab604fabf404e7f2f66abda1749
-Top:    2d319fc22efdb53c18811285d13f98f852afe2a8
+Bottom: 62988e101d6710151c9c2c79c4f76ef96841d213
+Top:    0c903db1ba782ebf8639176adbc302d79d415515
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:51:04 +1300
 
@@ -9,7 +9,7 @@ Adds a recording StreamResult for writing tests with.
 ---
 
 diff --git a/NEWS b/NEWS
-index 3099f8e..f072da0 100644
+index 1543608..bfefd87 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -23,6 +23,9 @@ Improvements

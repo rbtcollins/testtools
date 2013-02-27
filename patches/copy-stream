@@ -1,5 +1,5 @@
-Bottom: 2d319fc22efdb53c18811285d13f98f852afe2a8
-Top:    f8d9d114efe72b5a88b13f10d772ab399d70d3ad
+Bottom: 0c903db1ba782ebf8639176adbc302d79d415515
+Top:    b84a9795c8d9261e28cf35d1b9cee406f88ddaa1
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:48:03 +1300
 
@@ -11,7 +11,7 @@ This allows applying multiple terminal handlers to one stream.
 ---
 
 diff --git a/NEWS b/NEWS
-index f072da0..68440e2 100644
+index bfefd87..c8d024e 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -23,6 +23,10 @@ Improvements
