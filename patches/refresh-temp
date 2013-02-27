@@ -1,0 +1,92 @@
+Bottom: 51397fe0d09b960ff7aa686a010de5e6c0032404
+Top:    f028ed6c5a8fbd8c9d94bef5737c143146727cdc
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-27 22:36:24 +1300
+
+Refresh of placeholder-timestamp
+
+---
+
+diff --git a/NEWS b/NEWS
+index 6ccf3f5..a5de485 100644
+--- a/NEWS
++++ b/NEWS
+@@ -19,6 +19,9 @@ Improvements
+ * ``PlaceHolder`` can now hold tags, and applies them before, and removes them
+   after, the test. (Robert Collins)
+ 
++* ``PlaceHolder`` can now hold timestamps, and applies them before the test and
++  then before the outcome. (Robert Collins)
++
+ 0.9.29
+ ~~~~~~
+ 
+diff --git a/testtools/testcase.py b/testtools/testcase.py
+index fb6e293..13ad2e8 100644
+--- a/testtools/testcase.py
++++ b/testtools/testcase.py
+@@ -616,7 +616,7 @@ class PlaceHolder(object):
+     failureException = None
+ 
+     def __init__(self, test_id, short_description=None, details=None,
+-        outcome='addSuccess', error=None, tags=None):
++        outcome='addSuccess', error=None, tags=None, timestamps=(None, None)):
+         """Construct a `PlaceHolder`.
+ 
+         :param test_id: The id of the placeholder test.
+@@ -625,6 +625,8 @@ class PlaceHolder(object):
+         :param details: Outcome details as accepted by addSuccess etc.
+         :param outcome: The outcome to call. Defaults to 'addSuccess'.
+         :param tags: Tags to report for the test.
++        :param timestamps: A two-tuple of timestamps for the test start and
++            finish. Each timestamp may be None to undicate it is not known.
+         """
+         self._test_id = test_id
+         self._short_description = short_description
+@@ -633,6 +635,7 @@ class PlaceHolder(object):
+         if error is not None:
+             self._details['traceback'] = content.TracebackContent(error, self)
+         self._tags = tags or set()
++        self._timestamps = timestamps
+ 
+     def __call__(self, result=None):
+         return self.run(result=result)
+@@ -666,8 +669,12 @@ class PlaceHolder(object):
+ 
+     def run(self, result=None):
+         result = self._result(result)
++        if self._timestamps[0] is not None:
++            result.time(self._timestamps[0])
+         result.tags(self._tags, set())
+         result.startTest(self)
++        if self._timestamps[1] is not None:
++            result.time(self._timestamps[1])
+         outcome = getattr(result, self._outcome)
+         outcome(self, details=self._details)
+         result.stopTest(self)
+diff --git a/testtools/tests/test_testcase.py b/testtools/tests/test_testcase.py
+index ddd095c..5cf26ab 100644
+--- a/testtools/tests/test_testcase.py
++++ b/testtools/tests/test_testcase.py
+@@ -134,6 +134,21 @@ class TestPlaceHolder(TestCase):
+              ],
+             result._events)
+ 
++    def test_supplies_timestamps(self):
++        test = PlaceHolder('foo', details={}, timestamps=["A", "B"])
++        result = ExtendedTestResult()
++        test.run(result)
++        self.assertEqual(
++            [('time', "A"),
++             ('tags', set(), set()),
++             ('startTest', test),
++             ('time', "B"),
++             ('addSuccess', test),
++             ('stopTest', test),
++             ('tags', set(), set()),
++             ],
++            result._events)
++
+     def test_call_is_run(self):
+         # A PlaceHolder can be called, in which case it behaves like run.
+         test = self.makePlaceHolder()
