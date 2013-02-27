@@ -407,6 +407,10 @@ class StreamToDict(StreamResult):
         objects.
     * status: One of the StreamResult status codes (including inprogress) or
         'unknown' (used if only file events for a test were received...)
+    * timestamps: A pair of timestamps - the first one received with this
+      test id, and the one in the event that triggered the notification.
+      Hung tests have a None for the second end event. Timestamps are not
+      compared - their ordering is purely order received in the stream.
 
     Only the most recent tags observed in the stream are reported.
     """
@@ -433,12 +437,13 @@ class StreamToDict(StreamResult):
             test_tags=test_tags, runnable=runnable, file_name=file_name,
             file_bytes=file_bytes, eof=eof, mime_type=mime_type,
             route_code=route_code, timestamp=timestamp)
-        key = self._ensure_key(test_id, route_code)
+        key = self._ensure_key(test_id, route_code, timestamp)
         # update fields
         if not key:
             return
         if test_status is not None:
             self._inprogress[key]['status'] = test_status
+        self._inprogress[key]['timestamps'][1] = timestamp
         case = self._inprogress[key]
         if file_name is not None:
             if file_name not in case['details']:
@@ -466,9 +471,11 @@ class StreamToDict(StreamResult):
     def stopTestRun(self):
         super(StreamToDict, self).stopTestRun()
         while self._inprogress:
-            self.on_test(self._inprogress.popitem()[1])
+            case = self._inprogress.popitem()[1]
+            case['timestamps'][1] = None
+            self.on_test(case)
 
-    def _ensure_key(self, test_id, route_code):
+    def _ensure_key(self, test_id, route_code, timestamp):
         if test_id is None:
             return
         key = (test_id, route_code)
@@ -477,7 +484,8 @@ class StreamToDict(StreamResult):
                 'id': test_id,
                 'tags': set(),
                 'details': {},
-                'status': 'unknown'}
+                'status': 'unknown',
+                'timestamps': [timestamp, None]}
         return key
 
 

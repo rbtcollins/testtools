@@ -617,7 +617,8 @@ class TestStreamToDict(TestCase):
         self.assertEqual([], tests)
         result.stopTestRun()
         self.assertEqual([
-            {'id': 'foo', 'tags': set(), 'details': {}, 'status': 'inprogress'}
+            {'id': 'foo', 'tags': set(), 'details': {}, 'status': 'inprogress',
+             'timestamps': [None, None]}
             ], tests)
 
     def test_all_terminal_states_reported(self):
@@ -678,6 +679,18 @@ class TestStreamToDict(TestCase):
         self.assertEqual(
             "text/plain; charset=\"utf8\"",
             repr(details['file'].content_type))
+
+    def test_timestamps(self):
+        tests = []
+        result = StreamToDict(tests.append)
+        result.startTestRun()
+        result.status(test_id='foo', test_status='inprogress', timestamp="A")
+        result.status(test_id='foo', test_status='success', timestamp="B")
+        result.status(test_id='bar', test_status='inprogress', timestamp="C")
+        result.stopTestRun()
+        self.assertThat(tests, HasLength(2))
+        self.assertEqual(["A", "B"], tests[0]['timestamps'])
+        self.assertEqual(["C", None], tests[1]['timestamps'])
 
 
 class TestTestResult(TestCase):
