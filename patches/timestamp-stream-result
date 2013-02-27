@@ -1,5 +1,5 @@
-Bottom: ca2635b25bcc338f540c73adc68ad1bea10b6fd5
-Top:    5d68061f077d6eb91ef449748eb4218f305b4ea4
+Bottom: d53878f25b996afba97df6328f2c663ba3784cc1
+Top:    7e32b224c6e6e8b0230cee816eefba7b4fa83344
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 21:19:25 +1300
 
@@ -85,7 +85,7 @@ index 8f0fd76..36830af 100644
 +    TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index b48a49f..30a3e88 100644
+index 5738fbf..a0a5bcb 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -16,6 +16,7 @@ __all__ = [
@@ -96,7 +96,7 @@ index b48a49f..30a3e88 100644
      ]
  
  import datetime
-@@ -1450,6 +1451,23 @@ class TestByTestResult(TestResult):
+@@ -1458,6 +1459,23 @@ class TestByTestResult(TestResult):
          self._details = details
  
  
@@ -121,7 +121,7 @@ index b48a49f..30a3e88 100644
      """An exception made from an arbitrary string."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 577c0c1..c3f07a6 100644
+index b8e8c29..fa049b9 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -36,6 +36,7 @@ from testtools import (
@@ -132,7 +132,7 @@ index 577c0c1..c3f07a6 100644
      testresult,
      )
  from testtools.compat import (
-@@ -2611,6 +2612,38 @@ class TestTagger(TestCase):
+@@ -2624,6 +2625,38 @@ class TestTagger(TestCase):
               ], result._events)
  
  

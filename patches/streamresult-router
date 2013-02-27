@@ -1,5 +1,5 @@
-Bottom: 5ba3251d7b4c4cb581b6b7cd67f96bf7476df5e4
-Top:    3b646a7ff105997767805abf8f408996098d3c97
+Bottom: 7690412bfcdefa1fb7a93b39f414716f7e5b09b1
+Top:    39aa0b595cfd62d419cd3db43ddf740af1e6b9ea
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-24 12:38:02 +1300
 
@@ -106,7 +106,7 @@ index 940846d..9f8c789 100644
      StreamToDict,
      StreamToExtendedDecorator,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 27c8da3..b2711c8 100644
+index b83bf0e..365e17d 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -416,6 +416,100 @@ class StreamFailfast(StreamResult):
@@ -211,7 +211,7 @@ index 27c8da3..b2711c8 100644
      """A specialised StreamResult that emits a callback as tests complete.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 6648000..95ea1b9 100644
+index feab53d..1f0d791 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -25,6 +25,7 @@ from testtools import (
@@ -235,7 +235,7 @@ index 6648000..95ea1b9 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -1620,6 +1627,100 @@ class TestMergeTags(TestCase):
+@@ -1633,6 +1640,100 @@ class TestMergeTags(TestCase):
              expected, _merge_tags(current_tags, changing_tags))
  
  
