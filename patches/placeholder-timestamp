@@ -1,0 +1,11 @@
+Bottom: 51397fe0d09b960ff7aa686a010de5e6c0032404
+Top:    51397fe0d09b960ff7aa686a010de5e6c0032404
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-02-27 22:28:20 +1300
+
+Add support for timestamp events to Placeholder objects.
+
+
+---
+
+
