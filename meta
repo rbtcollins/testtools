@@ -1,6 +1,6 @@
 Version: 1
-Previous: 05cdada80236bd1b8b8db669ff2d3c4c2d8faaed
-Head: ffce0d45828ec99d7eb4fe62b5f07fed88a0adc9
+Previous: d8728e24e771f04f5ef4b430b110e1622e9a5c6d
+Head: cbb72f27e3e0d40d515f225482474a7502104323
 Applied:
   content-type-repr: 53c144e0ac93f24cf1a524b47117846303a488ce
   placeholder-tags: aa382029ee3682e4a143cf2cfea8da63c07bc0f2
@@ -15,7 +15,6 @@ Applied:
   stream-to-extended-result: ecde450d8f2615b193faafd9e36bcc0e950a3f01
   timestamp-stream-result: 1f66d9ce761e341aee22b2173c49d49c33834e4e
   threadsafestreamresult: 2204497611836c27839e1b7c61bb997dc0f6a580
-  streamresult-router: e6956060ebe22a16e9cc25286ad161fcae70434d
-  refresh-temp: ffce0d45828ec99d7eb4fe62b5f07fed88a0adc9
+  streamresult-router: cbb72f27e3e0d40d515f225482474a7502104323
 Unapplied:
 Hidden:
