@@ -1,5 +1,5 @@
-Bottom: 51397fe0d09b960ff7aa686a010de5e6c0032404
-Top:    f028ed6c5a8fbd8c9d94bef5737c143146727cdc
+Bottom: 306b5ae636bd6a6a250b579cd3d395befed08737
+Top:    672e6314751b3a560b122e4523f619d2804a36c9
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-27 22:28:20 +1300
 
@@ -9,10 +9,10 @@ Add support for timestamp events to Placeholder objects.
 ---
 
 diff --git a/NEWS b/NEWS
-index 6ccf3f5..a5de485 100644
+index 2dd2927..b8ea878 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -19,6 +19,9 @@ Improvements
+@@ -26,6 +26,9 @@ Improvements
  * ``PlaceHolder`` can now hold tags, and applies them before, and removes them
    after, the test. (Robert Collins)
  
