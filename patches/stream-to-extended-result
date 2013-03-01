@@ -1,5 +1,5 @@
-Bottom: d27b41a8dbaf3f97ed563ca8c60403e9a1a16ef9
-Top:    336612f39e4c0c17e74f0e46902cb456102fc56f
+Bottom: ecf9e815e8ded22f2dee33e28dfb7be1f43c49a5
+Top:    2bcceba8eb9cb10725c3bf904c467bd1f8e011e6
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -13,10 +13,10 @@ TestResult into a StreamResult.
 ---
 
 diff --git a/NEWS b/NEWS
-index 3f709b8..c0ac15d 100644
+index fda5a1a..1be638c 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -50,6 +50,11 @@ Improvements
+@@ -43,6 +43,11 @@ Improvements
    separate consumer will be created to support that.
    (Robert Collins)
  
