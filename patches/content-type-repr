@@ -1,53 +1,11 @@
-Bottom: 85fae5ddcfbb4d588e5a6cd1997b28a6ff65b450
-Top:    78a6fbec56b2adbce515b9f13fcb87bc45066ef1
+Bottom: c4991ef6a05086515e955b75ea3613058de5a993
+Top:    c4991ef6a05086515e955b75ea3613058de5a993
 Author: Robert Collins <robertc@robertcollins.net>
-Date:   2013-02-21 14:08:55 +1300
+Date:   2013-03-01 23:15:15 +1300
 
 The ContentType repr() incorrectly used , instead of ;.
 
 
 ---
 
-diff --git a/NEWS b/NEWS
-index 963e951..223f5ac 100644
---- a/NEWS
-+++ b/NEWS
-@@ -21,6 +21,12 @@ Improvements
- 
- A simple bug fix, and better error messages when you don't up-call.
- 
-+Changes
-+-------
-+
-+* ``testtools.content_type.ContentType`` incorrectly used ',' rather than ';'
-+  to separate parameters. (Robert Collins)
-+
- Improvements
- ------------
- 
-diff --git a/testtools/content_type.py b/testtools/content_type.py
-index c491408..bbf314b 100644
---- a/testtools/content_type.py
-+++ b/testtools/content_type.py
-@@ -29,7 +29,7 @@ class ContentType(object):
-     def __repr__(self):
-         if self.parameters:
-             params = '; '
--            params += ', '.join(
-+            params += '; '.join(
-                 sorted('%s="%s"' % (k, v) for k, v in self.parameters.items()))
-         else:
-             params = ''
-diff --git a/testtools/tests/test_content_type.py b/testtools/tests/test_content_type.py
-index ecb8e3a..2d34f95 100644
---- a/testtools/tests/test_content_type.py
-+++ b/testtools/tests/test_content_type.py
-@@ -43,7 +43,7 @@ class TestContentType(TestCase):
-         content_type = ContentType(
-             'text', 'plain', {'foo': 'bar', 'baz': 'qux'})
-         self.assertThat(
--            repr(content_type), Equals('text/plain; baz="qux", foo="bar"'))
-+            repr(content_type), Equals('text/plain; baz="qux"; foo="bar"'))
- 
- 
- class TestBuiltinContentTypes(TestCase):
+
