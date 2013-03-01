@@ -1,0 +1,131 @@
+Bottom: c4991ef6a05086515e955b75ea3613058de5a993
+Top:    306b5ae636bd6a6a250b579cd3d395befed08737
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-01 23:16:14 +1300
+
+Refresh of placeholder-tags
+
+---
+
+diff --git a/NEWS b/NEWS
+index dcbf1a4..2dd2927 100644
+--- a/NEWS
++++ b/NEWS
+@@ -20,6 +20,12 @@ Improvements
+   test that accidentally depended on the CPython repr for object().
+   (Jonathan Lange)
+ 
++Improvements
++------------
++
++* ``PlaceHolder`` can now hold tags, and applies them before, and removes them
++  after, the test. (Robert Collins)
++
+ 0.9.29
+ ~~~~~~
+ 
+diff --git a/testtools/testcase.py b/testtools/testcase.py
+index 15bcbee..fb6e293 100644
+--- a/testtools/testcase.py
++++ b/testtools/testcase.py
+@@ -616,7 +616,7 @@ class PlaceHolder(object):
+     failureException = None
+ 
+     def __init__(self, test_id, short_description=None, details=None,
+-        outcome='addSuccess', error=None):
++        outcome='addSuccess', error=None, tags=None):
+         """Construct a `PlaceHolder`.
+ 
+         :param test_id: The id of the placeholder test.
+@@ -624,6 +624,7 @@ class PlaceHolder(object):
+             test. If not provided, the id will be used instead.
+         :param details: Outcome details as accepted by addSuccess etc.
+         :param outcome: The outcome to call. Defaults to 'addSuccess'.
++        :param tags: Tags to report for the test.
+         """
+         self._test_id = test_id
+         self._short_description = short_description
+@@ -631,6 +632,7 @@ class PlaceHolder(object):
+         self._outcome = outcome
+         if error is not None:
+             self._details['traceback'] = content.TracebackContent(error, self)
++        self._tags = tags or set()
+ 
+     def __call__(self, result=None):
+         return self.run(result=result)
+@@ -664,10 +666,12 @@ class PlaceHolder(object):
+ 
+     def run(self, result=None):
+         result = self._result(result)
++        result.tags(self._tags, set())
+         result.startTest(self)
+         outcome = getattr(result, self._outcome)
+         outcome(self, details=self._details)
+         result.stopTest(self)
++        result.tags(set(), self._tags)
+ 
+     def shortDescription(self):
+         if self._short_description is None:
+diff --git a/testtools/tests/test_testcase.py b/testtools/tests/test_testcase.py
+index cdab99a..ddd095c 100644
+--- a/testtools/tests/test_testcase.py
++++ b/testtools/tests/test_testcase.py
+@@ -116,7 +116,8 @@ class TestPlaceHolder(TestCase):
+         log = []
+         test.run(LoggingResult(log))
+         self.assertEqual(
+-            [('startTest', test), ('addSuccess', test), ('stopTest', test)],
++            [('tags', set(), set()), ('startTest', test), ('addSuccess', test),
++             ('stopTest', test), ('tags', set(), set()),],
+             log)
+ 
+     def test_supplies_details(self):
+@@ -125,9 +126,12 @@ class TestPlaceHolder(TestCase):
+         result = ExtendedTestResult()
+         test.run(result)
+         self.assertEqual(
+-            [('startTest', test),
++            [('tags', set(), set()),
++             ('startTest', test),
+              ('addSuccess', test, details),
+-             ('stopTest', test)],
++             ('stopTest', test),
++             ('tags', set(), set()),
++             ],
+             result._events)
+ 
+     def test_call_is_run(self):
+@@ -148,6 +152,19 @@ class TestPlaceHolder(TestCase):
+         # A PlaceHolder can be debugged.
+         self.makePlaceHolder().debug()
+ 
++    def test_supports_tags(self):
++        result = ExtendedTestResult()
++        tags = set(['foo', 'bar'])
++        case = PlaceHolder("foo", tags=tags)
++        case.run(result)
++        self.assertEqual([
++            ('tags', tags, set()),
++            ('startTest', case),
++            ('addSuccess', case),
++            ('stopTest', case),
++            ('tags', set(), tags),
++            ], result._events)
++
+ 
+ class TestErrorHolder(TestCase):
+     # Note that these tests exist because ErrorHolder exists - it could be
+@@ -201,9 +218,11 @@ class TestErrorHolder(TestCase):
+         log = result._events
+         test.run(result)
+         self.assertEqual(
+-            [('startTest', test),
++            [('tags', set(), set()),
++             ('startTest', test),
+              ('addError', test, test._details),
+-             ('stopTest', test)], log)
++             ('stopTest', test),
++             ('tags', set(), set())], log)
+ 
+     def test_call_is_run(self):
+         # A PlaceHolder can be called, in which case it behaves like run.
