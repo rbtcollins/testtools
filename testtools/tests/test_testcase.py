@@ -116,7 +116,8 @@ class TestPlaceHolder(TestCase):
         log = []
         test.run(LoggingResult(log))
         self.assertEqual(
-            [('startTest', test), ('addSuccess', test), ('stopTest', test)],
+            [('tags', set(), set()), ('startTest', test), ('addSuccess', test),
+             ('stopTest', test), ('tags', set(), set()),],
             log)
 
     def test_supplies_details(self):
@@ -125,9 +126,12 @@ class TestPlaceHolder(TestCase):
         result = ExtendedTestResult()
         test.run(result)
         self.assertEqual(
-            [('startTest', test),
+            [('tags', set(), set()),
+             ('startTest', test),
              ('addSuccess', test, details),
-             ('stopTest', test)],
+             ('stopTest', test),
+             ('tags', set(), set()),
+             ],
             result._events)
 
     def test_call_is_run(self):
@@ -147,6 +151,19 @@ class TestPlaceHolder(TestCase):
     def test_debug(self):
         # A PlaceHolder can be debugged.
         self.makePlaceHolder().debug()
+
+    def test_supports_tags(self):
+        result = ExtendedTestResult()
+        tags = set(['foo', 'bar'])
+        case = PlaceHolder("foo", tags=tags)
+        case.run(result)
+        self.assertEqual([
+            ('tags', tags, set()),
+            ('startTest', case),
+            ('addSuccess', case),
+            ('stopTest', case),
+            ('tags', set(), tags),
+            ], result._events)
 
 
 class TestErrorHolder(TestCase):
@@ -201,9 +218,11 @@ class TestErrorHolder(TestCase):
         log = result._events
         test.run(result)
         self.assertEqual(
-            [('startTest', test),
+            [('tags', set(), set()),
+             ('startTest', test),
              ('addError', test, test._details),
-             ('stopTest', test)], log)
+             ('stopTest', test),
+             ('tags', set(), set())], log)
 
     def test_call_is_run(self):
         # A PlaceHolder can be called, in which case it behaves like run.
