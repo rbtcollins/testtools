@@ -20,6 +20,12 @@ Improvements
   test that accidentally depended on the CPython repr for object().
   (Jonathan Lange)
 
+Improvements
+------------
+
+* ``PlaceHolder`` can now hold tags, and applies them before, and removes them
+  after, the test. (Robert Collins)
+
 0.9.29
 ~~~~~~
 
