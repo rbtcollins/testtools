@@ -1,9 +1,8 @@
 Version: 1
-Previous: 4970619cc69e99b3a4760b93d09510362c0f53e5
+Previous: 6c4a4de53fcb9df856da7fa6e6e4ecbf1f0e7704
 Head: 990176b4facf50a956dd07d300fe55954cc50b0c
 Applied:
 Unapplied:
-  content-type-repr: 53c144e0ac93f24cf1a524b47117846303a488ce
   placeholder-tags: aa382029ee3682e4a143cf2cfea8da63c07bc0f2
   placeholder-timestamp: 22094794626d43dcc88159802074b3fb20db4086
   define-stream-result: 8d475afe19f12b1b5a67b35af71f3366b912cccd
