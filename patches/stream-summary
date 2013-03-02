@@ -1,5 +1,5 @@
-Bottom: eb042ea2ff00e901499f2078151534fe338f5987
-Top:    8db239fd9f73af81078c973a55cce687027b24e4
+Bottom: b6e0ad068fafc4e3200de61cd6cb63fb3af0dcd3
+Top:    a415009e7b417aeac28a68bed6b118d6e68dae3b
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -13,7 +13,7 @@ generating them).
 ---
 
 diff --git a/NEWS b/NEWS
-index a72e6b2..6c6d761 100644
+index a8527d1..185bb06 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -20,6 +20,9 @@ Improvements
@@ -27,10 +27,10 @@ index a72e6b2..6c6d761 100644
    series of dicts describing a test. Useful for writing trivial stream
    analysers. (Robert Collins)
 diff --git a/testtools/__init__.py b/testtools/__init__.py
-index cd83156..b78bf53 100644
+index 3b0cbc4..a304ade 100644
 --- a/testtools/__init__.py
 +++ b/testtools/__init__.py
-@@ -27,6 +27,7 @@ __all__ = [
+@@ -28,6 +28,7 @@ __all__ = [
      'skipIf',
      'skipUnless',
      'StreamResult',
@@ -38,7 +38,7 @@ index cd83156..b78bf53 100644
      'StreamToDict',
      'ThreadsafeForwardingResult',
      'try_import',
-@@ -71,6 +72,7 @@ else:
+@@ -73,6 +74,7 @@ else:
          ExtendedToOriginalDecorator,
          MultiTestResult,
          StreamResult,
