@@ -1,6 +1,6 @@
 Version: 1
-Previous: 9fc8a9bd6d0e4d3af334f1befc0b1f570703e6fa
-Head: 02fdbb9a011094b4f74d8ddd58605452b2c042e5
+Previous: a369990f7062a041babcddef1f7a4e6b1a4d164d
+Head: ba4fde848498cbcf3e9007a5676ae2e0bfac06a9
 Applied:
   placeholder-tags: de1b3a693c519140090601014373604f874a5271
   placeholder-timestamp: 49e6706b159b48229a36cab4e3f260d250524671
@@ -11,8 +11,7 @@ Applied:
   stream-to-dict: 2802552c519e675089552348d4a8bb7a273ead39
   stream-summary: fdfad578192184bd8aea4f9c3bbd45cc5e84771a
   test-control: fcfde7c9a2680dcb15ceb1698d110e2303ef85e7
-  extended-to-stream: 22385c23f16e11f92b7b887da04e851d0c9889dc
-  refresh-temp: 02fdbb9a011094b4f74d8ddd58605452b2c042e5
+  extended-to-stream: ba4fde848498cbcf3e9007a5676ae2e0bfac06a9
 Unapplied:
   stream-to-extended-result: ecde450d8f2615b193faafd9e36bcc0e950a3f01
   timestamp-stream-result: 1f66d9ce761e341aee22b2173c49d49c33834e4e
