@@ -1,5 +1,5 @@
-Bottom: 9d2475b2e0d2b54b6af036d80792b8bc141f8009
-Top:    c2a46e4b5fef28f5bc5afbdf37f08329f73adece
+Bottom: cee97fb037d3ae5244e84a937cd07889c56971ba
+Top:    930757d0cdc0f5f2919364363d51ddd8ff6bb25d
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-24 12:38:02 +1300
 
@@ -13,10 +13,10 @@ a fallback stream.
 ---
 
 diff --git a/NEWS b/NEWS
-index 331bf91..d3be7a6 100644
+index 8e52f7e..47af30c 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -66,6 +66,10 @@ Improvements
+@@ -71,6 +71,10 @@ Improvements
  * ``PlaceHolder`` can now hold timestamps, and applies them before the test and
    then before the outcome. (Robert Collins)
  
@@ -28,10 +28,10 @@ index 331bf91..d3be7a6 100644
  ------------
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index a4b54d2..612894c 100644
+index 2539f23..27806f7 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -212,6 +212,33 @@ passing the events via this decorator to get timestamped data. As long as
+@@ -231,6 +231,33 @@ passing the events via this decorator to get timestamped data. As long as
  no buffering/queueing or blocking happen before the timestamper sees the event
  the timestamp will be as accurate as if the original event had it.
  
@@ -66,10 +66,10 @@ index a4b54d2..612894c 100644
  ------------------
  
 diff --git a/testtools/__init__.py b/testtools/__init__.py
-index a56200d..39de698 100644
+index 20e6937..2bed507 100644
 --- a/testtools/__init__.py
 +++ b/testtools/__init__.py
-@@ -30,6 +30,7 @@ __all__ = [
+@@ -31,6 +31,7 @@ __all__ = [
      'skipUnless',
      'StreamFailfast',
      'StreamResult',
@@ -77,7 +77,7 @@ index a56200d..39de698 100644
      'StreamSummary',
      'StreamToDict',
      'StreamToExtendedDecorator',
-@@ -81,6 +82,7 @@ else:
+@@ -83,6 +84,7 @@ else:
          MultiTestResult,
          StreamFailfast,
          StreamResult,
