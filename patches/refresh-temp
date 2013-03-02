@@ -1,0 +1,374 @@
+Bottom: 228fd51df2185fbb57d6553a2dcb681e3a08b557
+Top:    b6e0ad068fafc4e3200de61cd6cb63fb3af0dcd3
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-02 23:11:32 +1300
+
+Refresh of stream-to-dict
+
+---
+
+diff --git a/.travis.yml b/.travis.yml
+index 1bcce89..2a39c55 100644
+--- a/.travis.yml
++++ b/.travis.yml
+@@ -8,7 +8,7 @@ python:
+   - "pypy"
+ 
+ install:
+-  - pip install -q --use-mirrors fixtures extras
++  - pip install -q --use-mirrors fixtures extras python-mimeparse
+   - python setup.py -q install
+ 
+ script:
+diff --git a/NEWS b/NEWS
+index 919adaa..a8527d1 100644
+--- a/NEWS
++++ b/NEWS
+@@ -20,6 +20,10 @@ Improvements
+   ``StreamResult`` objects (each of which receives all the events).
+   (Robert Collins)
+ 
++* New support class ``StreamToDict`` which converts a ``StreamResult`` to a
++  series of dicts describing a test. Useful for writing trivial stream
++  analysers. (Robert Collins)
++
+ * New ``TestCase`` decorator ``DecorateTestCaseResult`` that adapts the
+   ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
+   a particular result object is used even if the runner running the test doesn't
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index 8408a91..0f0537d 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -176,6 +176,23 @@ Lastly we define the ``TestControl`` API which is used to provide the
+ ``shouldStop`` and ``stop`` elements from ``TestResult``. Again, see the API
+ documentation for ``testtools.TestControl``.
+ 
++StreamToDict
++------------
++
++A simplified API for dealing with ``StreamResult`` streams. Each test is
++buffered until it completes and then reported as a trivial dict. This makes
++writing analysers very easy - you can ignore all the plumbing and just work
++with the result. e.g.::
++
++    >>> from testtools import StreamToDict
++    >>> def handle_test(test_dict):
++    ...     print(test_dict['id'])
++    >>> result = StreamToDict(handle_test)
++    >>> result.startTestRun()
++    >>> # Run tests against result here.
++    >>> # At stopTestRun() any incomplete buffered tests are announced.
++    >>> result.stopTestRun()
++
+ ThreadsafeStreamResult
+ ----------------------
+ 
+diff --git a/setup.py b/setup.py
+index 2e079bf..4b9257d 100755
+--- a/setup.py
++++ b/setup.py
+@@ -69,5 +69,7 @@ setup(name='testtools',
+       zip_safe=False,
+       install_requires=[
+         'extras',
++        # 'mimeparse' has not been uploaded by the maintainer with Python3 compat
++        'python-mimeparse',
+         ],
+       )
+diff --git a/testtools/__init__.py b/testtools/__init__.py
+index 188f991..3b0cbc4 100644
+--- a/testtools/__init__.py
++++ b/testtools/__init__.py
+@@ -28,6 +28,7 @@ __all__ = [
+     'skipIf',
+     'skipUnless',
+     'StreamResult',
++    'StreamToDict',
+     'ThreadsafeForwardingResult',
+     'try_import',
+     'try_imports',
+@@ -72,6 +73,7 @@ else:
+         ExtendedToOriginalDecorator,
+         MultiTestResult,
+         StreamResult,
++        StreamToDict,
+         Tagger,
+         TestByTestResult,
+         TestResult,
+diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
+index f1ec047..789e617 100644
+--- a/testtools/testresult/__init__.py
++++ b/testtools/testresult/__init__.py
+@@ -7,6 +7,7 @@ __all__ = [
+     'ExtendedToOriginalDecorator',
+     'MultiTestResult',
+     'StreamResult',
++    'StreamToDict',
+     'Tagger',
+     'TestByTestResult',
+     'TestResult',
+@@ -20,6 +21,7 @@ from testtools.testresult.real import (
+     ExtendedToOriginalDecorator,
+     MultiTestResult,
+     StreamResult,
++    StreamToDict,
+     Tagger,
+     TestByTestResult,
+     TestResult,
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 7d264d8..fae48a2 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -7,6 +7,7 @@ __all__ = [
+     'ExtendedToOriginalDecorator',
+     'MultiTestResult',
+     'StreamResult',
++    'StreamToDict',
+     'Tagger',
+     'TestResult',
+     'TestResultDecorator',
+@@ -18,13 +19,16 @@ from operator import methodcaller
+ import sys
+ import unittest
+ 
+-from extras import safe_hasattr
++from extras import safe_hasattr, try_import
++parse_mime_type = try_import('mimeparse.parse_mime_type')
+ 
+ from testtools.compat import all, str_is_unicode, _u
+ from testtools.content import (
++    Content,
+     text_content,
+     TracebackContent,
+     )
++from testtools.content_type import ContentType
+ from testtools.tags import TagContext
+ 
+ # From http://docs.python.org/library/datetime.html
+@@ -390,6 +394,101 @@ class CopyStreamResult(StreamResult):
+         domap(methodcaller('status', *args, **kwargs), self.targets)
+ 
+ 
++class StreamToDict(StreamResult):
++    """A specialised StreamResult that emits a callback as tests complete.
++
++    Top level file attachments are simply discarded. Hung tests are detected
++    by stopTestRun and notified there and then.
++
++    The callback is passed a dict with the following keys:
++    * id: the test id.
++    * tags: The tags for the test. A set of unicode strings.
++    * details: A dict of file attachments - ``testtools.content.Content``
++        objects.
++    * status: One of the StreamResult status codes (including inprogress) or
++        'unknown' (used if only file events for a test were received...)
++    * timestamps: A pair of timestamps - the first one received with this
++      test id, and the one in the event that triggered the notification.
++      Hung tests have a None for the second end event. Timestamps are not
++      compared - their ordering is purely order received in the stream.
++
++    Only the most recent tags observed in the stream are reported.
++    """
++
++    def __init__(self, on_test):
++        """Create a StreamToDict calling on_test on test completions.
++
++        :param on_test: A callback that accepts one parameter - a dict
++            describing a test.
++        """
++        super(StreamToDict, self).__init__()
++        self.on_test = on_test
++        if parse_mime_type is None:
++            raise ImportError("mimeparse module missing.")
++
++    def startTestRun(self):
++        super(StreamToDict, self).startTestRun()
++        self._inprogress = {}
++
++    def status(self, test_id=None, test_status=None, test_tags=None,
++        runnable=True, file_name=None, file_bytes=None, eof=False,
++        mime_type=None, route_code=None, timestamp=None):
++        super(StreamToDict, self).status(test_id, test_status,
++            test_tags=test_tags, runnable=runnable, file_name=file_name,
++            file_bytes=file_bytes, eof=eof, mime_type=mime_type,
++            route_code=route_code, timestamp=timestamp)
++        key = self._ensure_key(test_id, route_code, timestamp)
++        # update fields
++        if not key:
++            return
++        if test_status is not None:
++            self._inprogress[key]['status'] = test_status
++        self._inprogress[key]['timestamps'][1] = timestamp
++        case = self._inprogress[key]
++        if file_name is not None:
++            if file_name not in case['details']:
++                if mime_type is None:
++                    mime_type = 'application/octet-stream'
++                primary, sub, parameters = parse_mime_type(mime_type)
++                if 'charset' in parameters:
++                    if ',' in parameters['charset']:
++                        # testtools was emitting a bad encoding, workaround it,
++                        # Though this does lose data - probably want to drop
++                        # this in a few releases.
++                        parameters['charset'] = parameters['charset'][
++                            :parameters['charset'].find(',')]
++                content_type = ContentType(primary, sub, parameters)
++                content_bytes = []
++                case['details'][file_name] = Content(
++                    content_type, lambda:content_bytes)
++            case['details'][file_name].iter_bytes().append(file_bytes)
++        if test_tags is not None:
++            self._inprogress[key]['tags'] = test_tags
++        # notify completed tests.
++        if test_status not in (None, 'inprogress'):
++            self.on_test(self._inprogress.pop(key))
++    
++    def stopTestRun(self):
++        super(StreamToDict, self).stopTestRun()
++        while self._inprogress:
++            case = self._inprogress.popitem()[1]
++            case['timestamps'][1] = None
++            self.on_test(case)
++
++    def _ensure_key(self, test_id, route_code, timestamp):
++        if test_id is None:
++            return
++        key = (test_id, route_code)
++        if key not in self._inprogress:
++            self._inprogress[key] = {
++                'id': test_id,
++                'tags': set(),
++                'details': {},
++                'status': 'unknown',
++                'timestamps': [timestamp, None]}
++        return key
++
++
+ class MultiTestResult(TestResult):
+     """A test result that dispatches to many test results."""
+ 
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index 8d19ccb..31157d4 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -23,6 +23,7 @@ from testtools import (
+     MultiTestResult,
+     PlaceHolder,
+     StreamResult,
++    StreamToDict,
+     Tagger,
+     TestCase,
+     TestResult,
+@@ -53,6 +54,7 @@ from testtools.matchers import (
+     Contains,
+     DocTestMatches,
+     Equals,
++    HasLength,
+     MatchesAny,
+     MatchesException,
+     Raises,
+@@ -531,6 +533,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
+         return LoggingStreamResult()
+ 
+ 
++class TestStreamToDictContract(TestCase, TestStreamResultContract):
++
++    def _make_result(self):
++        return StreamToDict(lambda x:None)
++
++
+ class TestDoubleStreamResultEvents(TestCase):
+ 
+     def test_startTestRun(self):
+@@ -599,6 +607,92 @@ class TestCopyStreamResultCopies(TestCase):
+                 ])))
+ 
+ 
++class TestStreamToDict(TestCase):
++
++    def test_hung_test(self):
++        tests = []
++        result = StreamToDict(tests.append)
++        result.startTestRun()
++        result.status('foo', 'inprogress')
++        self.assertEqual([], tests)
++        result.stopTestRun()
++        self.assertEqual([
++            {'id': 'foo', 'tags': set(), 'details': {}, 'status': 'inprogress',
++             'timestamps': [None, None]}
++            ], tests)
++
++    def test_all_terminal_states_reported(self):
++        tests = []
++        result = StreamToDict(tests.append)
++        result.startTestRun()
++        result.status('success', 'success')
++        result.status('skip', 'skip')
++        result.status('exists', 'exists')
++        result.status('fail', 'fail')
++        result.status('xfail', 'xfail')
++        result.status('uxsuccess', 'uxsuccess')
++        self.assertThat(tests, HasLength(6))
++        self.assertEqual(
++            ['success', 'skip', 'exists', 'fail', 'xfail', 'uxsuccess'],
++            [test['id'] for test in tests])
++        result.stopTestRun()
++        self.assertThat(tests, HasLength(6))
++
++    def test_files_reported(self):
++        tests = []
++        result = StreamToDict(tests.append)
++        result.startTestRun()
++        result.status(file_name="some log.txt",
++            file_bytes=_b("1234 log message"), eof=True,
++            mime_type="text/plain; charset=utf8", test_id="foo.bar")
++        result.status(file_name="another file",
++            file_bytes=_b("""Traceback..."""), test_id="foo.bar")
++        result.stopTestRun()
++        self.assertThat(tests, HasLength(1))
++        test = tests[0]
++        self.assertEqual("foo.bar", test['id'])
++        self.assertEqual("unknown", test['status'])
++        details = test['details']
++        self.assertEqual(
++            _u("1234 log message"), details['some log.txt'].as_text())
++        self.assertEqual(
++            _b("Traceback..."),
++            _b('').join(details['another file'].iter_bytes()))
++        self.assertEqual(
++            "application/octet-stream", repr(details['another file'].content_type))
++
++    def test_bad_mime(self):
++        # Testtools was making bad mime types, this tests that the specific
++        # corruption is catered for.
++        tests = []
++        result = StreamToDict(tests.append)
++        result.startTestRun()
++        result.status(file_name="file", file_bytes=b'a',
++            mime_type='text/plain; charset=utf8, language=python',
++            test_id='id')
++        result.stopTestRun()
++        self.assertThat(tests, HasLength(1))
++        test = tests[0]
++        self.assertEqual("id", test['id'])
++        details = test['details']
++        self.assertEqual(_u("a"), details['file'].as_text())
++        self.assertEqual(
++            "text/plain; charset=\"utf8\"",
++            repr(details['file'].content_type))
++
++    def test_timestamps(self):
++        tests = []
++        result = StreamToDict(tests.append)
++        result.startTestRun()
++        result.status(test_id='foo', test_status='inprogress', timestamp="A")
++        result.status(test_id='foo', test_status='success', timestamp="B")
++        result.status(test_id='bar', test_status='inprogress', timestamp="C")
++        result.stopTestRun()
++        self.assertThat(tests, HasLength(2))
++        self.assertEqual(["A", "B"], tests[0]['timestamps'])
++        self.assertEqual(["C", None], tests[1]['timestamps'])
++
++
+ class TestTestResult(TestCase):
+     """Tests for 'TestResult'."""
