@@ -1,0 +1,12 @@
+Bottom: 672e6314751b3a560b122e4523f619d2804a36c9
+Top:    672e6314751b3a560b122e4523f619d2804a36c9
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-02 20:29:52 +1300
+
+Add a helper for decorating the result object given to
+``case.(__call__/run/debug)`` - DecorateTestCaseResult.
+
+
+---
+
+

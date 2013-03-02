@@ -1,9 +1,10 @@
 Version: 1
-Previous: f1b2c6aa294518327d1ac3dcc16f9d211e9e5b8b
-Head: 49e6706b159b48229a36cab4e3f260d250524671
+Previous: 6a7d8e094370845e810dc4c03267e480966bac43
+Head: f8a756445519531c850412fdfa9a2aaf8cd6bccc
 Applied:
   placeholder-tags: de1b3a693c519140090601014373604f874a5271
   placeholder-timestamp: 49e6706b159b48229a36cab4e3f260d250524671
+  decorate-testcase-result: f8a756445519531c850412fdfa9a2aaf8cd6bccc
 Unapplied:
   define-stream-result: 8d475afe19f12b1b5a67b35af71f3366b912cccd
   double-streamresult: 552aa1965d883c80c7e8e4b513f0e68465bee924
