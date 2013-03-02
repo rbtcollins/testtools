@@ -1,5 +1,5 @@
 Bottom: 672e6314751b3a560b122e4523f619d2804a36c9
-Top:    672e6314751b3a560b122e4523f619d2804a36c9
+Top:    8cbc4e77e6f35948a7a28fe983a424c91c038705
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-02 20:29:52 +1300
 
@@ -9,4 +9,190 @@ Add a helper for decorating the result object given to
 
 ---
 
-
+diff --git a/NEWS b/NEWS
+index b8ea878..794d7f2 100644
+--- a/NEWS
++++ b/NEWS
+@@ -23,6 +23,11 @@ Improvements
+ Improvements
+ ------------
+ 
++* New ``TestCase`` decorator ``DecorateTestCaseResult`` that adapts the
++  ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
++  a particular result object is used even if the runner running the test doesn't
++  know to use it. (Robert Collins)
++
+ * ``PlaceHolder`` can now hold tags, and applies them before, and removes them
+   after, the test. (Robert Collins)
+ 
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index 5e7d8dd..5cf744b 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -108,6 +108,25 @@ e.g.::
+   I record an event                                                   [OK]
+ 
+ 
++Test instance decorators
++========================
++
++DecorateTestCaseResult
++----------------------
++
++This object calls out to your code when ``run`` / ``__call__`` are called and
++allows the result object that will be used to run the test to be altered. This
++is very useful when working with a test runner that doesn't know your test case
++requirements. For instance, it can be used to inject a ``unittest2`` compatible
++adapter when someone attempts to run your test suite with a ``TestResult`` that
++does not support ``addSkip`` or other ``unittest2`` methods. Similarly it can
++aid the migration to ``StreamResult``.
++
++e.g.::
++
++ >>> suite = TestSuite()
++ >>> suite = DecorateTestCaseResult(suite, ExtendedToOriginalDecorator)
++
+ Extensions to TestResult
+ ========================
+ 
+diff --git a/testtools/__init__.py b/testtools/__init__.py
+index 707fb55..dcfece8 100644
+--- a/testtools/__init__.py
++++ b/testtools/__init__.py
+@@ -5,6 +5,7 @@
+ __all__ = [
+     'clone_test_with_new_id',
+     'ConcurrentTestSuite',
++    'DecorateTestCaseResult',
+     'ErrorHolder',
+     'ExpectedException',
+     'ExtendedToOriginalDecorator',
+@@ -53,6 +54,7 @@ else:
+         RunTest,
+         )
+     from testtools.testcase import (
++        DecorateTestCaseResult,
+         ErrorHolder,
+         ExpectedException,
+         PlaceHolder,
+diff --git a/testtools/testcase.py b/testtools/testcase.py
+index 13ad2e8..0f9b041 100644
+--- a/testtools/testcase.py
++++ b/testtools/testcase.py
+@@ -860,6 +860,39 @@ class Nullary(object):
+         return repr(self._callable_object)
+ 
+ 
++class DecorateTestCaseResult(object):
++    """Decorate a TestCase and permit customisation of the result for runs."""
++
++    def __init__(self, case, callout):
++        """Construct a DecorateTestCaseResult.
++
++        :param case: The case to decorate.
++        :param callout: A callback to call when run/__call__/debug is called.
++            Must take a result parameter and return a result object to be used.
++            For instance: lambda result: result.
++        """
++        self.decorated = case
++        self.callout = callout
++
++    def run(self, result=None):
++            return self.decorated.run(self.callout(result))
++
++    def __call__(self, result=None):
++            return self.decorated(self.callout(result))
++
++    def __getattr__(self, name):
++        return getattr(self.decorated, name)
++    
++    def __delattr__(self, name):
++        delattr(self.decorated, name)
++
++    def __setattr__(self, name, value):
++        if name == 'decorated':
++            self.__dict__['decorated'] = value
++            return
++        setattr(self.decorated, name, value)
++
++
+ # Signal that this is part of the testing framework, and that code from this
+ # should not normally appear in tracebacks.
+ __unittest = True
+diff --git a/testtools/tests/test_testcase.py b/testtools/tests/test_testcase.py
+index 5cf26ab..afe58df 100644
+--- a/testtools/tests/test_testcase.py
++++ b/testtools/tests/test_testcase.py
+@@ -8,6 +8,7 @@ import sys
+ import unittest
+ 
+ from testtools import (
++    DecorateTestCaseResult,
+     ErrorHolder,
+     MultipleExceptions,
+     PlaceHolder,
+@@ -1420,6 +1421,64 @@ class TestAttributes(TestCase):
+             case.id())
+ 
+ 
++class TestDecorateTestCaseResult(TestCase):
++
++    def setUp(self):
++        super(TestDecorateTestCaseResult, self).setUp()
++        self.log = []
++
++    def make_result(self, result):
++        self.log.append(result)
++        return LoggingResult(self.log)
++
++    def test___call__(self):
++        case = DecorateTestCaseResult(PlaceHolder('foo'), self.make_result)
++        case(None)
++        case('something')
++        self.assertEqual([None,
++            ('tags', set(), set()),
++            ('startTest', case.decorated),
++            ('addSuccess', case.decorated),
++            ('stopTest', case.decorated),
++            ('tags', set(), set()),
++            'something',
++            ('tags', set(), set()),
++            ('startTest', case.decorated),
++            ('addSuccess', case.decorated),
++            ('stopTest', case.decorated),
++            ('tags', set(), set())
++            ], self.log)
++
++    def test_run(self):
++        case = DecorateTestCaseResult(PlaceHolder('foo'), self.make_result)
++        case.run(None)
++        case.run('something')
++        self.assertEqual([None,
++            ('tags', set(), set()),
++            ('startTest', case.decorated),
++            ('addSuccess', case.decorated),
++            ('stopTest', case.decorated),
++            ('tags', set(), set()),
++            'something',
++            ('tags', set(), set()),
++            ('startTest', case.decorated),
++            ('addSuccess', case.decorated),
++            ('stopTest', case.decorated),
++            ('tags', set(), set())
++            ], self.log)
++
++    def test_other_attribute(self):
++        orig = PlaceHolder('foo')
++        orig.thing = 'fred'
++        case = DecorateTestCaseResult(orig, self.make_result)
++        self.assertEqual('fred', case.thing)
++        self.assertRaises(AttributeError, getattr, case, 'other')
++        case.other = 'barbara'
++        self.assertEqual('barbara', orig.other)
++        del case.thing
++        self.assertRaises(AttributeError, getattr, orig, 'thing')
++
++
+ def test_suite():
+     from unittest import TestLoader
+     return TestLoader().loadTestsFromName(__name__)
