@@ -1,5 +1,5 @@
 Version: 1
-Previous: a00103e980bc2049b5dc45025bab8149d4610403
+Previous: b6e1860752bd86201136d23cc87775fe2d9761e1
 Head: 033350d7804ff8e7c6b923d42ae9befcba2b28a1
 Applied:
   placeholder-tags: de1b3a693c519140090601014373604f874a5271
@@ -7,8 +7,8 @@ Applied:
   decorate-testcase-result: ad878e36c865005953fb4090a94f4e1ab993deb3
   define-stream-result: 455cb6e7d828979791b8e4893c6f19531d23182a
   double-streamresult: 5938cd6a932b4df7c49bda4f95843ad1403d4311
+  copy-stream: 033350d7804ff8e7c6b923d42ae9befcba2b28a1
 Unapplied:
-  copy-stream: 57a0da9542e9e614f6d4c3b9be6e484f54fc63b4
   stream-to-dict: a9c8ff3ae6e5c65162449bc698493a7ba98a4586
   stream-summary: e1e7970a2ac4e3aa17c0a33c9c2289d62a12e913
   test-control: c150fa44f2abbb7f677f8f955f7f54308917e25b
