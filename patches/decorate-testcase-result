@@ -4,7 +4,7 @@ Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-02 20:29:52 +1300
 
 Add a helper for decorating the result object given to
-``case.(__call__/run/debug)`` - DecorateTestCaseResult.
+``case.(__call__/run)`` - DecorateTestCaseResult.
 
 
 ---
