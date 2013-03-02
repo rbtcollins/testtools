@@ -1,5 +1,5 @@
 Version: 1
-Previous: c3826c11f704ed6d7f84a0c16b1c680f2212958c
+Previous: bd4a28dce8c50a27ee91d7ef7ed3db1dfbe1d501
 Head: e85f968be21f34209e4eb7365541fa92f1d80c21
 Applied:
   placeholder-tags: de1b3a693c519140090601014373604f874a5271
@@ -10,8 +10,8 @@ Applied:
   copy-stream: ac3bbf017702bcd46e4dc5435e8371b90a2a52ca
   stream-to-dict: 2802552c519e675089552348d4a8bb7a273ead39
   stream-summary: fdfad578192184bd8aea4f9c3bbd45cc5e84771a
+  test-control: e85f968be21f34209e4eb7365541fa92f1d80c21
 Unapplied:
-  test-control: c150fa44f2abbb7f677f8f955f7f54308917e25b
   extended-to-stream: 6186728905fd5ad4df42485438f17743da167d02
   stream-to-extended-result: ecde450d8f2615b193faafd9e36bcc0e950a3f01
   timestamp-stream-result: 1f66d9ce761e341aee22b2173c49d49c33834e4e
