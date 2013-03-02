@@ -1,5 +1,5 @@
-Bottom: 2bcceba8eb9cb10725c3bf904c467bd1f8e011e6
-Top:    979f9cdcb749410a238927d28390472e74e0a388
+Bottom: 7f7f3498513e5f9e229a44e8ea2ca94b66dd49b2
+Top:    60dcbada88cb9a2eeb5b07245e16d2f2db222909
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 21:19:25 +1300
 
@@ -13,7 +13,7 @@ it will be accurate enough.
 ---
 
 diff --git a/NEWS b/NEWS
-index 1be638c..998503f 100644
+index f32e29c..49290fd 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -16,6 +16,9 @@ Improvements
@@ -27,10 +27,10 @@ index 1be638c..998503f 100644
    ``StreamResult`` objects (each of which receives all the events).
    (Robert Collins)
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 736beff..f4c9eaa 100644
+index b889900..23b2f55 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -203,6 +203,15 @@ at once. Each method takes out a lock around the decorated result to prevent
+@@ -222,6 +222,15 @@ at once. Each method takes out a lock around the decorated result to prevent
  race conditions. The ``startTestRun`` and ``stopTestRun`` methods are not
  forwarded to prevent the decorated result having them called multiple times.
  
@@ -47,10 +47,10 @@ index 736beff..f4c9eaa 100644
  ------------------
  
 diff --git a/testtools/__init__.py b/testtools/__init__.py
-index 6a965cd..b8a8903 100644
+index 3e46da9..f0afbb1 100644
 --- a/testtools/__init__.py
 +++ b/testtools/__init__.py
-@@ -34,6 +34,7 @@ __all__ = [
+@@ -35,6 +35,7 @@ __all__ = [
      'StreamToExtendedDecorator',
      'TestControl',
      'ThreadsafeForwardingResult',
@@ -58,7 +58,7 @@ index 6a965cd..b8a8903 100644
      'try_import',
      'try_imports',
      ]
-@@ -88,6 +89,7 @@ else:
+@@ -90,6 +91,7 @@ else:
          TestResultDecorator,
          TextTestResult,
          ThreadsafeForwardingResult,
