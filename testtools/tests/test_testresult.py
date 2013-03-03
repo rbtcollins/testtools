@@ -1642,15 +1642,38 @@ class TestMergeTags(TestCase):
 
 class TestStreamResultRouter(TestCase):
 
+    def test_start_stop_test_run_no_fallback(self):
+        result = StreamResultRouter()
+        result.startTestRun()
+        result.stopTestRun()
+
     def test_no_fallback_errors(self):
         self.assertRaises(Exception, StreamResultRouter().status, test_id='f')
 
     def test_fallback_calls(self):
         fallback = LoggingStreamResult()
-        StreamResultRouter(fallback).status(test_id='foo')
+        result = StreamResultRouter(fallback)
+        result.startTestRun()
+        result.status(test_id='foo')
+        result.stopTestRun()
+        self.assertEqual([
+            ('startTestRun',),
+            ('status', 'foo', None, None, True, None, None, False, None, None,
+             None),
+            ('stopTestRun',),
+            ],
+            fallback._events)
+
+    def test_fallback_no_do_start_stop_run(self):
+        fallback = LoggingStreamResult()
+        result = StreamResultRouter(fallback, do_start_stop_run=False)
+        result.startTestRun()
+        result.status(test_id='foo')
+        result.stopTestRun()
         self.assertEqual([
             ('status', 'foo', None, None, True, None, None, False, None, None,
-             None)],
+             None)
+            ],
             fallback._events)
 
     def test_map_bad_policy(self):
@@ -1732,6 +1755,28 @@ class TestStreamResultRouter(TestCase):
         self.assertEqual([
             ('status', None, None, None, True, 'bar', b'', False, None, None,
              None),], nontest._events)
+
+    def test_map_do_start_stop_run(self):
+        nontest = LoggingStreamResult()
+        router = StreamResultRouter()
+        router.map(nontest, 'test_id', test_id=None, do_start_stop_run=True)
+        router.startTestRun()
+        router.stopTestRun()
+        self.assertEqual([
+            ('startTestRun',),
+            ('stopTestRun',),
+            ], nontest._events)
+
+    def test_map_do_start_stop_run_after_startTestRun(self):
+        nontest = LoggingStreamResult()
+        router = StreamResultRouter()
+        router.startTestRun()
+        router.map(nontest, 'test_id', test_id=None, do_start_stop_run=True)
+        router.stopTestRun()
+        self.assertEqual([
+            ('startTestRun',),
+            ('stopTestRun',),
+            ], nontest._events)
 
 
 class TestThreadStreamResult(TestCase):

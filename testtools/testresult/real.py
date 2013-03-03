@@ -434,9 +434,14 @@ class StreamResultRouter(StreamResult):
       ...     consume_route=True)
       >>> router.status(test_id='foo', route_code='0/1', test_status='uxsuccess')
 
-    StreamResultRouter has no buffering and startTestRun and stopTestRun are
-    no-ops: they are neither forwarded (because some map targets might be
-    called multiple times), nor have any effect on StreamResultRouter itself.
+    StreamResultRouter has no buffering.
+    
+    When adding routes (and for the fallback) whether to call startTestRun and
+    stopTestRun or to not call them is controllable by passing
+    'do_start_stop_run'. The default is to call them for the fallback only.
+    If a route is added after startTestRun has been called, and
+    do_start_stop_run is True then startTestRun is called immediately on the 
+    new route sink.
 
     There is no a-priori defined lookup order for routes: if they are ambiguous
     the behaviour is undefined. Only a single route is chosen for any event.
@@ -444,15 +449,34 @@ class StreamResultRouter(StreamResult):
 
     policies = {}
 
-    def __init__(self, fallback=None):
+    def __init__(self, fallback=None, do_start_stop_run=True):
         """Construct a StreamResultRouter with optional fallback.
 
         :param fallback: A StreamResult to forward events to when no route
             exists for them.
+        :param do_start_stop_run: If False do not pass startTestRun and
+            stopTestRun onto the fallback.
         """
         self.fallback = fallback
         self._route_code_prefixes = {}
         self._test_ids = {}
+        # Records sinks that should have do_start_stop_run called on them.
+        self._sinks = []
+        if do_start_stop_run and fallback:
+            self._sinks.append(fallback)
+        self._in_run = False
+
+    def startTestRun(self):
+        super(StreamResultRouter, self).startTestRun()
+        for sink in self._sinks:
+            sink.startTestRun()
+        self._in_run = True
+
+    def stopTestRun(self):
+        super(StreamResultRouter, self).stopTestRun()
+        for sink in self._sinks:
+            sink.stopTestRun()
+        self._in_run = False
 
     def status(self, **kwargs):
         route_code = kwargs.get('route_code', None)
@@ -474,12 +498,14 @@ class StreamResultRouter(StreamResult):
             target = self.fallback
         target.status(**kwargs)
 
-    def map(self, sink, policy, **policy_args):
+    def map(self, sink, policy, do_start_stop_run=False, **policy_args):
         """Route events to sink when they match a given policy.
 
         :param sink: A StreamResult to receive events.
         :param policy: A routing policy. Valid policies are
             'route_code_prefix' and 'test_id'.
+        :param do_start_stop_run: If True then startTestRun and stopTestRun
+            events will be passed onto this sink.
 
         route_code_prefix routes events based on a prefix of the route code in
         the event. It takes the following arguments::
@@ -499,6 +525,10 @@ class StreamResultRouter(StreamResult):
         if not policy_method:
             raise ValueError("bad policy %r" % (policy,))
         policy_method(self, sink, **policy_args)
+        if do_start_stop_run:
+            self._sinks.append(sink)
+        if self._in_run:
+            sink.startTestRun()
 
     def _map_route_code_prefix(self, sink, route_prefix, consume_route=False):
         if '/' in route_prefix:
@@ -510,6 +540,7 @@ class StreamResultRouter(StreamResult):
     def _map_test_id(self, sink, test_id):
         self._test_ids[test_id] = sink
     policies['test_id'] = _map_test_id
+
 
 class StreamToDict(StreamResult):
     """A specialised StreamResult that emits a callback as tests complete.

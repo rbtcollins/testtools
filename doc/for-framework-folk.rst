@@ -239,8 +239,8 @@ This is a ``StreamResult`` which forwards events to an arbitrary set of target
 an fallback ``StreamResult`` for processing. The mapping can be changed at
 runtime, allowing great flexability and responsiveness to changes. Because
 The mapping can change dynamically and there could be the same recipient for
-two different maps, ``startTestRun`` and ``stopTestRun`` are not forwarded by
-``StreamResultRouter`` - that is up to the user to arrange.
+two different maps, ``startTestRun`` and ``stopTestRun`` handling is fine
+grained and up to the user.
 
 If no fallback has been supplied, an unroutable event will raise an exception.
 
