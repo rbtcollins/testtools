@@ -1467,6 +1467,21 @@ class TestDecorateTestCaseResult(TestCase):
             ('tags', set(), set())
             ], self.log)
 
+    def test_before_after_hooks(self):
+        case = DecorateTestCaseResult(PlaceHolder('foo'), self.make_result,
+            before_run=lambda result: self.log.append('before'),
+            after_run=lambda result: self.log.append('after'))
+        case.run(None)
+        self.assertEqual([None,
+            'before',
+            ('tags', set(), set()),
+            ('startTest', case.decorated),
+            ('addSuccess', case.decorated),
+            ('stopTest', case.decorated),
+            ('tags', set(), set()),
+            'after',
+            ], self.log)
+
     def test_other_attribute(self):
         orig = PlaceHolder('foo')
         orig.thing = 'fred'

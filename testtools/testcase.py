@@ -863,19 +863,32 @@ class Nullary(object):
 class DecorateTestCaseResult(object):
     """Decorate a TestCase and permit customisation of the result for runs."""
 
-    def __init__(self, case, callout):
+    def __init__(self, case, callout, before_run=None, after_run=None):
         """Construct a DecorateTestCaseResult.
 
         :param case: The case to decorate.
         :param callout: A callback to call when run/__call__/debug is called.
             Must take a result parameter and return a result object to be used.
             For instance: lambda result: result.
+        :param before_run: If set, call this with the decorated result before
+            calling into the decorated run/__call__ method.
+        :param before_run: If set, call this with the decorated result after
+            calling into the decorated run/__call__ method.
         """
         self.decorated = case
         self.callout = callout
+        self.before_run = before_run
+        self.after_run = after_run
 
     def run(self, result=None):
-            return self.decorated.run(self.callout(result))
+            result = self.callout(result)
+            if self.before_run:
+                self.before_run(result)
+            try:
+                return self.decorated.run(result)
+            finally:
+                if self.after_run:
+                    self.after_run(result)
 
     def __call__(self, result=None):
             return self.decorated(self.callout(result))
