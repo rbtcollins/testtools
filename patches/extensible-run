@@ -1,0 +1,11 @@
+Bottom: a9e574977dc72901ff17be18508a467a679f1cf8
+Top:    a9e574977dc72901ff17be18508a467a679f1cf8
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-04 12:08:40 +1300
+
+Allow customisation of testtools.run --list-tests behaviour.
+
+
+---
+
+
