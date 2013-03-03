@@ -1472,7 +1472,17 @@ class TestDecorateTestCaseResult(TestCase):
             before_run=lambda result: self.log.append('before'),
             after_run=lambda result: self.log.append('after'))
         case.run(None)
-        self.assertEqual([None,
+        case(None)
+        self.assertEqual([
+            None,
+            'before',
+            ('tags', set(), set()),
+            ('startTest', case.decorated),
+            ('addSuccess', case.decorated),
+            ('stopTest', case.decorated),
+            ('tags', set(), set()),
+            'after',
+            None,
             'before',
             ('tags', set(), set()),
             ('startTest', case.decorated),

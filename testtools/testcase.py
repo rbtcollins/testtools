@@ -880,18 +880,21 @@ class DecorateTestCaseResult(object):
         self.before_run = before_run
         self.after_run = after_run
 
+    def _run(self, result, run_method):
+        result = self.callout(result)
+        if self.before_run:
+            self.before_run(result)
+        try:
+            return run_method(result)
+        finally:
+            if self.after_run:
+                self.after_run(result)
+
     def run(self, result=None):
-            result = self.callout(result)
-            if self.before_run:
-                self.before_run(result)
-            try:
-                return self.decorated.run(result)
-            finally:
-                if self.after_run:
-                    self.after_run(result)
+        self._run(result, self.decorated.run)
 
     def __call__(self, result=None):
-            return self.decorated(self.callout(result))
+        self._run(result, self.decorated)
 
     def __getattr__(self, name):
         return getattr(self.decorated, name)
