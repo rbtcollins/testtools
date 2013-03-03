@@ -78,6 +78,10 @@ Improvements
   partitioning analysis of events or sending feedback encapsulated in
   StreamResult events back to their source. (Robert Collins)
 
+* ``testtools.run.TestProgram`` now supports the ``TestRunner`` taking over
+  responsibility for formatting the output of ``--list-tests``.
+  (Robert Collins)
+
 Improvements
 ------------
 
