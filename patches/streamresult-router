@@ -1,5 +1,5 @@
 Bottom: b23ee80a95d8243de3149ae6c4f0d29d8ae74941
-Top:    500aca63d160ee85c979201a20599f58379b156d
+Top:    a9e574977dc72901ff17be18508a467a679f1cf8
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-24 12:38:02 +1300
 
@@ -28,7 +28,7 @@ index 8e52f7e..47af30c 100644
  ------------
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 2539f23..27806f7 100644
+index 2539f23..991228b 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -231,6 +231,33 @@ passing the events via this decorator to get timestamped data. As long as
@@ -43,8 +43,8 @@ index 2539f23..27806f7 100644
 +an fallback ``StreamResult`` for processing. The mapping can be changed at
 +runtime, allowing great flexability and responsiveness to changes. Because
 +The mapping can change dynamically and there could be the same recipient for
-+two different maps, ``startTestRun`` and ``stopTestRun`` are not forwarded by
-+``StreamResultRouter`` - that is up to the user to arrange.
++two different maps, ``startTestRun`` and ``stopTestRun`` handling is fine
++grained and up to the user.
 +
 +If no fallback has been supplied, an unroutable event will raise an exception.
 +
@@ -106,10 +106,10 @@ index 940846d..9f8c789 100644
      StreamToDict,
      StreamToExtendedDecorator,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index afa0da6..d3261df 100644
+index afa0da6..92d115d 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -417,6 +417,100 @@ class StreamFailfast(StreamResult):
+@@ -417,6 +417,131 @@ class StreamFailfast(StreamResult):
              self.callback()
  
  
@@ -130,9 +130,14 @@ index afa0da6..d3261df 100644
 +      ...     consume_route=True)
 +      >>> router.status(test_id='foo', route_code='0/1', test_status='uxsuccess')
 +
-+    StreamResultRouter has no buffering and startTestRun and stopTestRun are
-+    no-ops: they are neither forwarded (because some map targets might be
-+    called multiple times), nor have any effect on StreamResultRouter itself.
++    StreamResultRouter has no buffering.
++    
++    When adding routes (and for the fallback) whether to call startTestRun and
++    stopTestRun or to not call them is controllable by passing
++    'do_start_stop_run'. The default is to call them for the fallback only.
++    If a route is added after startTestRun has been called, and
++    do_start_stop_run is True then startTestRun is called immediately on the 
++    new route sink.
 +
 +    There is no a-priori defined lookup order for routes: if they are ambiguous
 +    the behaviour is undefined. Only a single route is chosen for any event.
@@ -140,15 +145,34 @@ index afa0da6..d3261df 100644
 +
 +    policies = {}
 +
-+    def __init__(self, fallback=None):
++    def __init__(self, fallback=None, do_start_stop_run=True):
 +        """Construct a StreamResultRouter with optional fallback.
 +
 +        :param fallback: A StreamResult to forward events to when no route
 +            exists for them.
++        :param do_start_stop_run: If False do not pass startTestRun and
++            stopTestRun onto the fallback.
 +        """
 +        self.fallback = fallback
 +        self._route_code_prefixes = {}
 +        self._test_ids = {}
++        # Records sinks that should have do_start_stop_run called on them.
++        self._sinks = []
++        if do_start_stop_run and fallback:
++            self._sinks.append(fallback)
++        self._in_run = False
++
++    def startTestRun(self):
++        super(StreamResultRouter, self).startTestRun()
++        for sink in self._sinks:
++            sink.startTestRun()
++        self._in_run = True
++
++    def stopTestRun(self):
++        super(StreamResultRouter, self).stopTestRun()
++        for sink in self._sinks:
++            sink.stopTestRun()
++        self._in_run = False
 +
 +    def status(self, **kwargs):
 +        route_code = kwargs.get('route_code', None)
@@ -170,12 +194,14 @@ index afa0da6..d3261df 100644
 +            target = self.fallback
 +        target.status(**kwargs)
 +
-+    def map(self, sink, policy, **policy_args):
++    def map(self, sink, policy, do_start_stop_run=False, **policy_args):
 +        """Route events to sink when they match a given policy.
 +
 +        :param sink: A StreamResult to receive events.
 +        :param policy: A routing policy. Valid policies are
 +            'route_code_prefix' and 'test_id'.
++        :param do_start_stop_run: If True then startTestRun and stopTestRun
++            events will be passed onto this sink.
 +
 +        route_code_prefix routes events based on a prefix of the route code in
 +        the event. It takes the following arguments::
@@ -195,6 +221,10 @@ index afa0da6..d3261df 100644
 +        if not policy_method:
 +            raise ValueError("bad policy %r" % (policy,))
 +        policy_method(self, sink, **policy_args)
++        if do_start_stop_run:
++            self._sinks.append(sink)
++        if self._in_run:
++            sink.startTestRun()
 +
 +    def _map_route_code_prefix(self, sink, route_prefix, consume_route=False):
 +        if '/' in route_prefix:
@@ -207,11 +237,12 @@ index afa0da6..d3261df 100644
 +        self._test_ids[test_id] = sink
 +    policies['test_id'] = _map_test_id
 +
++
  class StreamToDict(StreamResult):
      """A specialised StreamResult that emits a callback as tests complete.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index feab53d..1f0d791 100644
+index feab53d..afbf190 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -25,6 +25,7 @@ from testtools import (
@@ -235,21 +266,44 @@ index feab53d..1f0d791 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -1633,6 +1640,100 @@ class TestMergeTags(TestCase):
+@@ -1633,6 +1640,145 @@ class TestMergeTags(TestCase):
              expected, _merge_tags(current_tags, changing_tags))
  
  
 +class TestStreamResultRouter(TestCase):
++
++    def test_start_stop_test_run_no_fallback(self):
++        result = StreamResultRouter()
++        result.startTestRun()
++        result.stopTestRun()
 +
 +    def test_no_fallback_errors(self):
 +        self.assertRaises(Exception, StreamResultRouter().status, test_id='f')
 +
 +    def test_fallback_calls(self):
 +        fallback = LoggingStreamResult()
-+        StreamResultRouter(fallback).status(test_id='foo')
++        result = StreamResultRouter(fallback)
++        result.startTestRun()
++        result.status(test_id='foo')
++        result.stopTestRun()
++        self.assertEqual([
++            ('startTestRun',),
++            ('status', 'foo', None, None, True, None, None, False, None, None,
++             None),
++            ('stopTestRun',),
++            ],
++            fallback._events)
++
++    def test_fallback_no_do_start_stop_run(self):
++        fallback = LoggingStreamResult()
++        result = StreamResultRouter(fallback, do_start_stop_run=False)
++        result.startTestRun()
++        result.status(test_id='foo')
++        result.stopTestRun()
 +        self.assertEqual([
 +            ('status', 'foo', None, None, True, None, None, False, None, None,
-+             None)],
++             None)
++            ],
 +            fallback._events)
 +
 +    def test_map_bad_policy(self):
@@ -331,6 +385,28 @@ index feab53d..1f0d791 100644
 +        self.assertEqual([
 +            ('status', None, None, None, True, 'bar', b'', False, None, None,
 +             None),], nontest._events)
++
++    def test_map_do_start_stop_run(self):
++        nontest = LoggingStreamResult()
++        router = StreamResultRouter()
++        router.map(nontest, 'test_id', test_id=None, do_start_stop_run=True)
++        router.startTestRun()
++        router.stopTestRun()
++        self.assertEqual([
++            ('startTestRun',),
++            ('stopTestRun',),
++            ], nontest._events)
++
++    def test_map_do_start_stop_run_after_startTestRun(self):
++        nontest = LoggingStreamResult()
++        router = StreamResultRouter()
++        router.startTestRun()
++        router.map(nontest, 'test_id', test_id=None, do_start_stop_run=True)
++        router.stopTestRun()
++        self.assertEqual([
++            ('startTestRun',),
++            ('stopTestRun',),
++            ], nontest._events)
 +
 +
  class TestThreadStreamResult(TestCase):
