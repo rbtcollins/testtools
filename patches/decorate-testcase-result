@@ -1,5 +1,5 @@
 Bottom: 672e6314751b3a560b122e4523f619d2804a36c9
-Top:    7e0a1279380304de8bf418e71c04ea839128208d
+Top:    2350c0375ee7b8473f9d8883b68c3830d17b3b20
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-02 20:29:52 +1300
 
@@ -76,10 +76,10 @@ index 707fb55..dcfece8 100644
          ExpectedException,
          PlaceHolder,
 diff --git a/testtools/testcase.py b/testtools/testcase.py
-index 13ad2e8..bac718d 100644
+index 13ad2e8..3e78bf1 100644
 --- a/testtools/testcase.py
 +++ b/testtools/testcase.py
-@@ -860,6 +860,52 @@ class Nullary(object):
+@@ -860,6 +860,55 @@ class Nullary(object):
          return repr(self._callable_object)
  
  
@@ -103,18 +103,21 @@ index 13ad2e8..bac718d 100644
 +        self.before_run = before_run
 +        self.after_run = after_run
 +
++    def _run(self, result, run_method):
++        result = self.callout(result)
++        if self.before_run:
++            self.before_run(result)
++        try:
++            return run_method(result)
++        finally:
++            if self.after_run:
++                self.after_run(result)
++
 +    def run(self, result=None):
-+            result = self.callout(result)
-+            if self.before_run:
-+                self.before_run(result)
-+            try:
-+                return self.decorated.run(result)
-+            finally:
-+                if self.after_run:
-+                    self.after_run(result)
++        self._run(result, self.decorated.run)
 +
 +    def __call__(self, result=None):
-+            return self.decorated(self.callout(result))
++        self._run(result, self.decorated)
 +
 +    def __getattr__(self, name):
 +        return getattr(self.decorated, name)
@@ -133,7 +136,7 @@ index 13ad2e8..bac718d 100644
  # should not normally appear in tracebacks.
  __unittest = True
 diff --git a/testtools/tests/test_testcase.py b/testtools/tests/test_testcase.py
-index 5cf26ab..fccc482 100644
+index 5cf26ab..b14e1bd 100644
 --- a/testtools/tests/test_testcase.py
 +++ b/testtools/tests/test_testcase.py
 @@ -8,6 +8,7 @@ import sys
@@ -144,7 +147,7 @@ index 5cf26ab..fccc482 100644
      ErrorHolder,
      MultipleExceptions,
      PlaceHolder,
-@@ -1420,6 +1421,79 @@ class TestAttributes(TestCase):
+@@ -1420,6 +1421,89 @@ class TestAttributes(TestCase):
              case.id())
  
  
@@ -199,7 +202,17 @@ index 5cf26ab..fccc482 100644
 +            before_run=lambda result: self.log.append('before'),
 +            after_run=lambda result: self.log.append('after'))
 +        case.run(None)
-+        self.assertEqual([None,
++        case(None)
++        self.assertEqual([
++            None,
++            'before',
++            ('tags', set(), set()),
++            ('startTest', case.decorated),
++            ('addSuccess', case.decorated),
++            ('stopTest', case.decorated),
++            ('tags', set(), set()),
++            'after',
++            None,
 +            'before',
 +            ('tags', set(), set()),
 +            ('startTest', case.decorated),
