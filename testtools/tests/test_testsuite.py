@@ -181,7 +181,7 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
 Traceback (most recent call last):
   File "...testtools/testsuite.py", line 188, in _run_test
     test.run(process_result)
-TypeError: run() takes ...1 ...argument (2 given)
+TypeError: run() takes ...1 ...argument...2...given...
 """, doctest.ELLIPSIS))
         events = [event[0:10] + (None,) for event in events]
         events[1] = events[1][:6] + (None,) + events[1][7:]
