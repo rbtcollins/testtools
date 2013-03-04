@@ -1,5 +1,5 @@
 Bottom: 59bfc9044d6f2e2c2e657e932f6a5d4be6563f72
-Top:    b23ee80a95d8243de3149ae6c4f0d29d8ae74941
+Top:    7461373a2821d207a4b06a1d482941e7ee5fb665
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -254,7 +254,7 @@ index fa049b9..feab53d 100644
  
      def make_26_result(self):
 diff --git a/testtools/tests/test_testsuite.py b/testtools/tests/test_testsuite.py
-index 289beb9..57f79f9 100644
+index 289beb9..90ed638 100644
 --- a/testtools/tests/test_testsuite.py
 +++ b/testtools/tests/test_testsuite.py
 @@ -4,6 +4,7 @@
@@ -383,7 +383,7 @@ index 289beb9..57f79f9 100644
 +Traceback (most recent call last):
 +  File "...testtools/testsuite.py", line 188, in _run_test
 +    test.run(process_result)
-+TypeError: run() takes ...1 ...argument (2 given)
++TypeError: run() takes ...1 ...argument...2...given...
 +""", doctest.ELLIPSIS))
 +        events = [event[0:10] + (None,) for event in events]
 +        events[1] = events[1][:6] + (None,) + events[1][7:]
