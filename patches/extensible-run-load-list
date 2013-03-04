@@ -1,0 +1,11 @@
+Bottom: ba5c2b86e98dc88394732f4362baf77e640fc590
+Top:    ba5c2b86e98dc88394732f4362baf77e640fc590
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-04 16:11:17 +1300
+
+Allow parsing of ``testtools.run`` ``--load-list`` to be customised.
+
+
+---
+
+
