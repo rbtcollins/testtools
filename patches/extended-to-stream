@@ -1,5 +1,5 @@
-Bottom: cdc30b1586b77fda2fd4d8391a45cd4778c2ab8c
-Top:    1cb402106fab91bbb67dcfa3f3ea30b78697ba3a
+Bottom: b635f415847e1c16f6ef75dc665e599628daefe0
+Top:    04b9dff89eb3c8792736ec51347946c4bc2f153f
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -12,10 +12,10 @@ with a StreamResult.
 ---
 
 diff --git a/NEWS b/NEWS
-index c045099..1af50ae 100644
+index e1d1fe8..9afa8ec 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -33,6 +33,16 @@ Improvements
+@@ -36,6 +36,16 @@ Improvements
  * New support class ``StreamFailfast`` which calls a ``TestControl`` instance
    to abort the test run when a failure is detected. (Robert Collins)
  

@@ -1,5 +1,5 @@
-Bottom: 672e6314751b3a560b122e4523f619d2804a36c9
-Top:    2350c0375ee7b8473f9d8883b68c3830d17b3b20
+Bottom: 25cb0402467ace845acb8eaa8ec7adb555bc4864
+Top:    c5bb077a05b159a016b388e04cc335323e5bdb26
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-02 20:29:52 +1300
 
@@ -10,10 +10,10 @@ Add a helper for decorating the result object given to
 ---
 
 diff --git a/NEWS b/NEWS
-index b8ea878..794d7f2 100644
+index 7b0433d..3ca58f6 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -23,6 +23,11 @@ Improvements
+@@ -26,6 +26,11 @@ Improvements
  Improvements
  ------------
  
@@ -76,10 +76,10 @@ index 707fb55..dcfece8 100644
          ExpectedException,
          PlaceHolder,
 diff --git a/testtools/testcase.py b/testtools/testcase.py
-index 13ad2e8..3e78bf1 100644
+index 4710aa2..75a9b0d 100644
 --- a/testtools/testcase.py
 +++ b/testtools/testcase.py
-@@ -860,6 +860,55 @@ class Nullary(object):
+@@ -862,6 +862,55 @@ class Nullary(object):
          return repr(self._callable_object)
  
  
@@ -136,7 +136,7 @@ index 13ad2e8..3e78bf1 100644
  # should not normally appear in tracebacks.
  __unittest = True
 diff --git a/testtools/tests/test_testcase.py b/testtools/tests/test_testcase.py
-index 5cf26ab..b14e1bd 100644
+index 6698eba..78940d6 100644
 --- a/testtools/tests/test_testcase.py
 +++ b/testtools/tests/test_testcase.py
 @@ -8,6 +8,7 @@ import sys
@@ -147,7 +147,7 @@ index 5cf26ab..b14e1bd 100644
      ErrorHolder,
      MultipleExceptions,
      PlaceHolder,
-@@ -1420,6 +1421,89 @@ class TestAttributes(TestCase):
+@@ -1429,6 +1430,89 @@ class TestAttributes(TestCase):
              case.id())
  
  

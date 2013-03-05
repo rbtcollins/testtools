@@ -1,5 +1,5 @@
-Bottom: 59bfc9044d6f2e2c2e657e932f6a5d4be6563f72
-Top:    7461373a2821d207a4b06a1d482941e7ee5fb665
+Bottom: 8f6d4ef9b4bf64f33a1a7fc7dfa78f66272a0edf
+Top:    7bbc645c86c310f786a562d2848ab194b12d26a0
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -9,10 +9,10 @@ Add a StreamResult decorator safe for use in threaded/concurrent code.
 ---
 
 diff --git a/NEWS b/NEWS
-index 49290fd..8e52f7e 100644
+index 6bcb393..7808380 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -19,6 +19,9 @@ Improvements
+@@ -22,6 +22,9 @@ Improvements
  * New support class ``TimestampingStreamResult`` which adds a timestamp to
    events with no timestamp. (Robert Collins)
  
@@ -22,7 +22,7 @@ index 49290fd..8e52f7e 100644
  * New support class ``CopyStreamResult`` which forwards events onto multiple
    ``StreamResult`` objects (each of which receives all the events).
    (Robert Collins)
-@@ -51,6 +54,9 @@ Improvements
+@@ -54,6 +57,9 @@ Improvements
    ``TestResult``) calls. This permits using un-migrated result objects with
    new runners / tests. (Robert Collins)
  
