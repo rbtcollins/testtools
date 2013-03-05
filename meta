@@ -1,9 +1,8 @@
 Version: 1
-Previous: ba97e8605e24dd520ca671baaf606661321d4270
-Head: 0eeeb684e37e17132bfa059b41a013b1d615d751
+Previous: aa6c242ad86747259dee06dddf5b981e25350bbc
+Head: e9ef3b8424f9f4353fb1e47ab02402d95c39840c
 Applied:
-  placeholder-tags: 849f89d0c320cf98b3610c52ea20297526b89caf
-  refresh-temp: 0eeeb684e37e17132bfa059b41a013b1d615d751
+  placeholder-tags: e9ef3b8424f9f4353fb1e47ab02402d95c39840c
 Unapplied:
   placeholder-timestamp: 49e6706b159b48229a36cab4e3f260d250524671
   decorate-testcase-result: a93afa4a5894dab50787be81e4242c375e460e8f
