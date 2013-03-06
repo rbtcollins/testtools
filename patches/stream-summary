@@ -1,5 +1,5 @@
-Bottom: 49d48eb54a8236ff88805358fd22b473ffbdf54a
-Top:    c42b2392c426a612a7f726d2aa684eceabb3d7f5
+Bottom: f0ed59e417aa191f61678a3ce546b86b32d859e5
+Top:    8748aed9cab51a726d75b11fdf68618941ea011c
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -13,10 +13,10 @@ generating them).
 ---
 
 diff --git a/NEWS b/NEWS
-index a88a218..a494f6f 100644
+index 1265b28..4ca0a85 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -23,6 +23,9 @@ Improvements
+@@ -24,6 +24,9 @@ Improvements
    ``StreamResult`` objects (each of which receives all the events).
    (Robert Collins)
  

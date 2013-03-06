@@ -1,5 +1,5 @@
-Bottom: 7bbc645c86c310f786a562d2848ab194b12d26a0
-Top:    c7114d67c9ebf88ab9f6a6d395d18c8638ad9d5c
+Bottom: 7261fe8a8106ae3d39b49363b454519707eb2df4
+Top:    62bb11fdc4932da85422c304e39885697340965b
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-24 12:38:02 +1300
 
@@ -13,10 +13,10 @@ a fallback stream.
 ---
 
 diff --git a/NEWS b/NEWS
-index 7808380..66152f4 100644
+index 7b44bc6..8b14212 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -74,6 +74,10 @@ Improvements
+@@ -75,6 +75,10 @@ Improvements
  * ``PlaceHolder`` can now hold timestamps, and applies them before the test and
    then before the outcome. (Robert Collins)
  
