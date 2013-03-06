@@ -1,5 +1,5 @@
-Bottom: 62bb11fdc4932da85422c304e39885697340965b
-Top:    f17cfac6aff2a45ea3bafc03fbc00980d439feb8
+Bottom: 60296f0b6bae72e26007c26a495986c41b1a182b
+Top:    f09c7d73b56ea20e364dd922ee1f72356e144ac7
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-04 12:08:40 +1300
 
@@ -9,7 +9,7 @@ Allow customisation of testtools.run --list-tests behaviour.
 ---
 
 diff --git a/NEWS b/NEWS
-index 8b14212..96b6692 100644
+index 54723bf..7972c28 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -79,6 +79,10 @@ Improvements
@@ -24,7 +24,7 @@ index 8b14212..96b6692 100644
  ------------
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 991228b..2486781 100644
+index c3e24b8..45e4895 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -413,6 +413,13 @@ If you a writing custom wrapping suites, consider implementing filter_by_ids

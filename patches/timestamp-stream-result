@@ -1,5 +1,5 @@
-Bottom: f60982dfd3a3f46f5aea80cd56fef89cbacbf991
-Top:    5e88746808109207132db37f71bf17bc3983d1da
+Bottom: 7eeef34a571b92d86b392fd15a10b83b2a2b4725
+Top:    e2f0a0a8498e059f86a53ed11b2e667096801c99
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 21:19:25 +1300
 
@@ -13,7 +13,7 @@ it will be accurate enough.
 ---
 
 diff --git a/NEWS b/NEWS
-index 68d38f0..10082b8 100644
+index eee061a..56136e4 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -20,6 +20,9 @@ Improvements
@@ -27,7 +27,7 @@ index 68d38f0..10082b8 100644
    ``StreamResult`` objects (each of which receives all the events).
    (Robert Collins)
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index b889900..23b2f55 100644
+index 949e4a5..57ac59e 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -222,6 +222,15 @@ at once. Each method takes out a lock around the decorated result to prevent
@@ -47,7 +47,7 @@ index b889900..23b2f55 100644
  ------------------
  
 diff --git a/testtools/__init__.py b/testtools/__init__.py
-index 3e46da9..f0afbb1 100644
+index 2bde458..f317e0b 100644
 --- a/testtools/__init__.py
 +++ b/testtools/__init__.py
 @@ -35,6 +35,7 @@ __all__ = [
@@ -67,7 +67,7 @@ index 3e46da9..f0afbb1 100644
      from testtools.testsuite import (
          ConcurrentTestSuite,
 diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
-index 8f0fd76..36830af 100644
+index 404aa3c..04960ba 100644
 --- a/testtools/testresult/__init__.py
 +++ b/testtools/testresult/__init__.py
 @@ -19,6 +19,7 @@ __all__ = [
@@ -85,7 +85,7 @@ index 8f0fd76..36830af 100644
 +    TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index d37cbce..3ed1a0a 100644
+index 108538d..a50c52c 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -17,6 +17,7 @@ __all__ = [
@@ -96,7 +96,7 @@ index d37cbce..3ed1a0a 100644
      ]
  
  import datetime
-@@ -1460,6 +1461,23 @@ class TestByTestResult(TestResult):
+@@ -1462,6 +1463,23 @@ class TestByTestResult(TestResult):
          self._details = details
  
  
@@ -121,7 +121,7 @@ index d37cbce..3ed1a0a 100644
      """An exception made from an arbitrary string."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index b8e8c29..fa049b9 100644
+index 34d99d8..75461a4 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -36,6 +36,7 @@ from testtools import (

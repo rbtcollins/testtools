@@ -1,5 +1,5 @@
-Bottom: 7261fe8a8106ae3d39b49363b454519707eb2df4
-Top:    62bb11fdc4932da85422c304e39885697340965b
+Bottom: 7ca819cf3973df6f1adde0ec61b607584f2af92e
+Top:    60296f0b6bae72e26007c26a495986c41b1a182b
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-24 12:38:02 +1300
 
@@ -13,7 +13,7 @@ a fallback stream.
 ---
 
 diff --git a/NEWS b/NEWS
-index 7b44bc6..8b14212 100644
+index d7a8b03..54723bf 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -75,6 +75,10 @@ Improvements
@@ -28,7 +28,7 @@ index 7b44bc6..8b14212 100644
  ------------
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 2539f23..991228b 100644
+index a9b5574..c3e24b8 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -231,6 +231,33 @@ passing the events via this decorator to get timestamped data. As long as
@@ -66,12 +66,12 @@ index 2539f23..991228b 100644
  ------------------
  
 diff --git a/testtools/__init__.py b/testtools/__init__.py
-index 20e6937..2bed507 100644
+index 59834a5..375b4f2 100644
 --- a/testtools/__init__.py
 +++ b/testtools/__init__.py
 @@ -31,6 +31,7 @@ __all__ = [
      'skipUnless',
-     'StreamFailfast',
+     'StreamFailFast',
      'StreamResult',
 +    'StreamResultRouter',
      'StreamSummary',
@@ -79,19 +79,19 @@ index 20e6937..2bed507 100644
      'StreamToExtendedDecorator',
 @@ -83,6 +84,7 @@ else:
          MultiTestResult,
-         StreamFailfast,
+         StreamFailFast,
          StreamResult,
 +        StreamResultRouter,
          StreamSummary,
          StreamToDict,
          StreamToExtendedDecorator,
 diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
-index 940846d..9f8c789 100644
+index 5b311c7..162bb34 100644
 --- a/testtools/testresult/__init__.py
 +++ b/testtools/testresult/__init__.py
 @@ -9,6 +9,7 @@ __all__ = [
      'MultiTestResult',
-     'StreamFailfast',
+     'StreamFailFast',
      'StreamResult',
 +    'StreamResultRouter',
      'StreamSummary',
@@ -99,17 +99,17 @@ index 940846d..9f8c789 100644
      'StreamToExtendedDecorator',
 @@ -30,6 +31,7 @@ from testtools.testresult.real import (
      MultiTestResult,
-     StreamFailfast,
+     StreamFailFast,
      StreamResult,
 +    StreamResultRouter,
      StreamSummary,
      StreamToDict,
      StreamToExtendedDecorator,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index afa0da6..92d115d 100644
+index 95ecb83..2ed7a1c 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -417,6 +417,131 @@ class StreamFailfast(StreamResult):
+@@ -419,6 +419,131 @@ class StreamFailFast(StreamResult):
              self.callback()
  
  
@@ -242,19 +242,19 @@ index afa0da6..92d115d 100644
      """A specialised StreamResult that emits a callback as tests complete.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index feab53d..afbf190 100644
+index 7998f57..979fc45 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -25,6 +25,7 @@ from testtools import (
      PlaceHolder,
-     StreamFailfast,
+     StreamFailFast,
      StreamResult,
 +    StreamResultRouter,
      StreamSummary,
      StreamToDict,
      StreamToExtendedDecorator,
-@@ -589,6 +590,12 @@ class TestStreamFailfastContract(TestCase, TestStreamResultContract):
-         return StreamFailfast(lambda:None)
+@@ -589,6 +590,12 @@ class TestStreamFailFastContract(TestCase, TestStreamResultContract):
+         return StreamFailFast(lambda:None)
  
  
 +class TestStreamResultRouterContract(TestCase, TestStreamResultContract):
