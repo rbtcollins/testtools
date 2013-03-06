@@ -1,5 +1,5 @@
 Bottom: 5e88746808109207132db37f71bf17bc3983d1da
-Top:    7261fe8a8106ae3d39b49363b454519707eb2df4
+Top:    f047512c1e1dfad2834c0c802d9e4e8c1ffe3990
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -408,7 +408,7 @@ index 289beb9..90ed638 100644
  
      def setUp(self):
 diff --git a/testtools/testsuite.py b/testtools/testsuite.py
-index 0ffe6f3..808af0c 100644
+index 0ffe6f3..6553196 100644
 --- a/testtools/testsuite.py
 +++ b/testtools/testsuite.py
 @@ -5,6 +5,7 @@
@@ -435,7 +435,7 @@ index 0ffe6f3..808af0c 100644
 +            ConcurrentTestSuite into some number of concurrently executing
 +            sub-suites. make_tests must take a suite, and return an iterable
 +            of tuples. Each tuple must be of the form (case, route_code), where
-+            case is a TestCase-like object with a run(result) mthod, and
++            case is a TestCase-like object with a run(result) method, and
 +            route_code is either None or a unicode string.
 +        """
 +        super(ConcurrentStreamTestSuite, self).__init__([suite])
