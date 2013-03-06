@@ -628,7 +628,7 @@ class PlaceHolder(object):
         :param outcome: The outcome to call. Defaults to 'addSuccess'.
         :param tags: Tags to report for the test.
         :param timestamps: A two-tuple of timestamps for the test start and
-            finish. Each timestamp may be None to undicate it is not known.
+            finish. Each timestamp may be None to indicate it is not known.
         """
         self._test_id = test_id
         self._short_description = short_description
@@ -636,7 +636,8 @@ class PlaceHolder(object):
         self._outcome = outcome
         if error is not None:
             self._details['traceback'] = content.TracebackContent(error, self)
-        self._tags = tags or set()
+        tags = tags or frozenset()
+        self._tags = frozenset(tags)
         self._timestamps = timestamps
 
     def __call__(self, result=None):
