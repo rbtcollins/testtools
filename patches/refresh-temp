@@ -1,0 +1,32 @@
+Bottom: 25cb0402467ace845acb8eaa8ec7adb555bc4864
+Top:    65f15a3218f280e383a45174e604efe0971a77d8
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-06 23:19:51 +1300
+
+Refresh of placeholder-timestamp
+
+---
+
+diff --git a/testtools/testcase.py b/testtools/testcase.py
+index 4710aa2..d21aee2 100644
+--- a/testtools/testcase.py
++++ b/testtools/testcase.py
+@@ -628,7 +628,7 @@ class PlaceHolder(object):
+         :param outcome: The outcome to call. Defaults to 'addSuccess'.
+         :param tags: Tags to report for the test.
+         :param timestamps: A two-tuple of timestamps for the test start and
+-            finish. Each timestamp may be None to undicate it is not known.
++            finish. Each timestamp may be None to indicate it is not known.
+         """
+         self._test_id = test_id
+         self._short_description = short_description
+@@ -636,7 +636,8 @@ class PlaceHolder(object):
+         self._outcome = outcome
+         if error is not None:
+             self._details['traceback'] = content.TracebackContent(error, self)
+-        self._tags = tags or set()
++        tags = tags or frozenset()
++        self._tags = frozenset(tags)
+         self._timestamps = timestamps
+ 
+     def __call__(self, result=None):
