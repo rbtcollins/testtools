@@ -1,0 +1,23 @@
+Bottom: 65f15a3218f280e383a45174e604efe0971a77d8
+Top:    d23ccce2546a4025445fd116b8110574c99af48c
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-06 23:21:08 +1300
+
+Refresh of placeholder-timestamp
+
+---
+
+diff --git a/testtools/testcase.py b/testtools/testcase.py
+index d21aee2..59ceb13 100644
+--- a/testtools/testcase.py
++++ b/testtools/testcase.py
+@@ -636,8 +636,7 @@ class PlaceHolder(object):
+         self._outcome = outcome
+         if error is not None:
+             self._details['traceback'] = content.TracebackContent(error, self)
+-        tags = tags or frozenset()
+-        self._tags = frozenset(tags)
++        self._tags = tags or set()
+         self._timestamps = timestamps
+ 
+     def __call__(self, result=None):
