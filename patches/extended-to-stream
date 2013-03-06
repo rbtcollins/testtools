@@ -1,5 +1,5 @@
-Bottom: e6d7d4290eb513844ae65228ab88b5f19f7f3142
-Top:    bb35df84cef73681c53a17ae7b496d6bb7800216
+Bottom: ccdcdf3354d2635e0cbf7b01224a1d234c7f2250
+Top:    fa299b5157a4929a484984ae73283237dd816884
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -93,7 +93,7 @@ index 435cb32..2827f0b 100644
      StreamFailfast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 3b4f0a7..cb23d1e 100644
+index 343412d..786e4c0 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -113,7 +113,7 @@ index 3b4f0a7..cb23d1e 100644
  from testtools.content import (
      Content,
      text_content,
-@@ -1119,6 +1120,142 @@ class ExtendedToOriginalDecorator(object):
+@@ -1121,6 +1122,142 @@ class ExtendedToOriginalDecorator(object):
          return self.decorated.wasSuccessful()
  
  

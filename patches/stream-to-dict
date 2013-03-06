@@ -1,5 +1,5 @@
-Bottom: 419ef0ebf96e1ee7d6b211458435a0911d5e4dd7
-Top:    f0ed59e417aa191f61678a3ce546b86b32d859e5
+Bottom: 879bf48ae8eeabb7f605de89f0dc901c4953f0d6
+Top:    4854e370ff1482d8e8051c62444206de3e1614f3
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 21:28:29 +1300
 
@@ -121,7 +121,7 @@ index f1ec047..789e617 100644
      TestByTestResult,
      TestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 7d264d8..fae48a2 100644
+index 4268462..b4482d7 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -7,6 +7,7 @@ __all__ = [
@@ -150,7 +150,7 @@ index 7d264d8..fae48a2 100644
  from testtools.tags import TagContext
  
  # From http://docs.python.org/library/datetime.html
-@@ -390,6 +394,101 @@ class CopyStreamResult(StreamResult):
+@@ -392,6 +396,101 @@ class CopyStreamResult(StreamResult):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  

@@ -1,5 +1,5 @@
-Bottom: 8748aed9cab51a726d75b11fdf68618941ea011c
-Top:    e6d7d4290eb513844ae65228ab88b5f19f7f3142
+Bottom: 7d44aad7bd5ffafc0cdff033fe066af4e190df69
+Top:    ccdcdf3354d2635e0cbf7b01224a1d234c7f2250
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-17 16:12:38 +1300
 
@@ -105,7 +105,7 @@ index 29ee39d..435cb32 100644
      TestResultDecorator,
      TextTestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index f89547f..3b4f0a7 100644
+index c20b918..343412d 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,10 +6,12 @@ __metaclass__ = type
@@ -121,7 +121,7 @@ index f89547f..3b4f0a7 100644
      'TestResult',
      'TestResultDecorator',
      'ThreadsafeForwardingResult',
-@@ -398,6 +400,19 @@ class CopyStreamResult(StreamResult):
+@@ -400,6 +402,19 @@ class CopyStreamResult(StreamResult):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  
@@ -141,7 +141,7 @@ index f89547f..3b4f0a7 100644
  class StreamToDict(StreamResult):
      """A specialised StreamResult that emits a callback as tests complete.
  
-@@ -593,6 +608,23 @@ class StreamSummary(StreamToDict):
+@@ -595,6 +610,23 @@ class StreamSummary(StreamToDict):
          self.unexpectedSuccesses.append(case)
  
  
