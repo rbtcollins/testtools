@@ -280,7 +280,7 @@ class StreamResult(object):
     streams together as it allows identification of interactions between tests
     that were run on the same hardware or in the same test process. Generally
     actual tests never need to bother with this - it is added and processed
-    by StreamResult's that do multiplexing / run analysis. route_code's are
+    by StreamResult's that do multiplexing / run analysis. route_codes are
     also used to route stdin back to pdb instances.
 
     The StreamResult base class does no accounting or processing, rather it
