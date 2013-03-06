@@ -1,0 +1,22 @@
+Bottom: 64500518a30045be4bb61a809aa0aeb821e9bf88
+Top:    02f38ba18a823320de538b8842b0c793bb84892f
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-06 22:49:15 +1300
+
+Refresh of define-stream-result
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 8f24ecb..3acb3d8 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -280,7 +280,7 @@ class StreamResult(object):
+     streams together as it allows identification of interactions between tests
+     that were run on the same hardware or in the same test process. Generally
+     actual tests never need to bother with this - it is added and processed
+-    by StreamResult's that do multiplexing / run analysis. route_code's are
++    by StreamResult's that do multiplexing / run analysis. route_codes are
+     also used to route stdin back to pdb instances.
+ 
+     The StreamResult base class does no accounting or processing, rather it
