@@ -1,5 +1,5 @@
-Bottom: bc0c093c67b2dcd9afbd9e315f8ada34b53f5883
-Top:    fb94574cb49fac3223e3dad232310ca962ed97fe
+Bottom: 35bbd7439f8b265383cad8765b46c62fd989c3b2
+Top:    419ef0ebf96e1ee7d6b211458435a0911d5e4dd7
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:48:03 +1300
 
@@ -11,10 +11,10 @@ This allows applying multiple terminal handlers to one stream.
 ---
 
 diff --git a/NEWS b/NEWS
-index cbaaf73..c3dcd4b 100644
+index abcb80a..e20bc63 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -19,6 +19,10 @@ Improvements
+@@ -20,6 +20,10 @@ Improvements
  * New class ``StreamResult`` which defines the API for the new result type.
    (Robert Collins)
  
