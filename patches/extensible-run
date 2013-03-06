@@ -1,5 +1,5 @@
 Bottom: 62bb11fdc4932da85422c304e39885697340965b
-Top:    6a0a4098a351b30b06ddfa0f29c7f02129cdcd09
+Top:    f17cfac6aff2a45ea3bafc03fbc00980d439feb8
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-04 12:08:40 +1300
 
@@ -42,10 +42,10 @@ index 991228b..2486781 100644
  .. _unittest: http://docs.python.org/library/unittest.html
  .. _fixture: http://pypi.python.org/pypi/fixtures
 diff --git a/testtools/run.py b/testtools/run.py
-index dc604b5..3e4765e 100755
+index dc604b5..8dce5e4 100755
 --- a/testtools/run.py
 +++ b/testtools/run.py
-@@ -8,6 +8,7 @@ For instance, to run the testtools test suite.
+@@ -8,10 +8,13 @@ For instance, to run the testtools test suite.
   $ python -m testtools.run testtools.tests.test_suite
  """
  
@@ -53,7 +53,13 @@ index dc604b5..3e4765e 100755
  import os
  import unittest
  import sys
-@@ -35,14 +36,22 @@ else:
+ 
++from extras import safe_hasattr
++
+ from testtools import TextTestResult
+ from testtools.compat import classtypes, istext, unicode_output_stream
+ from testtools.testsuite import filter_by_ids, iterate_tests, sorted_tests
+@@ -35,14 +38,22 @@ else:
  class TestToolsTestRunner(object):
      """ A thunk object to support unittest.TestProgram."""
  
@@ -77,22 +83,22 @@ index dc604b5..3e4765e 100755
  
      def run(self, test):
          "Run the given test case or test suite."
-@@ -177,8 +186,12 @@ class TestProgram(object):
+@@ -177,8 +188,12 @@ class TestProgram(object):
          if not self.listtests:
              self.runTests()
          else:
 -            for test in iterate_tests(self.test):
 -                stdout.write('%s\n' % test.id())
 +            runner = self._get_runner()
-+            try:
++            if safe_hasattr(runner, 'list'):
 +                runner.list(self.test)
-+            except AttributeError:
++            else:
 +                for test in iterate_tests(self.test):
 +                    stdout.write('%s\n' % test.id())
  
      def usageExit(self, msg=None):
          if msg:
-@@ -321,26 +334,32 @@ class TestProgram(object):
+@@ -321,26 +336,32 @@ class TestProgram(object):
          if (self.catchbreak
              and getattr(unittest, 'installHandler', None) is not None):
              unittest.installHandler()
