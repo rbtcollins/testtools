@@ -1,5 +1,5 @@
-Bottom: 25cb0402467ace845acb8eaa8ec7adb555bc4864
-Top:    c5bb077a05b159a016b388e04cc335323e5bdb26
+Bottom: 65f15a3218f280e383a45174e604efe0971a77d8
+Top:    f40c35c75ad4c17c783ac73a9a7d520169f972dd
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-02 20:29:52 +1300
 
@@ -76,10 +76,10 @@ index 707fb55..dcfece8 100644
          ExpectedException,
          PlaceHolder,
 diff --git a/testtools/testcase.py b/testtools/testcase.py
-index 4710aa2..75a9b0d 100644
+index d21aee2..1121ad2 100644
 --- a/testtools/testcase.py
 +++ b/testtools/testcase.py
-@@ -862,6 +862,55 @@ class Nullary(object):
+@@ -863,6 +863,55 @@ class Nullary(object):
          return repr(self._callable_object)
  
  

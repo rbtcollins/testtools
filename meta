@@ -1,21 +1,21 @@
 Version: 1
-Previous: cb2a14149a0206780a8deed252073dfdd87ec94d
-Head: 55e9a46f0e999b554274a04a472c73e9e9dd38fa
+Previous: 2c1f82faaaa90c7e658e613a7244c511e88b87e2
+Head: 33b0caa10961ce1e574d58e831e01d8d714ca8be
 Applied:
   placeholder-tags: a9d0b12b58a0235a6c8411266f4202c6181a91dd
   placeholder-timestamp: 55e9a46f0e999b554274a04a472c73e9e9dd38fa
+  decorate-testcase-result: 3549144f90df074fec88755f430aaf172af8f278
+  define-stream-result: a2c93a5fb007a4d507f009b631aeef100dbdab3c
+  double-streamresult: 3ac35ab274dafd17c28683e2865c8822df4c9f4b
+  copy-stream: 83ad553b5439cae127ee4e75c1005dbbe8c4db0c
+  stream-to-dict: dc23b19e434d58dbd04aeab6f8d829342402e62c
+  stream-summary: 3b2b1a60903b673325df71c519f10f6c10683991
+  test-control: c4ea2a74d21a91a1feaa82519dcecce437ac2d94
+  extended-to-stream: 73850f1c08ecd661026eddfb03d9c72199425934
+  stream-to-extended-result: f2a95eab1c0c9b9ad4c40379403d93487a067472
+  timestamp-stream-result: 53a132b350d8d86520d3f10c0acbd73cd72f7c95
+  threadsafestreamresult: ab5956eda9ed949218759831d05001d8a1c65431
+  streamresult-router: 8ac93fc63b3c07e16fe74f1bb437d41b54eef71f
+  extensible-run: 33b0caa10961ce1e574d58e831e01d8d714ca8be
 Unapplied:
-  decorate-testcase-result: b7bf01214883877569101b3f6bd6ffed6e9e4074
-  define-stream-result: ae93d7e8cf08ec470f777859164364bbcd509feb
-  double-streamresult: d2e1b333edac1739a560f7e5c82e3d63ec4f4207
-  copy-stream: c0e16f25d7958086db1d92abf4196fe7ed307b1c
-  stream-to-dict: 3010bc9d98ef3f82f3285f6466ece39436bc5f63
-  stream-summary: 0f08a3b03e02bc2d822b3870b0512978e176a456
-  test-control: b4d16be1871e341f79e5bd4fa0401c0c636c86a0
-  extended-to-stream: e43e49d322dffff8afa16f5697069f7286be532d
-  stream-to-extended-result: da644d5bee6b47624bfec8511a5d249bc7cd7a6a
-  timestamp-stream-result: 176f2962706a1dff674029408ccee85f3f0b6c7d
-  threadsafestreamresult: e68da489425b734a2ef4871c02fae7c67d27ad9a
-  streamresult-router: 05543d563ca792e7600178e98a32a6fd43266d3c
-  extensible-run: 1ebd91b416dad122853767a3e77944b70f078de7
 Hidden:
