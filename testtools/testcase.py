@@ -634,7 +634,8 @@ class PlaceHolder(object):
         self._outcome = outcome
         if error is not None:
             self._details['traceback'] = content.TracebackContent(error, self)
-        self._tags = tags or set()
+        tags = tags or frozenset()
+        self._tags = frozenset(tags)
 
     def __call__(self, result=None):
         return self.run(result=result)
