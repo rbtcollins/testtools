@@ -1,5 +1,5 @@
 Bottom: 5ea685cdd66a1eb2652ee9d6ead781c8cc4a6a5d
-Top:    25cb0402467ace845acb8eaa8ec7adb555bc4864
+Top:    65f15a3218f280e383a45174e604efe0971a77d8
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-27 22:28:20 +1300
 
@@ -23,7 +23,7 @@ index cd9a370..7b0433d 100644
  ~~~~~~
  
 diff --git a/testtools/testcase.py b/testtools/testcase.py
-index 97158c0..4710aa2 100644
+index 97158c0..d21aee2 100644
 --- a/testtools/testcase.py
 +++ b/testtools/testcase.py
 @@ -618,7 +618,7 @@ class PlaceHolder(object):
@@ -40,19 +40,22 @@ index 97158c0..4710aa2 100644
          :param outcome: The outcome to call. Defaults to 'addSuccess'.
          :param tags: Tags to report for the test.
 +        :param timestamps: A two-tuple of timestamps for the test start and
-+            finish. Each timestamp may be None to undicate it is not known.
++            finish. Each timestamp may be None to indicate it is not known.
          """
          self._test_id = test_id
          self._short_description = short_description
-@@ -635,6 +637,7 @@ class PlaceHolder(object):
+@@ -634,7 +636,9 @@ class PlaceHolder(object):
+         self._outcome = outcome
          if error is not None:
              self._details['traceback'] = content.TracebackContent(error, self)
-         self._tags = tags or set()
+-        self._tags = tags or set()
++        tags = tags or frozenset()
++        self._tags = frozenset(tags)
 +        self._timestamps = timestamps
  
      def __call__(self, result=None):
          return self.run(result=result)
-@@ -668,8 +671,12 @@ class PlaceHolder(object):
+@@ -668,8 +672,12 @@ class PlaceHolder(object):
  
      def run(self, result=None):
          result = self._result(result)
