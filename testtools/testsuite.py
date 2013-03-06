@@ -137,7 +137,9 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
         This calls out to the provided make_tests helper to determine the
         concurrency to use and to assign routing codes to each worker. It
         is possible to also decorate or alter the tests in make_tests if
-        desired (though that can also be done at construction time).
+        desired. Another option is to decorate or alter the tests when
+        you construct them. The right approach will depend on your test
+        framework and the extension points it offers you.
 
         ConcurrentTestSuite provides no special mechanism to stop the tests
         returned by make_tests, it is up to the made tests to honour the
