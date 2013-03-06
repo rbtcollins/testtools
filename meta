@@ -1,12 +1,11 @@
 Version: 1
-Previous: 11a446c492bfc0438cc950693ef214940fcc4ced
-Head: ea8897c5f7e6a18fae3f430d59cabefd2852221d
+Previous: 335d28fbce3bd3df6042171499c425f42f83a501
+Head: 726234c722ffe2ee5d992f515daa86bb60edddb3
 Applied:
   placeholder-tags: e9ef3b8424f9f4353fb1e47ab02402d95c39840c
   placeholder-timestamp: 5a3837111385d03621d273c1342281b1bfe0a8b9
   decorate-testcase-result: b7bf01214883877569101b3f6bd6ffed6e9e4074
-  define-stream-result: 5366d373c00f7fdb2dc48b3fe14a531c94cd8d4d
-  refresh-temp: ea8897c5f7e6a18fae3f430d59cabefd2852221d
+  define-stream-result: 726234c722ffe2ee5d992f515daa86bb60edddb3
 Unapplied:
   double-streamresult: 05a96d00cbee03c6de205960b0c179220010b773
   copy-stream: c5981a0db88959236c8a294438c6b0e668c08096

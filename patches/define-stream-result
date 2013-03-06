@@ -1,5 +1,5 @@
 Bottom: c5bb077a05b159a016b388e04cc335323e5bdb26
-Top:    2a7bd6ec7958ed401d42c473c6933af37398b30d
+Top:    64500518a30045be4bb61a809aa0aeb821e9bf88
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-21 14:08:55 +1300
 
@@ -11,10 +11,10 @@ This is intended to prototype the new API for inclusion upstream.
 ---
 
 diff --git a/NEWS b/NEWS
-index 3ca58f6..37b1f32 100644
+index 3ca58f6..e27a06f 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -6,19 +6,9 @@ Changes and improvements to testtools_, grouped by release.
+@@ -6,19 +6,10 @@ Changes and improvements to testtools_, grouped by release.
  NEXT
  ~~~~
  
@@ -32,12 +32,13 @@ index 3ca58f6..37b1f32 100644
 -  test that accidentally depended on the CPython repr for object().
 -  (Jonathan Lange)
 +A new sort of TestResult, the StreamResult has been added, as a prototype for
-+a revised standard library test result API. The API is not stable yet, though
-+we will endeavour to preserve compatibility for early adopters.
++a revised standard library test result API.  Expect this API to change.
++Although we will try to preserve compatibility for early adopters, it is
++experimental and we might need to break it.
  
  * The error message for setUp and tearDown upcall errors was broken on Python
    3.4. (Monty Taylor, Robert Collins, #1140688)
-@@ -26,6 +16,9 @@ Improvements
+@@ -26,6 +17,9 @@ Improvements
  Improvements
  ------------
  
@@ -47,7 +48,7 @@ index 3ca58f6..37b1f32 100644
  * New ``TestCase`` decorator ``DecorateTestCaseResult`` that adapts the
    ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
    a particular result object is used even if the runner running the test doesn't
-@@ -37,6 +30,20 @@ Improvements
+@@ -37,6 +31,20 @@ Improvements
  * ``PlaceHolder`` can now hold timestamps, and applies them before the test and
    then before the outcome. (Robert Collins)
  
