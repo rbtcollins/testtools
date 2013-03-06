@@ -125,7 +125,7 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
             ConcurrentTestSuite into some number of concurrently executing
             sub-suites. make_tests must take a suite, and return an iterable
             of tuples. Each tuple must be of the form (case, route_code), where
-            case is a TestCase-like object with a run(result) mthod, and
+            case is a TestCase-like object with a run(result) method, and
             route_code is either None or a unicode string.
         """
         super(ConcurrentStreamTestSuite, self).__init__([suite])
