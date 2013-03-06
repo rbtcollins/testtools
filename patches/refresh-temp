@@ -1,0 +1,22 @@
+Bottom: 7261fe8a8106ae3d39b49363b454519707eb2df4
+Top:    f047512c1e1dfad2834c0c802d9e4e8c1ffe3990
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-06 22:38:28 +1300
+
+Refresh of threadsafestreamresult
+
+---
+
+diff --git a/testtools/testsuite.py b/testtools/testsuite.py
+index 808af0c..6553196 100644
+--- a/testtools/testsuite.py
++++ b/testtools/testsuite.py
+@@ -125,7 +125,7 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
+             ConcurrentTestSuite into some number of concurrently executing
+             sub-suites. make_tests must take a suite, and return an iterable
+             of tuples. Each tuple must be of the form (case, route_code), where
+-            case is a TestCase-like object with a run(result) mthod, and
++            case is a TestCase-like object with a run(result) method, and
+             route_code is either None or a unicode string.
+         """
+         super(ConcurrentStreamTestSuite, self).__init__([suite])
