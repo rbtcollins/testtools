@@ -13,6 +13,8 @@ import os
 import unittest
 import sys
 
+from extras import safe_hasattr
+
 from testtools import TextTestResult
 from testtools.compat import classtypes, istext, unicode_output_stream
 from testtools.testsuite import filter_by_ids, iterate_tests, sorted_tests
@@ -187,9 +189,9 @@ class TestProgram(object):
             self.runTests()
         else:
             runner = self._get_runner()
-            try:
+            if safe_hasattr(runner, 'list'):
                 runner.list(self.test)
-            except AttributeError:
+            else:
                 for test in iterate_tests(self.test):
                     stdout.write('%s\n' % test.id())
 
