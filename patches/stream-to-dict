@@ -1,5 +1,5 @@
 Bottom: 419ef0ebf96e1ee7d6b211458435a0911d5e4dd7
-Top:    dea61b38ea27d057426514c15564d471df671369
+Top:    f0ed59e417aa191f61678a3ce546b86b32d859e5
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 21:28:29 +1300
 
@@ -68,14 +68,15 @@ index 8408a91..0f0537d 100644
  ----------------------
  
 diff --git a/setup.py b/setup.py
-index 2e079bf..4b9257d 100755
+index 2e079bf..b9a7677 100755
 --- a/setup.py
 +++ b/setup.py
-@@ -69,5 +69,7 @@ setup(name='testtools',
+@@ -69,5 +69,8 @@ setup(name='testtools',
        zip_safe=False,
        install_requires=[
          'extras',
 +        # 'mimeparse' has not been uploaded by the maintainer with Python3 compat
++        # but someone kindly uploaded a fixed version as 'python-mimeparse'.
 +        'python-mimeparse',
          ],
        )
