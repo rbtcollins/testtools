@@ -1,5 +1,5 @@
 Bottom: 5e88746808109207132db37f71bf17bc3983d1da
-Top:    f047512c1e1dfad2834c0c802d9e4e8c1ffe3990
+Top:    7132ac7aec99ffe2e82568738ba65649e4f72df9
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -408,7 +408,7 @@ index 289beb9..90ed638 100644
  
      def setUp(self):
 diff --git a/testtools/testsuite.py b/testtools/testsuite.py
-index 0ffe6f3..6553196 100644
+index 0ffe6f3..7c2bd58 100644
 --- a/testtools/testsuite.py
 +++ b/testtools/testsuite.py
 @@ -5,6 +5,7 @@
@@ -419,7 +419,7 @@ index 0ffe6f3..6553196 100644
    'filter_by_ids',
    'iterate_tests',
    'sorted_tests',
-@@ -112,6 +113,91 @@ class ConcurrentTestSuite(unittest.TestSuite):
+@@ -112,6 +113,93 @@ class ConcurrentTestSuite(unittest.TestSuite):
              queue.put(test)
  
  
@@ -447,7 +447,9 @@ index 0ffe6f3..6553196 100644
 +        This calls out to the provided make_tests helper to determine the
 +        concurrency to use and to assign routing codes to each worker. It
 +        is possible to also decorate or alter the tests in make_tests if
-+        desired (though that can also be done at construction time).
++        desired. Another option is to decorate or alter the tests when
++        you construct them. The right approach will depend on your test
++        framework and the extension points it offers you.
 +
 +        ConcurrentTestSuite provides no special mechanism to stop the tests
 +        returned by make_tests, it is up to the made tests to honour the
