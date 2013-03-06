@@ -371,6 +371,8 @@ class CopyStreamResult(StreamResult):
     """Copies all event it receives to multiple results.
     
     This provides an easy facility for combining multiple StreamResults.
+
+    For TestResult the equivalent class was ``MultiTestResult``.
     """
 
     def __init__(self, targets):
