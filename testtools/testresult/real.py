@@ -6,7 +6,7 @@ __metaclass__ = type
 __all__ = [
     'ExtendedToOriginalDecorator',
     'MultiTestResult',
-    'StreamFailfast',
+    'StreamFailFast',
     'StreamResult',
     'StreamSummary',
     'StreamToDict',
@@ -402,7 +402,7 @@ class CopyStreamResult(StreamResult):
         domap(methodcaller('status', *args, **kwargs), self.targets)
 
 
-class StreamFailfast(StreamResult):
+class StreamFailFast(StreamResult):
     """Call the supplied callback if an error is seen in a stream."""
 
     def __init__(self, callback):

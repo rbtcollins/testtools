@@ -34,7 +34,7 @@ Improvements
 * New support class ``TestControl`` which permits cancelling an in-progress
   run. (Robert Collins)
 
-* New support class ``StreamFailfast`` which calls a ``TestControl`` instance
+* New support class ``StreamFailFast`` which calls a ``TestControl`` instance
   to abort the test run when a failure is detected. (Robert Collins)
 
 * New ``TestCase`` decorator ``DecorateTestCaseResult`` that adapts the

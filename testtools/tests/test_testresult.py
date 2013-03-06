@@ -22,7 +22,7 @@ from testtools import (
     ExtendedToOriginalDecorator,
     MultiTestResult,
     PlaceHolder,
-    StreamFailfast,
+    StreamFailFast,
     StreamResult,
     StreamSummary,
     StreamToDict,
@@ -548,10 +548,10 @@ class TestStreamToDictContract(TestCase, TestStreamResultContract):
         return StreamToDict(lambda x:None)
 
 
-class TestStreamFailfastContract(TestCase, TestStreamResultContract):
+class TestStreamFailFastContract(TestCase, TestStreamResultContract):
 
     def _make_result(self):
-        return StreamFailfast(lambda:None)
+        return StreamFailFast(lambda:None)
 
 
 class TestDoubleStreamResultEvents(TestCase):
@@ -708,44 +708,44 @@ class TestStreamToDict(TestCase):
         self.assertEqual(["C", None], tests[1]['timestamps'])
 
 
-class TestStreamFailfast(TestCase):
+class TestStreamFailFast(TestCase):
 
     def test_inprogress(self):
-        result = StreamFailfast(self.fail)
+        result = StreamFailFast(self.fail)
         result.status('foo', 'inprogress')
 
     def test_exists(self):
-        result = StreamFailfast(self.fail)
+        result = StreamFailFast(self.fail)
         result.status('foo', 'exists')
 
     def test_xfail(self):
-        result = StreamFailfast(self.fail)
+        result = StreamFailFast(self.fail)
         result.status('foo', 'xfail')
 
     def test_uxsuccess(self):
         calls = []
         def hook():
             calls.append("called")
-        result = StreamFailfast(hook)
+        result = StreamFailFast(hook)
         result.status('foo', 'uxsuccess')
         result.status('foo', 'uxsuccess')
         self.assertEqual(['called', 'called'], calls)
 
     def test_success(self):
-        result = StreamFailfast(self.fail)
+        result = StreamFailFast(self.fail)
         result.status('foo', 'success')
 
     def test_fail(self):
         calls = []
         def hook():
             calls.append("called")
-        result = StreamFailfast(hook)
+        result = StreamFailFast(hook)
         result.status('foo', 'fail')
         result.status('foo', 'fail')
         self.assertEqual(['called', 'called'], calls)
 
     def test_skip(self):
-        result = StreamFailfast(self.fail)
+        result = StreamFailFast(self.fail)
         result.status('foo', 'skip')
 
 
