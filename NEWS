@@ -7,8 +7,9 @@ NEXT
 ~~~~
 
 A new sort of TestResult, the StreamResult has been added, as a prototype for
-a revised standard library test result API. The API is not stable yet, though
-we will endeavour to preserve compatibility for early adopters.
+a revised standard library test result API.  Expect this API to change.
+Although we will try to preserve compatibility for early adopters, it is
+experimental and we might need to break it.
 
 * The error message for setUp and tearDown upcall errors was broken on Python
   3.4. (Monty Taylor, Robert Collins, #1140688)
