@@ -352,9 +352,9 @@ class StreamResult(object):
             file. This can just be a single chunk of the file - emitting
             another file event with more later. Must be None unleses a
             file_name is supplied.
-        :param eof: This chunk is the last chunk of the file, any additional
-            chunks with the same name should be treated as an error and 
-            discarded. Ignored unless file_name has been supplied.
+        :param eof: True if this chunk is the last chunk of the file, any
+            additional chunks with the same name should be treated as an error
+            and discarded. Ignored unless file_name has been supplied.
         :param mime_type: An optional MIME type for the file. stdout and
             stderr will generally be "text/plain; charset=utf8". If None,
             defaults to application/octet-stream. Ignores unless file_name
