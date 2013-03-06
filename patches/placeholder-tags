@@ -1,5 +1,5 @@
 Bottom: 89a454ee98f3470b30fa9aa778f567750f93a8a0
-Top:    5ea685cdd66a1eb2652ee9d6ead781c8cc4a6a5d
+Top:    29bb35f0ad4c1a493cd13d714f5c76c4b35a2474
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-06 00:01:11 +1300
 
@@ -26,7 +26,7 @@ index 78013ee..cd9a370 100644
  ~~~~~~
  
 diff --git a/testtools/testcase.py b/testtools/testcase.py
-index 3998ace..97158c0 100644
+index 3998ace..52dfde9 100644
 --- a/testtools/testcase.py
 +++ b/testtools/testcase.py
 @@ -618,7 +618,7 @@ class PlaceHolder(object):
@@ -46,15 +46,16 @@ index 3998ace..97158c0 100644
          """
          self._test_id = test_id
          self._short_description = short_description
-@@ -633,6 +634,7 @@ class PlaceHolder(object):
+@@ -633,6 +634,8 @@ class PlaceHolder(object):
          self._outcome = outcome
          if error is not None:
              self._details['traceback'] = content.TracebackContent(error, self)
-+        self._tags = tags or set()
++        tags = tags or frozenset()
++        self._tags = frozenset(tags)
  
      def __call__(self, result=None):
          return self.run(result=result)
-@@ -666,10 +668,12 @@ class PlaceHolder(object):
+@@ -666,10 +669,12 @@ class PlaceHolder(object):
  
      def run(self, result=None):
          result = self._result(result)
