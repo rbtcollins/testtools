@@ -1,9 +1,9 @@
 Version: 1
-Previous: ea49d3e70051dd2407eae16b52803ffd55f28568
+Previous: 22cb2db5959163babee0dcfc0f4ac7aaf49b30ad
 Head: f2d118b6c67776d9c0aa18d7cd7320e7007929f8
 Applied:
+  decorate-testcase-result: f2d118b6c67776d9c0aa18d7cd7320e7007929f8
 Unapplied:
-  decorate-testcase-result: 7c24abd2c263f77ebbf0242d6374825e5e912ef4
   define-stream-result: 899457101950ab1bb935cbc03b59dd71cba5174b
   double-streamresult: b0eb53740505eb3b77e2059c5151fbef01b319b0
   copy-stream: 55117690f5764a4d28ad5f0b129854327cf72ab6
