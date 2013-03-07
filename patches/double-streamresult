@@ -1,5 +1,5 @@
-Bottom: 49d28f23a5102652bd1bf8a8f63cf15011d151d5
-Top:    63efd6c93dfb3b3806c3771e2a78e6641f6a51f7
+Bottom: c0365c4529c68459be0ffa226714e412efafda03
+Top:    ddb0168c501db1a702c0276de0cb693205a2127a
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:51:04 +1300
 
@@ -9,10 +9,10 @@ Adds a recording StreamResult for writing tests with.
 ---
 
 diff --git a/NEWS b/NEWS
-index e27a06f..abcb80a 100644
+index eb09c33..6f949a5 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -25,6 +25,9 @@ Improvements
+@@ -29,6 +29,9 @@ Improvements
    a particular result object is used even if the runner running the test doesn't
    know to use it. (Robert Collins)
  
