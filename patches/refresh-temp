@@ -1,0 +1,24 @@
+Bottom: 9c0a74f15faed6e15fbad7f41acfc622b50fac2c
+Top:    066c53fe3e39da8b330a48cb7b72502650dda22d
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-07 21:35:06 +1300
+
+Refresh of decorate-testcase-result
+
+---
+
+diff --git a/NEWS b/NEWS
+index 7734520..592ead5 100644
+--- a/NEWS
++++ b/NEWS
+@@ -37,6 +37,11 @@ Improvements
+ Improvements
+ ------------
+ 
++* New ``TestCase`` decorator ``DecorateTestCaseResult`` that adapts the
++  ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
++  a particular result object is used even if the runner running the test doesn't
++  know to use it. (Robert Collins)
++
+ * ``PlaceHolder`` can now hold tags, and applies them before, and removes them
+   after, the test. (Robert Collins)
