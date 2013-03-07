@@ -79,6 +79,10 @@ Improvements
 * ``PlaceHolder`` can now hold timestamps, and applies them before the test and
   then before the outcome. (Robert Collins)
 
+* ``testtools.run.TestProgram`` now supports the ``TestRunner`` taking over
+  responsibility for formatting the output of ``--list-tests``.
+  (Robert Collins)
+
 * The error message for setUp and tearDown upcall errors was broken on Python
   3.4. (Monty Taylor, Robert Collins, #1140688)
 
