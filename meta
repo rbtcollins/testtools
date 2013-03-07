@@ -1,8 +1,9 @@
 Version: 1
-Previous: ca8b2930554e5cf8aae7797747f0e64c76fed7ad
-Head: 32e70b343aa7b9fea29c92e538a64aaf3b250699
+Previous: f0a0006c4e19a91946ef3d67899e5724ef8f93c8
+Head: 3cba6f36198b2776e1a2bfdfb2873df686ccafd1
 Applied:
   placeholder-tags: 32e70b343aa7b9fea29c92e538a64aaf3b250699
+  refresh-temp: 3cba6f36198b2776e1a2bfdfb2873df686ccafd1
 Unapplied:
   placeholder-timestamp: 37ad914c289f0a5342bce0e201cd5e631a54ff34
   decorate-testcase-result: 7c24abd2c263f77ebbf0242d6374825e5e912ef4

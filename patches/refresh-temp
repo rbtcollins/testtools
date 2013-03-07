@@ -1,0 +1,25 @@
+Bottom: 62fb4a3b338404ffab812cd9bdada75ce12aeacc
+Top:    bc78a6042e0357af74a1c32cf512736ded3deb6e
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-07 21:39:21 +1300
+
+Refresh of placeholder-tags
+
+---
+
+diff --git a/NEWS b/NEWS
+index f20d160..6943d40 100644
+--- a/NEWS
++++ b/NEWS
+@@ -34,12 +34,6 @@ Improvements
+ * The error message for setUp and tearDown upcall errors was broken on Python
+   3.4. (Monty Taylor, Robert Collins, #1140688)
+ 
+-Improvements
+-------------
+-
+-* ``PlaceHolder`` can now hold tags, and applies them before, and removes them
+-  after, the test. (Robert Collins)
+-
+ 0.9.29
+ ~~~~~~
