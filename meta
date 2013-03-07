@@ -1,18 +1,18 @@
 Version: 1
-Previous: 25d24c28966f3d5633763e2ccfa6f4ff8fe3bf85
-Head: db742ae19ef412e77a861a819df286fe86018669
+Previous: fc814d6ad5464b5a481ad7681dc2da28355186ef
+Head: 35b89afe36203ae14132a054bfe80bf6bb7cb099
 Applied:
   define-stream-result: db742ae19ef412e77a861a819df286fe86018669
+  double-streamresult: ba3f23901e1a4c59bab6c1edcd97b55dc9e15330
+  copy-stream: 188f1704760d1955f0190a14d79af659c14272d4
+  stream-to-dict: c1a14770d9445722b7eb0dc60590d791f6329147
+  stream-summary: 57b7e58cf00d30ba13a0539d3f439d63a062561f
+  test-control: 6f7a7d5922995720555843a2226c5ebbfcfed00f
+  extended-to-stream: e723937224e2489f7485b67e7887aa59d4074324
+  stream-to-extended-result: f9926be5df7ef68fd4664a02055e9050abdc0441
+  timestamp-stream-result: d4fdd40d5f518b86a2a4d3b134d53723724209ca
+  threadsafestreamresult: 1e5ecd729d87f55feb0fcc196b1cddab4eee0488
+  streamresult-router: 7af72cce4fb3248f19b2fcf4853db2fe06246daa
+  extensible-run: 35b89afe36203ae14132a054bfe80bf6bb7cb099
 Unapplied:
-  double-streamresult: b0eb53740505eb3b77e2059c5151fbef01b319b0
-  copy-stream: 55117690f5764a4d28ad5f0b129854327cf72ab6
-  stream-to-dict: a2664a23e834a0c76eaac88e369a0f7994474954
-  stream-summary: 3e4fc719bb8d7c9074f9ca4d6d5d4bbc2f089ce6
-  test-control: 057d891b60bdcd59f49ae7c7207b826ae87cad2c
-  extended-to-stream: 35ebed78a0ce1793b6ef9d0325506203927aa248
-  stream-to-extended-result: 7aa3e1f932196e23da529006f96c1828b2239c7c
-  timestamp-stream-result: 0f1e7a13121f89c950001c4154703a234d072b38
-  threadsafestreamresult: 4f9a9cb552d1ff352e66d3f1eadeebf515e60161
-  streamresult-router: 62ac48ef8f79453b210b5726dd427f2e0a917547
-  extensible-run: 79a42788b9a6a51e2dde0f28311044bc7e6f4997
 Hidden:
