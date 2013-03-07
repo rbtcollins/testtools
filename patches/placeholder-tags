@@ -1,5 +1,5 @@
 Bottom: bc78a6042e0357af74a1c32cf512736ded3deb6e
-Top:    bc78a6042e0357af74a1c32cf512736ded3deb6e
+Top:    62fb4a3b338404ffab812cd9bdada75ce12aeacc
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-07 21:33:14 +1300
 
@@ -8,4 +8,19 @@ Placeholder couldn't hold tags, which limits its use.
 
 ---
 
-
+diff --git a/NEWS b/NEWS
+index 6943d40..f20d160 100644
+--- a/NEWS
++++ b/NEWS
+@@ -34,6 +34,12 @@ Improvements
+ * The error message for setUp and tearDown upcall errors was broken on Python
+   3.4. (Monty Taylor, Robert Collins, #1140688)
+ 
++Improvements
++------------
++
++* ``PlaceHolder`` can now hold tags, and applies them before, and removes them
++  after, the test. (Robert Collins)
++
+ 0.9.29
+ ~~~~~~
