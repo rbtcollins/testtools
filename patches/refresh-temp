@@ -1,0 +1,22 @@
+Bottom: 33101eec660c033cb7ae0e23405e7f6574b336cc
+Top:    e4fba23b85ddb6798d2173d777c759455912fdb1
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-08 19:49:35 +1300
+
+Refresh of threadsafestreamresult
+
+---
+
+diff --git a/testtools/tests/test_testsuite.py b/testtools/tests/test_testsuite.py
+index 90ed638..56e2ef3 100644
+--- a/testtools/tests/test_testsuite.py
++++ b/testtools/tests/test_testsuite.py
+@@ -179,7 +179,7 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
+         # Check the traceback loosely.
+         self.assertThat(events[1][6].decode('utf8'), DocTestMatches("""\
+ Traceback (most recent call last):
+-  File "...testtools/testsuite.py", line 188, in _run_test
++  File "...testtools/testsuite.py", line 190, in _run_test
+     test.run(process_result)
+ TypeError: run() takes ...1 ...argument...2...given...
+ """, doctest.ELLIPSIS))
