@@ -1,5 +1,5 @@
 Version: 1
-Previous: 560eea43113284a7a0856cc0a7deaf4c131e3713
+Previous: 27c0a5411b673e0737599b461c6617f4ff179e74
 Head: 6d09157258409e687a9549a3a745358ace69e9e6
 Applied:
   double-streamresult: a8e6b67a1deb91a9a8ea690a9028fc1711af3a29
@@ -8,8 +8,8 @@ Applied:
   stream-to-dict: 3d157cab5a11c1a1496c762e908c1cb708c4558a
   stream-summary: 13367bec097f2f00ba24ac1317be36cc78a625a4
   test-control: f55be19fd88ed980b86d2d0bc3cf71eafc0a2512
+  extended-to-stream: 6d09157258409e687a9549a3a745358ace69e9e6
 Unapplied:
-  extended-to-stream: 1e7cbd7a3245d7dbc41489aef553fb7b8f7dcf4b
   stream-to-extended-result: 65f9f9382a873e80d5807ab69a89be3dcc5e3e90
   timestamp-stream-result: 8830bb134f05068d2c4ece7e33d5faeeebf9ce7f
   threadsafestreamresult: 8ecc3c78dc9680f4ceb4b7c06dffec2793e4235a
