@@ -1,12 +1,11 @@
 Version: 1
-Previous: 181b9ce516505dd9d7a3ec7fe172e181580712f9
-Head: 28628624f993915b02fce4b3199180973d678fc9
+Previous: 1a1c0872951dcea0f5d7e71e6f2aeddf0526260b
+Head: 3d157cab5a11c1a1496c762e908c1cb708c4558a
 Applied:
   double-streamresult: a8e6b67a1deb91a9a8ea690a9028fc1711af3a29
   copy-stream: d94f692b247094a5d09d87d3d88e489aead2bd05
   detect-incomplete-tests: d73ff4b610aafc85d0ee82cbdd3203f49f52f165
-  stream-to-dict: 7e582e3def47ee0ec0682da4eba43c8dfddfa900
-  refresh-temp: 28628624f993915b02fce4b3199180973d678fc9
+  stream-to-dict: 3d157cab5a11c1a1496c762e908c1cb708c4558a
 Unapplied:
   stream-summary: 0abfd9ea03300b93cfa07b5afe819bca2f05e6b8
   test-control: 7e4e0a21dd8534fe1a1267160251337679e9eb1b
