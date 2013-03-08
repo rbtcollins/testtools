@@ -11,6 +11,7 @@ __all__ = [
     'ExpectedException',
     'ExtendedToOriginalDecorator',
     'FixtureSuite',
+    'IncompleteTestDetector',
     'iterate_tests',
     'MultipleExceptions',
     'MultiTestResult',
@@ -71,6 +72,7 @@ else:
     from testtools.testresult import (
         CopyStreamResult,
         ExtendedToOriginalDecorator,
+        IncompleteTestDetector,
         MultiTestResult,
         StreamResult,
         StreamToDict,
