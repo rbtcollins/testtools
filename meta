@@ -1,13 +1,13 @@
 Version: 1
-Previous: 4398c542de5cd5d0f286b9304098e30dcc7706d9
+Previous: b6689f7f3a52d9e4d34079b9f66cb6e1a50a242b
 Head: 42ca4209a114a1a157e73635c7003389d50cc1ef
 Applied:
   double-streamresult: a8e6b67a1deb91a9a8ea690a9028fc1711af3a29
   copy-stream: d94f692b247094a5d09d87d3d88e489aead2bd05
   stream-to-dict: d232aab877853b75caff0496fc51f429c321f1fc
   stream-summary: 2cf12546df9ef4899b6e9b08301da294642e680e
+  detect-incomplete-tests: 42ca4209a114a1a157e73635c7003389d50cc1ef
 Unapplied:
-  detect-incomplete-tests: 00e50b9c3c286be0a55ce05eff8e74fe515133c9
   test-control: fb6b7fcd3e8228145131ffc6b8ec41b2f15a932b
   extended-to-stream: eb5012d21f9c62e8a018f7ee7b83b2c399728a24
   stream-to-extended-result: 92a3ee800e3808bf516a03847b490643706263a2
