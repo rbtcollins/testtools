@@ -1,5 +1,5 @@
 Version: 1
-Previous: bfed442a688a46bc5620f990a1bb37f3ecd17883
+Previous: c2eb3e2abd2011180f6824094ced7ac10ec5b986
 Head: ae49a5220f7e871fdead58eb159fce76ae97cf6f
 Applied:
   double-streamresult: a8e6b67a1deb91a9a8ea690a9028fc1711af3a29
@@ -7,9 +7,9 @@ Applied:
   stream-to-dict: d232aab877853b75caff0496fc51f429c321f1fc
   stream-summary: 2cf12546df9ef4899b6e9b08301da294642e680e
   test-control: 71bd0bc5e8c9f9581152ec7f04a8be736109c02d
+  extended-to-stream: ae49a5220f7e871fdead58eb159fce76ae97cf6f
 Unapplied:
   detect-incomplete-tests: 52f19faa3ac4eacd98bc7d0bd5160189aebd36dc
-  extended-to-stream: 9809215133b9d3c63b7d4225b08a864ef6d97885
   stream-to-extended-result: 53759223ededd85ea46bcdf99c5c5e3b8c012cc3
   timestamp-stream-result: 4b22c46ed6b0f81b553b7d850fef23128c0e34ec
   threadsafestreamresult: 5c9dc996b815213eb8de9b6587882879f1df10ac
