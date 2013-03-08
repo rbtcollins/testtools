@@ -7,6 +7,7 @@ __metaclass__ = type
 import codecs
 import datetime
 import doctest
+from itertools import chain, combinations
 import os
 import shutil
 import sys
@@ -470,7 +471,7 @@ class TestStreamResultContract(object):
             test_id=_u("foo"),
             timestamp=now,
             ).items())
-        param_dicts = self._permute(inputs)
+        param_dicts = self._power_set(inputs)
         for kwargs in param_dicts:
             result.status(file_name=_u("foo"), file_bytes=_b(""), **kwargs)
             result.status(file_name=_u("foo"), file_bytes=_b("bar"), **kwargs)
@@ -489,26 +490,17 @@ class TestStreamResultContract(object):
             route_code=_u("1234"),
             timestamp=now,
             ).items())
-        param_dicts = self._permute(inputs)
+        param_dicts = self._power_set(inputs)
         for kwargs in param_dicts:
             for arg in args:
                 result.status(test_id=arg[0], test_status=arg[1], **kwargs)
 
-    def _permute(self, inputs):
-        param_dicts = [{}]
-        # Build a full set of combinations
-        def permutations(size, inputs):
-            # For each possible start point, return the permutations one size
-            # smaller from the rest of the list combined with that start point.
-            if not size:
-                return [[]]
-            result = []
-            for start in range(len(inputs)-size+1):
-                for permutation in permutations(size-1, inputs[start+1:]):
-                    result.append([inputs[start]] + permutation)
-            return result
-        for size in range(1, len(inputs)+1):
-            param_dicts.extend(dict(p) for p in permutations(size, inputs))
+    def _power_set(self, iterable):
+        "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+        s = list(iterable)
+        param_dicts = []
+        for ss in chain.from_iterable(combinations(s, r) for r in range(len(s)+1)):
+            param_dicts.append(dict(ss))
         return param_dicts
 
 
