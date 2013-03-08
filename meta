@@ -1,6 +1,6 @@
 Version: 1
-Previous: 2739953345992f16089b0d27280cb62b60336843
-Head: f54abaac974fdd63ffadbb38b27f4e95bbb8b873
+Previous: 137e4c6e360c4970f1239486ed8c8e02d90baa54
+Head: 0e11b8118a3ecca591fafb0821e8cdabd3fb4290
 Applied:
   define-stream-result: be409a612826422d4a1e9e42e92b7ed784cbea2a
   double-streamresult: 5164724dd0ccc54602ecbbc44cf9a3c39777ebda
@@ -13,6 +13,6 @@ Applied:
   timestamp-stream-result: 8830bb134f05068d2c4ece7e33d5faeeebf9ce7f
   threadsafestreamresult: ebefd8644b32bda204d7eb25bf3f3001eabaf3a8
   streamresult-router: f54abaac974fdd63ffadbb38b27f4e95bbb8b873
-Unapplied:
   extensible-run: 0e11b8118a3ecca591fafb0821e8cdabd3fb4290
+Unapplied:
 Hidden:
