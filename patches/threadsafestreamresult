@@ -1,5 +1,5 @@
 Bottom: 461ec510e9de1ad3ddad1b2213edad6996146d20
-Top:    33101eec660c033cb7ae0e23405e7f6574b336cc
+Top:    e4fba23b85ddb6798d2173d777c759455912fdb1
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -254,7 +254,7 @@ index 0779b06..e8dd3ff 100644
  
      def make_26_result(self):
 diff --git a/testtools/tests/test_testsuite.py b/testtools/tests/test_testsuite.py
-index 289beb9..90ed638 100644
+index 289beb9..56e2ef3 100644
 --- a/testtools/tests/test_testsuite.py
 +++ b/testtools/tests/test_testsuite.py
 @@ -4,6 +4,7 @@
@@ -381,7 +381,7 @@ index 289beb9..90ed638 100644
 +        # Check the traceback loosely.
 +        self.assertThat(events[1][6].decode('utf8'), DocTestMatches("""\
 +Traceback (most recent call last):
-+  File "...testtools/testsuite.py", line 188, in _run_test
++  File "...testtools/testsuite.py", line 190, in _run_test
 +    test.run(process_result)
 +TypeError: run() takes ...1 ...argument...2...given...
 +""", doctest.ELLIPSIS))
