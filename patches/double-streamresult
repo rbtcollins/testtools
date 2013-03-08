@@ -1,5 +1,5 @@
-Bottom: c3d50a80a1bfe3ce3e8cc3c8997ab130f782afde
-Top:    1046d2d5b2064b5c3d9341edb6badd2bbc18d45d
+Bottom: 5747e56951eb856ebfee3d99cbc8721034cc48f2
+Top:    6f11c6821a02b556618ca84193757d9cb40e7698
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:51:04 +1300
 
@@ -62,10 +62,10 @@ index 1865e93..d86f7fa 100644
 +            runnable, file_name, file_bytes, eof, mime_type, route_code,
 +            timestamp))
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 0bb6a0a..135ce44 100644
+index a2c6c41..4d0f1d2 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
-@@ -65,6 +65,7 @@ from testtools.testresult.doubles import (
+@@ -66,6 +66,7 @@ from testtools.testresult.doubles import (
      Python26TestResult,
      Python27TestResult,
      ExtendedTestResult,
@@ -73,7 +73,7 @@ index 0bb6a0a..135ce44 100644
      )
  from testtools.testresult.real import (
      _details_to_str,
-@@ -518,6 +519,48 @@ class TestBaseStreamResultContract(TestCase, TestStreamResultContract):
+@@ -510,6 +511,48 @@ class TestBaseStreamResultContract(TestCase, TestStreamResultContract):
          return StreamResult()
  
  
