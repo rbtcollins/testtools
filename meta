@@ -1,6 +1,6 @@
 Version: 1
-Previous: b1eb5bba24273f1949e887a320cd1f6ce9472221
-Head: 52f19faa3ac4eacd98bc7d0bd5160189aebd36dc
+Previous: 8b161bc9b6ad52d099f0a2ee23ad7db36bbfd554
+Head: dc766a07be51a40acf0ebaa31b43f89c173028f5
 Applied:
   double-streamresult: a8e6b67a1deb91a9a8ea690a9028fc1711af3a29
   copy-stream: d94f692b247094a5d09d87d3d88e489aead2bd05
@@ -8,11 +8,11 @@ Applied:
   stream-summary: 2cf12546df9ef4899b6e9b08301da294642e680e
   test-control: 71bd0bc5e8c9f9581152ec7f04a8be736109c02d
   detect-incomplete-tests: 52f19faa3ac4eacd98bc7d0bd5160189aebd36dc
+  extended-to-stream: 9809215133b9d3c63b7d4225b08a864ef6d97885
+  stream-to-extended-result: 53759223ededd85ea46bcdf99c5c5e3b8c012cc3
+  timestamp-stream-result: 4b22c46ed6b0f81b553b7d850fef23128c0e34ec
+  threadsafestreamresult: 5c9dc996b815213eb8de9b6587882879f1df10ac
+  streamresult-router: d8698e20a54df12f33ee80c2ce2ec8037d7c75a2
+  extensible-run: dc766a07be51a40acf0ebaa31b43f89c173028f5
 Unapplied:
-  extended-to-stream: a9f986b739ccbd7ec07e204a55435a4aa4299555
-  stream-to-extended-result: 4b76794203be3bbb29620072ce9cc73c334bf12f
-  timestamp-stream-result: 60c1eaa4f60e535f0d6890b60928a6835f8034f0
-  threadsafestreamresult: 993ea017730d63038c3c89c6d61b4eebcc534ec2
-  streamresult-router: a99884db39ea0ddbd5475c784cf78f85eccb3fa2
-  extensible-run: 7d74af1521f43c8e82c5850cd6cb10f164165f32
 Hidden:
