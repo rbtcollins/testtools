@@ -1,5 +1,5 @@
-Bottom: cfb11d2735cae3bdfff95ae5729e09f57f682f70
-Top:    5f3da2f5590f17df24bc0bffc270142ffc3ae8fe
+Bottom: 2bca7596a644443d7a46bb1014bab7149f8063a1
+Top:    637fe8ed1104ebe5cfedd3ea85b6de4331e103e1
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 21:19:25 +1300
 
@@ -13,7 +13,7 @@ it will be accurate enough.
 ---
 
 diff --git a/NEWS b/NEWS
-index d2373d4..e7c2dbd 100644
+index 4f99759..85af1bf 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -24,6 +24,9 @@ Improvements
@@ -27,10 +27,10 @@ index d2373d4..e7c2dbd 100644
    ``StreamResult`` objects (each of which receives all the events).
    (Robert Collins)
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 926099a..ab7e4ac 100644
+index 57dae2c..e8a33ae 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -240,6 +240,15 @@ at once. Each method takes out a lock around the decorated result to prevent
+@@ -229,6 +229,15 @@ at once. Each method takes out a lock around the decorated result to prevent
  race conditions. The ``startTestRun`` and ``stopTestRun`` methods are not
  forwarded to prevent the decorated result having them called multiple times.
  
@@ -47,10 +47,10 @@ index 926099a..ab7e4ac 100644
  ------------------
  
 diff --git a/testtools/__init__.py b/testtools/__init__.py
-index 474350a..7a1b18e 100644
+index 2bde458..f317e0b 100644
 --- a/testtools/__init__.py
 +++ b/testtools/__init__.py
-@@ -36,6 +36,7 @@ __all__ = [
+@@ -35,6 +35,7 @@ __all__ = [
      'StreamToExtendedDecorator',
      'TestControl',
      'ThreadsafeForwardingResult',
@@ -58,7 +58,7 @@ index 474350a..7a1b18e 100644
      'try_import',
      'try_imports',
      ]
-@@ -92,6 +93,7 @@ else:
+@@ -90,6 +91,7 @@ else:
          TestResultDecorator,
          TextTestResult,
          ThreadsafeForwardingResult,
@@ -67,10 +67,10 @@ index 474350a..7a1b18e 100644
      from testtools.testsuite import (
          ConcurrentTestSuite,
 diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
-index a525e3e..5d37929 100644
+index 404aa3c..04960ba 100644
 --- a/testtools/testresult/__init__.py
 +++ b/testtools/testresult/__init__.py
-@@ -20,6 +20,7 @@ __all__ = [
+@@ -19,6 +19,7 @@ __all__ = [
      'TestResultDecorator',
      'TextTestResult',
      'ThreadsafeForwardingResult',
@@ -78,17 +78,17 @@ index a525e3e..5d37929 100644
      ]
  
  from testtools.testresult.real import (
-@@ -40,4 +41,5 @@ from testtools.testresult.real import (
+@@ -38,4 +39,5 @@ from testtools.testresult.real import (
      TestResultDecorator,
      TextTestResult,
      ThreadsafeForwardingResult,
 +    TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index d0637fc..7f7b232 100644
+index 2fb1212..8ec5c9a 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -18,6 +18,7 @@ __all__ = [
+@@ -17,6 +17,7 @@ __all__ = [
      'TestResult',
      'TestResultDecorator',
      'ThreadsafeForwardingResult',
@@ -96,7 +96,7 @@ index d0637fc..7f7b232 100644
      ]
  
  import datetime
-@@ -1471,6 +1472,23 @@ class TestByTestResult(TestResult):
+@@ -1462,6 +1463,23 @@ class TestByTestResult(TestResult):
          self._details = details
  
  

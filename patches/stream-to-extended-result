@@ -1,5 +1,5 @@
-Bottom: 3a4111f621304b55bfecca0b8010573e775a71ce
-Top:    cfb11d2735cae3bdfff95ae5729e09f57f682f70
+Bottom: 2ef2e787e3f51dad9e35f40c4d2813d102da670d
+Top:    2bca7596a644443d7a46bb1014bab7149f8063a1
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -13,10 +13,10 @@ TestResult into a StreamResult.
 ---
 
 diff --git a/NEWS b/NEWS
-index afd2ddb..d2373d4 100644
+index 80cba69..4f99759 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -55,6 +55,11 @@ Improvements
+@@ -51,6 +51,11 @@ Improvements
    separate consumer will be created to support that.
    (Robert Collins)
  
@@ -29,10 +29,10 @@ index afd2ddb..d2373d4 100644
    ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
    a particular result object is used even if the runner running the test doesn't
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index f1bd11d..926099a 100644
+index 4ea12d9..57dae2c 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -224,6 +224,14 @@ This is useful when a ``StreamResult`` stream is desired, but you cannot
+@@ -213,6 +213,14 @@ This is useful when a ``StreamResult`` stream is desired, but you cannot
  be sure that the tests which will run have been updated to the ``StreamResult``
  API.
  
@@ -48,10 +48,10 @@ index f1bd11d..926099a 100644
  ----------------------
  
 diff --git a/testtools/__init__.py b/testtools/__init__.py
-index 1b6a0c7..474350a 100644
+index 4d91c24..2bde458 100644
 --- a/testtools/__init__.py
 +++ b/testtools/__init__.py
-@@ -33,6 +33,7 @@ __all__ = [
+@@ -32,6 +32,7 @@ __all__ = [
      'StreamResult',
      'StreamSummary',
      'StreamToDict',
@@ -59,7 +59,7 @@ index 1b6a0c7..474350a 100644
      'TestControl',
      'ThreadsafeForwardingResult',
      'try_import',
-@@ -83,6 +84,7 @@ else:
+@@ -81,6 +82,7 @@ else:
          StreamResult,
          StreamSummary,
          StreamToDict,
@@ -68,10 +68,10 @@ index 1b6a0c7..474350a 100644
          TestByTestResult,
          TestControl,
 diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
-index 4800a42..a525e3e 100644
+index b0f22d6..404aa3c 100644
 --- a/testtools/testresult/__init__.py
 +++ b/testtools/testresult/__init__.py
-@@ -12,6 +12,7 @@ __all__ = [
+@@ -11,6 +11,7 @@ __all__ = [
      'StreamResult',
      'StreamSummary',
      'StreamToDict',
@@ -79,7 +79,7 @@ index 4800a42..a525e3e 100644
      'Tagger',
      'TestByTestResult',
      'TestControl',
-@@ -31,6 +32,7 @@ from testtools.testresult.real import (
+@@ -29,6 +30,7 @@ from testtools.testresult.real import (
      StreamResult,
      StreamSummary,
      StreamToDict,
@@ -88,10 +88,10 @@ index 4800a42..a525e3e 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index c5c6ab3..d0637fc 100644
+index 8a9ce01..2fb1212 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -12,6 +12,7 @@ __all__ = [
+@@ -11,6 +11,7 @@ __all__ = [
      'StreamResult',
      'StreamSummary',
      'StreamToDict',
@@ -99,7 +99,7 @@ index c5c6ab3..d0637fc 100644
      'Tagger',
      'TestControl',
      'TestResult',
-@@ -543,7 +544,8 @@ def test_dict_to_case(test_dict):
+@@ -534,7 +535,8 @@ def test_dict_to_case(test_dict):
          from testtools.testcase import PlaceHolder
      outcome = _status_map[test_dict['status']]
      return PlaceHolder(test_dict['id'], outcome=outcome,
@@ -109,7 +109,7 @@ index c5c6ab3..d0637fc 100644
  
  
  class StreamSummary(StreamToDict):
-@@ -1267,6 +1269,44 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+@@ -1258,6 +1260,44 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
          return super(ExtendedToStreamDecorator, self).wasSuccessful()
  
  
