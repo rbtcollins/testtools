@@ -5,6 +5,7 @@
 __all__ = [
     'CopyStreamResult',
     'ExtendedToOriginalDecorator',
+    'IncompleteTestDetector',
     'MultiTestResult',
     'StreamFailFast',
     'StreamResult',
@@ -22,6 +23,7 @@ __all__ = [
 from testtools.testresult.real import (
     CopyStreamResult,
     ExtendedToOriginalDecorator,
+    IncompleteTestDetector,
     MultiTestResult,
     StreamFailFast,
     StreamResult,
