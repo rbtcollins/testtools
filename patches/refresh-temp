@@ -1,0 +1,112 @@
+Bottom: 9dfa9957c499a102c92d7b40a49d0d462efb33e0
+Top:    9e8d34f0c01939bf66fef540c82c63532b280d90
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-09 00:19:48 +1300
+
+Refresh of detect-incomplete-tests
+
+---
+
+diff --git a/NEWS b/NEWS
+index 1259b51..b501a43 100644
+--- a/NEWS
++++ b/NEWS
+@@ -28,6 +28,10 @@ Improvements
+   ``StreamResult`` objects (each of which receives all the events).
+   (Robert Collins)
+ 
++* New support class ``IncompleteTestDetector`` which tracks tests that have
++  emitted output but not completed, and synthesises a ``fail`` event for them
++  when ``stopTestRun`` is called. (Robert Collins)
++
+ * New support class ``StreamToDict`` which converts a ``StreamResult`` to a
+   series of dicts describing a test. Useful for writing trivial stream
+   analysers. (Robert Collins)
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index 36cbd2b..c77afae 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -183,6 +183,17 @@ Lastly we define the ``TestControl`` API which is used to provide the
+ ``shouldStop`` and ``stop`` elements from ``TestResult``. Again, see the API
+ documentation for ``testtools.TestControl``.
+ 
++IncompleteTestDetector
++----------------------
++
++This ``StreamResult`` filter tracks tests that have emitted events but not
++completed (whether with an error or not). When ``stopTestRun`` is called, these
++outstanding tests have a ``fail`` event generated. This is useful to permit
++analysers of streams to assume that all tests will complete - as long as there
++is an ``IncompleteTestDetector`` in the processing chain within a single
++process, code can allow it to be responsible for detecting hung or crashed
++tests.
++
+ StreamToDict
+ ------------
+ 
+diff --git a/testtools/__init__.py b/testtools/__init__.py
+index 3b0cbc4..789e29f 100644
+--- a/testtools/__init__.py
++++ b/testtools/__init__.py
+@@ -11,6 +11,7 @@ __all__ = [
+     'ExpectedException',
+     'ExtendedToOriginalDecorator',
+     'FixtureSuite',
++    'IncompleteTestDetector',
+     'iterate_tests',
+     'MultipleExceptions',
+     'MultiTestResult',
+@@ -71,6 +72,7 @@ else:
+     from testtools.testresult import (
+         CopyStreamResult,
+         ExtendedToOriginalDecorator,
++        IncompleteTestDetector,
+         MultiTestResult,
+         StreamResult,
+         StreamToDict,
+diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
+index 789e617..aa0f361 100644
+--- a/testtools/testresult/__init__.py
++++ b/testtools/testresult/__init__.py
+@@ -5,6 +5,7 @@
+ __all__ = [
+     'CopyStreamResult',
+     'ExtendedToOriginalDecorator',
++    'IncompleteTestDetector',
+     'MultiTestResult',
+     'StreamResult',
+     'StreamToDict',
+@@ -19,6 +20,7 @@ __all__ = [
+ from testtools.testresult.real import (
+     CopyStreamResult,
+     ExtendedToOriginalDecorator,
++    IncompleteTestDetector,
+     MultiTestResult,
+     StreamResult,
+     StreamToDict,
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index b4482d7..5c13e9e 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -5,6 +5,7 @@
+ __metaclass__ = type
+ __all__ = [
+     'ExtendedToOriginalDecorator',
++    'IncompleteTestDetector',
+     'MultiTestResult',
+     'StreamResult',
+     'StreamToDict',
+@@ -396,6 +397,14 @@ class CopyStreamResult(StreamResult):
+         domap(methodcaller('status', *args, **kwargs), self.targets)
+ 
+ 
++class IncompleteTestDetector(CopyStreamResult):
++    """Detect tests that are incomplete when stopTestRun is called.
++
++    Such tests have a ``fail`` result generated and forwarded before
++    the ``stopTestRun`` event is forwarded.
++    """
++
++    
+ class StreamToDict(StreamResult):
+     """A specialised StreamResult that emits a callback as tests complete.
