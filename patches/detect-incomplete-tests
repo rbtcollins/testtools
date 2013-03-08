@@ -1,0 +1,11 @@
+Bottom: c33034a945a920489e2f02f4db0c507843c43fad
+Top:    c33034a945a920489e2f02f4db0c507843c43fad
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-08 23:51:16 +1300
+
+Add IncompleteTestDetector, for detecting incomplete tests.
+
+
+---
+
+

@@ -1,9 +1,10 @@
 Version: 1
-Previous: 181f0b3d9fcb57826ebe022d411cd06215802add
-Head: d94f692b247094a5d09d87d3d88e489aead2bd05
+Previous: f9796035af30e977f94e05afe868b4075578307a
+Head: d6f24a02e4d3800cff3aec32d4b8860c9e4854ac
 Applied:
   double-streamresult: a8e6b67a1deb91a9a8ea690a9028fc1711af3a29
   copy-stream: d94f692b247094a5d09d87d3d88e489aead2bd05
+  detect-incomplete-tests: d6f24a02e4d3800cff3aec32d4b8860c9e4854ac
 Unapplied:
   stream-to-dict: 3aef2571a164f3932cb778d87e269c0953ee75ba
   stream-summary: 0abfd9ea03300b93cfa07b5afe819bca2f05e6b8
