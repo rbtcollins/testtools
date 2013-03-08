@@ -1,10 +1,11 @@
 Version: 1
-Previous: 9372180f86d669af47c7204cbae193701a8c92c9
-Head: efe8f8df8a97ae6bd2b73fc85c8abcae535be408
+Previous: 59ac6f67595a79cfbe2f6aeaff89018370b1dd78
+Head: 8b5ea966d86a64bf57f2074604692701269b97ff
 Applied:
   double-streamresult: a8e6b67a1deb91a9a8ea690a9028fc1711af3a29
   copy-stream: d94f692b247094a5d09d87d3d88e489aead2bd05
   stream-to-dict: d232aab877853b75caff0496fc51f429c321f1fc
+Unapplied:
   detect-incomplete-tests: 00e50b9c3c286be0a55ce05eff8e74fe515133c9
   stream-summary: 787d06d4d67d01eb13551c30f229c263b5bf73d3
   test-control: fb6b7fcd3e8228145131ffc6b8ec41b2f15a932b
@@ -14,5 +15,4 @@ Applied:
   threadsafestreamresult: 8bbbf6fce177fc969246b18570d56a23f44776b4
   streamresult-router: e00f054750f71ec95b08ca55fba5835e472c6bee
   extensible-run: efe8f8df8a97ae6bd2b73fc85c8abcae535be408
-Unapplied:
 Hidden:
