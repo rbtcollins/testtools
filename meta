@@ -1,6 +1,6 @@
 Version: 1
-Previous: d26cc2e6c4ba0688badf34b5f311ea46833b48ac
-Head: ecf345b225b782063eff8e9b421f6eb58ae5d586
+Previous: 31217ad846012718bdad380bdc0f4926a5b75db6
+Head: 913f2a297628ddaf3e2e9547b3185a27d6feffee
 Applied:
   double-streamresult: a8e6b67a1deb91a9a8ea690a9028fc1711af3a29
   copy-stream: d94f692b247094a5d09d87d3d88e489aead2bd05
@@ -8,8 +8,7 @@ Applied:
   stream-summary: 2cf12546df9ef4899b6e9b08301da294642e680e
   test-control: 71bd0bc5e8c9f9581152ec7f04a8be736109c02d
   extended-to-stream: 11b6c2cee94c0a77dbad7f9f84fe96f55c59e322
-  detect-incomplete-tests: 5cd30c98e28c43531146cd968b9e465288a0145d
-  refresh-temp: ecf345b225b782063eff8e9b421f6eb58ae5d586
+  detect-incomplete-tests: 913f2a297628ddaf3e2e9547b3185a27d6feffee
 Unapplied:
   stream-to-extended-result: 53759223ededd85ea46bcdf99c5c5e3b8c012cc3
   timestamp-stream-result: 4b22c46ed6b0f81b553b7d850fef23128c0e34ec
