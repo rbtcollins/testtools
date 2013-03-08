@@ -183,6 +183,17 @@ Lastly we define the ``TestControl`` API which is used to provide the
 ``shouldStop`` and ``stop`` elements from ``TestResult``. Again, see the API
 documentation for ``testtools.TestControl``.
 
+IncompleteTestDetector
+----------------------
+
+This ``StreamResult`` filter tracks tests that have emitted events but not
+completed (whether with an error or not). When ``stopTestRun`` is called, these
+outstanding tests have a ``fail`` event generated. This is useful to permit
+analysers of streams to assume that all tests will complete - as long as there
+is an ``IncompleteTestDetector`` in the processing chain within a single
+process, code can allow it to be responsible for detecting hung or crashed
+tests.
+
 StreamToDict
 ------------
 
