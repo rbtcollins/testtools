@@ -1144,7 +1144,7 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
         if value:
             if len(self.targets) == 2:
                 return
-            self.targets.append(StreamFailfast(self.stop))
+            self.targets.append(StreamFailFast(self.stop))
         else:
             del self.targets[1:]
     failfast = property(_get_failfast, _set_failfast)
