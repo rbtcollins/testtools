@@ -1,5 +1,5 @@
-Bottom: 1046d2d5b2064b5c3d9341edb6badd2bbc18d45d
-Top:    40ec2373097fe3b28f1f4b8b39501e252c63fc02
+Bottom: 6f11c6821a02b556618ca84193757d9cb40e7698
+Top:    c33034a945a920489e2f02f4db0c507843c43fad
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 11:48:03 +1300
 
@@ -114,10 +114,10 @@ index 38428ac..4268462 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 135ce44..86b932e 100644
+index 4d0f1d2..d2a41e9 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
-@@ -18,6 +18,7 @@ import warnings
+@@ -19,6 +19,7 @@ import warnings
  from extras import safe_hasattr
  
  from testtools import (
@@ -125,7 +125,7 @@ index 135ce44..86b932e 100644
      ExtendedToOriginalDecorator,
      MultiTestResult,
      PlaceHolder,
-@@ -48,6 +49,7 @@ from testtools.content import (
+@@ -49,6 +50,7 @@ from testtools.content import (
      )
  from testtools.content_type import ContentType, UTF8_TEXT
  from testtools.matchers import (
@@ -133,7 +133,7 @@ index 135ce44..86b932e 100644
      Contains,
      DocTestMatches,
      Equals,
-@@ -519,6 +521,12 @@ class TestBaseStreamResultContract(TestCase, TestStreamResultContract):
+@@ -511,6 +513,12 @@ class TestBaseStreamResultContract(TestCase, TestStreamResultContract):
          return StreamResult()
  
  
@@ -146,7 +146,7 @@ index 135ce44..86b932e 100644
  class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -561,6 +569,38 @@ class TestDoubleStreamResultEvents(TestCase):
+@@ -553,6 +561,38 @@ class TestDoubleStreamResultEvents(TestCase):
              result._events)
  
  

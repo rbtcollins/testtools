@@ -1,5 +1,5 @@
-Bottom: 40ec2373097fe3b28f1f4b8b39501e252c63fc02
-Top:    35c608a870d1e02bed80a5eb865b1f02d3772689
+Bottom: c33034a945a920489e2f02f4db0c507843c43fad
+Top:    9dfa9957c499a102c92d7b40a49d0d462efb33e0
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 21:28:29 +1300
 
@@ -253,10 +253,10 @@ index 4268462..b4482d7 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 86b932e..ca97963 100644
+index d2a41e9..61693bf 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
-@@ -23,6 +23,7 @@ from testtools import (
+@@ -24,6 +24,7 @@ from testtools import (
      MultiTestResult,
      PlaceHolder,
      StreamResult,
@@ -264,7 +264,7 @@ index 86b932e..ca97963 100644
      Tagger,
      TestCase,
      TestResult,
-@@ -53,6 +54,7 @@ from testtools.matchers import (
+@@ -54,6 +55,7 @@ from testtools.matchers import (
      Contains,
      DocTestMatches,
      Equals,
@@ -272,7 +272,7 @@ index 86b932e..ca97963 100644
      MatchesAny,
      MatchesException,
      Raises,
-@@ -533,6 +535,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
+@@ -525,6 +527,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
          return LoggingStreamResult()
  
  
@@ -285,7 +285,7 @@ index 86b932e..ca97963 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -601,6 +609,92 @@ class TestCopyStreamResultCopies(TestCase):
+@@ -593,6 +601,92 @@ class TestCopyStreamResultCopies(TestCase):
                  ])))
  
  
