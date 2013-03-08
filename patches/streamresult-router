@@ -1,5 +1,5 @@
-Bottom: 369f7bef8417e3e9ad7cb90eb304f75193d75ed4
-Top:    ec8c623b39722e133815e650e061e706e5fde9ac
+Bottom: 33101eec660c033cb7ae0e23405e7f6574b336cc
+Top:    bdbd7cdff5162cbacb2bb376ef277b323c0cac51
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-24 12:38:02 +1300
 
@@ -106,7 +106,7 @@ index 5b311c7..162bb34 100644
      StreamToDict,
      StreamToExtendedDecorator,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 95ecb83..2ed7a1c 100644
+index 08f6471..abad57f 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -419,6 +419,131 @@ class StreamFailFast(StreamResult):
