@@ -1,8 +1,8 @@
 Version: 1
-Previous: d78c3318dc4c1f1ab4ec6d2266154943795896e9
-Head: 8b4258f12b5753f3b7e0cbd0c81476509dbc97f7
+Previous: eacb572aa0ee4410a56d1ce899f5f02c0d503801
+Head: f90c60e365da7f70695c80848b1947a3f453809f
 Applied:
-  define-stream-result: 8b4258f12b5753f3b7e0cbd0c81476509dbc97f7
+  define-stream-result: f90c60e365da7f70695c80848b1947a3f453809f
 Unapplied:
   double-streamresult: 5164724dd0ccc54602ecbbc44cf9a3c39777ebda
   copy-stream: 0b3f8036fa33660093ec99455c743eb729c13fcf
