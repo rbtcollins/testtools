@@ -458,6 +458,7 @@ class TestStreamResultContract(object):
         result.stopTestRun()
 
     def test_files(self):
+        # Test parameter combinations when files are being emitted.
         result = self._make_result()
         result.startTestRun()
         self.addCleanup(result.stopTestRun)
@@ -475,6 +476,7 @@ class TestStreamResultContract(object):
             result.status(file_name=_u("foo"), file_bytes=_b("bar"), **kwargs)
 
     def test_test_status(self):
+        # Tests non-file attachment parameter combinations.
         result = self._make_result()
         result.startTestRun()
         self.addCleanup(result.stopTestRun)
