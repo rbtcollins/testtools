@@ -1,5 +1,5 @@
-Bottom: 4d3e6c6c5485cce41a4d3e7396364473bc11bab2
-Top:    80984e1deb55104c440f64eeba05ddedda17b1bd
+Bottom: 1ca470fcebdf5bc3b9b03dea87359962692ded5c
+Top:    369f7bef8417e3e9ad7cb90eb304f75193d75ed4
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 14:37:09 +1300
 
@@ -33,10 +33,10 @@ index 85af1bf..a57d560 100644
    ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
    a particular result object is used even if the runner running the test doesn't
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 57ac59e..a9b5574 100644
+index e8a33ae..23beb90 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -339,6 +339,20 @@ ConcurrentTestSuite uses the helper to get a number of separate runnable
+@@ -346,6 +346,20 @@ ConcurrentTestSuite uses the helper to get a number of separate runnable
  objects with a run(result), runs them all in threads using the
  ThreadsafeForwardingResult to coalesce their activity.
  
@@ -188,7 +188,7 @@ index a50c52c..95ecb83 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 75461a4..7998f57 100644
+index 0779b06..e8dd3ff 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -36,6 +36,7 @@ from testtools import (
@@ -199,7 +199,7 @@ index 75461a4..7998f57 100644
      TimestampingStreamResult,
      testresult,
      )
-@@ -1632,6 +1633,53 @@ class TestMergeTags(TestCase):
+@@ -1634,6 +1635,53 @@ class TestMergeTags(TestCase):
              expected, _merge_tags(current_tags, changing_tags))
  
  

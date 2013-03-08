@@ -1,5 +1,5 @@
-Bottom: bec1bbb71803235b0b5b50e98ac5587042eeb371
-Top:    8aa1da294b570163d3483dc39758de00aceb1a38
+Bottom: ec8c623b39722e133815e650e061e706e5fde9ac
+Top:    d9bafc1c797682e17acb071d4b279da7b1d555b7
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-04 12:08:40 +1300
 
@@ -24,10 +24,10 @@ index de193af..6c0c57f 100644
    3.4. (Monty Taylor, Robert Collins, #1140688)
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index c3e24b8..45e4895 100644
+index 514c273..e1b2ef8 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -413,6 +413,13 @@ If you a writing custom wrapping suites, consider implementing filter_by_ids
+@@ -420,6 +420,13 @@ If you a writing custom wrapping suites, consider implementing filter_by_ids
  to support this (though most wrappers that subclass ``unittest.TestSuite`` will
  work just fine [see ``testtools.testsuite.filter_by_ids`` for details.]
  

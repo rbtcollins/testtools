@@ -1,5 +1,5 @@
-Bottom: 7ce75432850c8dd62527b5f11b8b196f7099f310
-Top:    6d478f0b18d54c3d92fa925462ba680378677de3
+Bottom: 35c608a870d1e02bed80a5eb865b1f02d3772689
+Top:    8fe919021381bcea0ff80939e4944f6f496140ad
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-16 20:12:25 +1300
 
@@ -196,7 +196,7 @@ index b4482d7..c20b918 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 31157d4..f766840 100644
+index ca97963..453a0c0 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -23,6 +23,7 @@ from testtools import (
@@ -207,7 +207,7 @@ index 31157d4..f766840 100644
      StreamToDict,
      Tagger,
      TestCase,
-@@ -533,6 +534,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
+@@ -535,6 +536,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
          return LoggingStreamResult()
  
  
@@ -220,7 +220,7 @@ index 31157d4..f766840 100644
  class TestStreamToDictContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -693,6 +700,153 @@ class TestStreamToDict(TestCase):
+@@ -695,6 +702,153 @@ class TestStreamToDict(TestCase):
          self.assertEqual(["C", None], tests[1]['timestamps'])
  
  

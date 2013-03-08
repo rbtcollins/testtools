@@ -1,5 +1,5 @@
-Bottom: cd0ac8555a30639631ec5cef3a1fa80d27e085cc
-Top:    b643fb6414ca174df6ec46f01bae97bbebaeea4b
+Bottom: e916777fa933aad43d527bb487a4b878c8dd0a07
+Top:    8840f251da487918d5ab6de026a3492acd61d074
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 15:34:54 +1300
 
@@ -29,10 +29,10 @@ index 80cba69..4f99759 100644
    ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
    a particular result object is used even if the runner running the test doesn't
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 7b006be..949e4a5 100644
+index 4ea12d9..57dae2c 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -206,6 +206,14 @@ This is useful when a ``StreamResult`` stream is desired, but you cannot
+@@ -213,6 +213,14 @@ This is useful when a ``StreamResult`` stream is desired, but you cannot
  be sure that the tests which will run have been updated to the ``StreamResult``
  API.
  
@@ -155,7 +155,7 @@ index 9e31a3d..108538d 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 94a5b71..34d99d8 100644
+index db57930..6fb821d 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -27,6 +27,7 @@ from testtools import (
@@ -182,7 +182,7 @@ index 94a5b71..34d99d8 100644
  class TestStreamResultContract(object):
  
      def _make_result(self):
-@@ -565,6 +575,12 @@ class TestStreamToDictContract(TestCase, TestStreamResultContract):
+@@ -567,6 +577,12 @@ class TestStreamToDictContract(TestCase, TestStreamResultContract):
          return StreamToDict(lambda x:None)
  
  

@@ -1,5 +1,5 @@
-Bottom: 80984e1deb55104c440f64eeba05ddedda17b1bd
-Top:    bec1bbb71803235b0b5b50e98ac5587042eeb371
+Bottom: 369f7bef8417e3e9ad7cb90eb304f75193d75ed4
+Top:    ec8c623b39722e133815e650e061e706e5fde9ac
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-24 12:38:02 +1300
 
@@ -28,10 +28,10 @@ index a57d560..de193af 100644
  ~~~~~~
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index a9b5574..c3e24b8 100644
+index 23beb90..514c273 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -231,6 +231,33 @@ passing the events via this decorator to get timestamped data. As long as
+@@ -238,6 +238,33 @@ passing the events via this decorator to get timestamped data. As long as
  no buffering/queueing or blocking happen before the timestamper sees the event
  the timestamp will be as accurate as if the original event had it.
  
@@ -242,7 +242,7 @@ index 95ecb83..2ed7a1c 100644
      """A specialised StreamResult that emits a callback as tests complete.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 7998f57..979fc45 100644
+index e8dd3ff..ef29233 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -25,6 +25,7 @@ from testtools import (
@@ -253,7 +253,7 @@ index 7998f57..979fc45 100644
      StreamSummary,
      StreamToDict,
      StreamToExtendedDecorator,
-@@ -589,6 +590,12 @@ class TestStreamFailFastContract(TestCase, TestStreamResultContract):
+@@ -591,6 +592,12 @@ class TestStreamFailFastContract(TestCase, TestStreamResultContract):
          return StreamFailFast(lambda:None)
  
  
@@ -266,7 +266,7 @@ index 7998f57..979fc45 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -1633,6 +1640,145 @@ class TestMergeTags(TestCase):
+@@ -1635,6 +1642,145 @@ class TestMergeTags(TestCase):
              expected, _merge_tags(current_tags, changing_tags))
  
  

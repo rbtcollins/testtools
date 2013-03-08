@@ -1,5 +1,5 @@
-Bottom: 6d478f0b18d54c3d92fa925462ba680378677de3
-Top:    aeef3e58f6c29bfbf2e6d27c344d5a2d90d748b2
+Bottom: 8fe919021381bcea0ff80939e4944f6f496140ad
+Top:    e5ed1d3de8ded1f336f39564544db9ecd319db7d
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-17 16:12:38 +1300
 
@@ -26,10 +26,10 @@ index c298aa6..4c300de 100644
    ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
    a particular result object is used even if the runner running the test doesn't
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 0f0537d..7162e97 100644
+index 36cbd2b..ec62287 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -174,7 +174,11 @@ TestControl
+@@ -181,7 +181,11 @@ TestControl
  
  Lastly we define the ``TestControl`` API which is used to provide the
  ``shouldStop`` and ``stop`` elements from ``TestResult``. Again, see the API
@@ -166,7 +166,7 @@ index c20b918..fde4a0d 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index f766840..1e137ad 100644
+index 453a0c0..2a21e58 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -22,11 +22,13 @@ from testtools import (
@@ -183,7 +183,7 @@ index f766840..1e137ad 100644
      TestResult,
      TestResultDecorator,
      TestByTestResult,
-@@ -546,6 +548,12 @@ class TestStreamToDictContract(TestCase, TestStreamResultContract):
+@@ -548,6 +550,12 @@ class TestStreamToDictContract(TestCase, TestStreamResultContract):
          return StreamToDict(lambda x:None)
  
  
@@ -196,7 +196,7 @@ index f766840..1e137ad 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -700,6 +708,47 @@ class TestStreamToDict(TestCase):
+@@ -702,6 +710,47 @@ class TestStreamToDict(TestCase):
          self.assertEqual(["C", None], tests[1]['timestamps'])
  
  
@@ -244,7 +244,7 @@ index f766840..1e137ad 100644
  class TestStreamSummary(TestCase):
  
      def test_attributes(self):
-@@ -847,6 +896,17 @@ testtools.matchers._impl.MismatchError: Differences: [
+@@ -849,6 +898,17 @@ testtools.matchers._impl.MismatchError: Differences: [
          self.assertEqual("foo.bar", result.unexpectedSuccesses[0].id())
  
  

@@ -1,5 +1,5 @@
-Bottom: 4ac3ba10c17e93fb2fd4315f56f6360845471228
-Top:    7ce75432850c8dd62527b5f11b8b196f7099f310
+Bottom: 40ec2373097fe3b28f1f4b8b39501e252c63fc02
+Top:    35c608a870d1e02bed80a5eb865b1f02d3772689
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-18 21:28:29 +1300
 
@@ -40,10 +40,10 @@ index c465fa9..1259b51 100644
    ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
    a particular result object is used even if the runner running the test doesn't
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 8408a91..0f0537d 100644
+index 514c4b7..36cbd2b 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -176,6 +176,23 @@ Lastly we define the ``TestControl`` API which is used to provide the
+@@ -183,6 +183,23 @@ Lastly we define the ``TestControl`` API which is used to provide the
  ``shouldStop`` and ``stop`` elements from ``TestResult``. Again, see the API
  documentation for ``testtools.TestControl``.
  
@@ -253,7 +253,7 @@ index 4268462..b4482d7 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 8d19ccb..31157d4 100644
+index 86b932e..ca97963 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -23,6 +23,7 @@ from testtools import (
@@ -272,7 +272,7 @@ index 8d19ccb..31157d4 100644
      MatchesAny,
      MatchesException,
      Raises,
-@@ -531,6 +533,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
+@@ -533,6 +535,12 @@ class TestDoubleStreamResultContract(TestCase, TestStreamResultContract):
          return LoggingStreamResult()
  
  
@@ -285,7 +285,7 @@ index 8d19ccb..31157d4 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -599,6 +607,92 @@ class TestCopyStreamResultCopies(TestCase):
+@@ -601,6 +609,92 @@ class TestCopyStreamResultCopies(TestCase):
                  ])))
  
  

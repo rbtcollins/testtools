@@ -1,5 +1,5 @@
-Bottom: b643fb6414ca174df6ec46f01bae97bbebaeea4b
-Top:    4d3e6c6c5485cce41a4d3e7396364473bc11bab2
+Bottom: 8840f251da487918d5ab6de026a3492acd61d074
+Top:    1ca470fcebdf5bc3b9b03dea87359962692ded5c
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-19 21:19:25 +1300
 
@@ -27,10 +27,10 @@ index 4f99759..85af1bf 100644
    ``StreamResult`` objects (each of which receives all the events).
    (Robert Collins)
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 949e4a5..57ac59e 100644
+index 57dae2c..e8a33ae 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -222,6 +222,15 @@ at once. Each method takes out a lock around the decorated result to prevent
+@@ -229,6 +229,15 @@ at once. Each method takes out a lock around the decorated result to prevent
  race conditions. The ``startTestRun`` and ``stopTestRun`` methods are not
  forwarded to prevent the decorated result having them called multiple times.
  
@@ -121,7 +121,7 @@ index 108538d..a50c52c 100644
      """An exception made from an arbitrary string."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 34d99d8..75461a4 100644
+index 6fb821d..0779b06 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -36,6 +36,7 @@ from testtools import (
@@ -132,7 +132,7 @@ index 34d99d8..75461a4 100644
      testresult,
      )
  from testtools.compat import (
-@@ -2624,6 +2625,38 @@ class TestTagger(TestCase):
+@@ -2626,6 +2627,38 @@ class TestTagger(TestCase):
               ], result._events)
  
  
