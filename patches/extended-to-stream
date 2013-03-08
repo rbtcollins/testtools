@@ -1,5 +1,5 @@
 Bottom: e5ed1d3de8ded1f336f39564544db9ecd319db7d
-Top:    e916777fa933aad43d527bb487a4b878c8dd0a07
+Top:    5211f934e59b9c5cd0798cec867d93c1f891f0f2
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-15 23:58:56 +1300
 
@@ -93,7 +93,7 @@ index cc00e57..b0f22d6 100644
      StreamFailFast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index fde4a0d..9e31a3d 100644
+index fde4a0d..8a9ce01 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -139,7 +139,7 @@ index fde4a0d..9e31a3d 100644
 +        if value:
 +            if len(self.targets) == 2:
 +                return
-+            self.targets.append(StreamFailfast(self.stop))
++            self.targets.append(StreamFailFast(self.stop))
 +        else:
 +            del self.targets[1:]
 +    failfast = property(_get_failfast, _set_failfast)
