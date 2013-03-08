@@ -1,11 +1,10 @@
 Version: 1
-Previous: 2e6008a581a893c3ea97c11b4f7203ab4b3adf69
-Head: ccd4b9990991993324b685c6676098d5ff74f0b8
+Previous: f758fe4ace9cae9739215277e2b426fa0c02c857
+Head: d73ff4b610aafc85d0ee82cbdd3203f49f52f165
 Applied:
   double-streamresult: a8e6b67a1deb91a9a8ea690a9028fc1711af3a29
   copy-stream: d94f692b247094a5d09d87d3d88e489aead2bd05
   detect-incomplete-tests: d73ff4b610aafc85d0ee82cbdd3203f49f52f165
-  provide-a-loosely-typed-buffer: ccd4b9990991993324b685c6676098d5ff74f0b8
 Unapplied:
   stream-to-dict: 3aef2571a164f3932cb778d87e269c0953ee75ba
   stream-summary: 0abfd9ea03300b93cfa07b5afe819bca2f05e6b8
