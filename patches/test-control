@@ -1,5 +1,5 @@
 Bottom: fd9edf1dcc29d4438cdc854e74a2440478fe96c4
-Top:    fd9edf1dcc29d4438cdc854e74a2440478fe96c4
+Top:    838256fd1fcc7b7dc1e84f092ac8ac5cb8794a9d
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-02-17 16:12:38 +1300
 
@@ -8,4 +8,256 @@ Add a dedicated interface for controlling an in-progress TestRun.
 
 ---
 
-
+diff --git a/NEWS b/NEWS
+index 8873841..f950e85 100644
+--- a/NEWS
++++ b/NEWS
+@@ -39,6 +39,12 @@ Improvements
+   series of dicts describing a test. Useful for writing trivial stream
+   analysers. (Robert Collins)
+ 
++* New support class ``TestControl`` which permits cancelling an in-progress
++  run. (Robert Collins)
++
++* New support class ``StreamFailFast`` which calls a ``TestControl`` instance
++  to abort the test run when a failure is detected. (Robert Collins)
++
+ * New ``TestCase`` decorator ``DecorateTestCaseResult`` that adapts the
+   ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
+   a particular result object is used even if the runner running the test doesn't
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index c77afae..e031c17 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -181,7 +181,11 @@ TestControl
+ 
+ Lastly we define the ``TestControl`` API which is used to provide the
+ ``shouldStop`` and ``stop`` elements from ``TestResult``. Again, see the API
+-documentation for ``testtools.TestControl``.
++documentation for ``testtools.TestControl``. ``TestControl`` can be paired with
++a ``StreamFailFast`` to trigger failing aborting a test run when a failure
++is observed. Aborting multiple workers in a distributed environment requires
++hooking whatever signalling mechanism the distributed environment has up to
++a ``TestControl`` in each worker process.
+ 
+ IncompleteTestDetector
+ ----------------------
+diff --git a/testtools/__init__.py b/testtools/__init__.py
+index 4a879ee..a395257 100644
+--- a/testtools/__init__.py
++++ b/testtools/__init__.py
+@@ -28,9 +28,11 @@ __all__ = [
+     'skip',
+     'skipIf',
+     'skipUnless',
++    'StreamFailFast',
+     'StreamResult',
+     'StreamSummary',
+     'StreamToDict',
++    'TestControl',
+     'ThreadsafeForwardingResult',
+     'try_import',
+     'try_imports',
+@@ -75,11 +77,13 @@ else:
+         ExtendedToOriginalDecorator,
+         IncompleteTestDetector,
+         MultiTestResult,
++        StreamFailFast,
+         StreamResult,
+         StreamSummary,
+         StreamToDict,
+         Tagger,
+         TestByTestResult,
++        TestControl,
+         TestResult,
+         TestResultDecorator,
+         TextTestResult,
+diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
+index 0a1d074..6511647 100644
+--- a/testtools/testresult/__init__.py
++++ b/testtools/testresult/__init__.py
+@@ -7,11 +7,13 @@ __all__ = [
+     'ExtendedToOriginalDecorator',
+     'IncompleteTestDetector',
+     'MultiTestResult',
++    'StreamFailFast',
+     'StreamResult',
+     'StreamSummary',
+     'StreamToDict',
+     'Tagger',
+     'TestByTestResult',
++    'TestControl',
+     'TestResult',
+     'TestResultDecorator',
+     'TextTestResult',
+@@ -23,11 +25,13 @@ from testtools.testresult.real import (
+     ExtendedToOriginalDecorator,
+     IncompleteTestDetector,
+     MultiTestResult,
++    StreamFailFast,
+     StreamResult,
+     StreamSummary,
+     StreamToDict,
+     Tagger,
+     TestByTestResult,
++    TestControl,
+     TestResult,
+     TestResultDecorator,
+     TextTestResult,
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index cda12b3..1ce8a6b 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -7,10 +7,12 @@ __all__ = [
+     'ExtendedToOriginalDecorator',
+     'IncompleteTestDetector',
+     'MultiTestResult',
++    'StreamFailFast',
+     'StreamResult',
+     'StreamSummary',
+     'StreamToDict',
+     'Tagger',
++    'TestControl',
+     'TestResult',
+     'TestResultDecorator',
+     'ThreadsafeForwardingResult',
+@@ -409,6 +411,19 @@ class IncompleteTestDetector(CopyStreamResult):
+     """
+ 
+     
++class StreamFailFast(StreamResult):
++    """Call the supplied callback if an error is seen in a stream."""
++
++    def __init__(self, callback):
++        self.callback = callback
++
++    def status(self, test_id=None, test_status=None, test_tags=None,
++        runnable=True, file_name=None, file_bytes=None, eof=False,
++        mime_type=None, route_code=None, timestamp=None):
++        if test_status in ('uxsuccess', 'fail'):
++            self.callback()
++
++
+ class StreamToDict(StreamResult):
+     """A specialised StreamResult that emits a callback as tests complete.
+ 
+@@ -604,6 +619,23 @@ class StreamSummary(StreamToDict):
+         self.unexpectedSuccesses.append(case)
+ 
+ 
++class TestControl(object):
++    """Controls a running test run, allowing it to be interrupted.
++    
++    :attribute shouldStop: If True, tests should no run and should instead
++        return without running. Similarly a TestSuite should abort running
++        and return immediately.
++    """
++
++    def __init__(self):
++        super(TestControl, self).__init__()
++        self.shouldStop = False
++
++    def stop(self):
++        """Indicate that tests should stop running."""
++        self.shouldStop = True
++
++
+ class MultiTestResult(TestResult):
+     """A test result that dispatches to many test results."""
+ 
+diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
+index 528e098..26cccba 100644
+--- a/testtools/tests/test_testresult.py
++++ b/testtools/tests/test_testresult.py
+@@ -23,11 +23,13 @@ from testtools import (
+     ExtendedToOriginalDecorator,
+     MultiTestResult,
+     PlaceHolder,
++    StreamFailFast,
+     StreamResult,
+     StreamSummary,
+     StreamToDict,
+     Tagger,
+     TestCase,
++    TestControl,
+     TestResult,
+     TestResultDecorator,
+     TestByTestResult,
+@@ -540,6 +542,12 @@ class TestStreamToDictContract(TestCase, TestStreamResultContract):
+         return StreamToDict(lambda x:None)
+ 
+ 
++class TestStreamFailFastContract(TestCase, TestStreamResultContract):
++
++    def _make_result(self):
++        return StreamFailFast(lambda:None)
++
++
+ class TestDoubleStreamResultEvents(TestCase):
+ 
+     def test_startTestRun(self):
+@@ -694,6 +702,47 @@ class TestStreamToDict(TestCase):
+         self.assertEqual(["C", None], tests[1]['timestamps'])
+ 
+ 
++class TestStreamFailFast(TestCase):
++
++    def test_inprogress(self):
++        result = StreamFailFast(self.fail)
++        result.status('foo', 'inprogress')
++
++    def test_exists(self):
++        result = StreamFailFast(self.fail)
++        result.status('foo', 'exists')
++
++    def test_xfail(self):
++        result = StreamFailFast(self.fail)
++        result.status('foo', 'xfail')
++
++    def test_uxsuccess(self):
++        calls = []
++        def hook():
++            calls.append("called")
++        result = StreamFailFast(hook)
++        result.status('foo', 'uxsuccess')
++        result.status('foo', 'uxsuccess')
++        self.assertEqual(['called', 'called'], calls)
++
++    def test_success(self):
++        result = StreamFailFast(self.fail)
++        result.status('foo', 'success')
++
++    def test_fail(self):
++        calls = []
++        def hook():
++            calls.append("called")
++        result = StreamFailFast(hook)
++        result.status('foo', 'fail')
++        result.status('foo', 'fail')
++        self.assertEqual(['called', 'called'], calls)
++
++    def test_skip(self):
++        result = StreamFailFast(self.fail)
++        result.status('foo', 'skip')
++
++
+ class TestStreamSummary(TestCase):
+ 
+     def test_attributes(self):
+@@ -841,6 +890,17 @@ testtools.matchers._impl.MismatchError: Differences: [
+         self.assertEqual("foo.bar", result.unexpectedSuccesses[0].id())
+ 
+ 
++class TestTestControl(TestCase):
++
++    def test_default(self):
++        self.assertEqual(False, TestControl().shouldStop)
++
++    def test_stop(self):
++        control = TestControl()
++        control.stop()
++        self.assertEqual(True, control.shouldStop)
++
++
+ class TestTestResult(TestCase):
+     """Tests for 'TestResult'."""
