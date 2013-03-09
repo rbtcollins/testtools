@@ -1,5 +1,5 @@
-Bottom: 431171ae969431ec125658e4786a79905f83f9c5
-Top:    a3244bbe9bd4ed38ba00695a72666c131df1d414
+Bottom: d86deda0ad75523eec2ced5d6f3bef3a3d89692b
+Top:    c58761cfd83e50884111932ecaaba56558c3aec7
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-09 01:12:35 +1300
 
@@ -106,7 +106,7 @@ index a3af5d5..cf4946d 100644
      StreamTagger,
      StreamToDict,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 89e98ed..7f33d9b 100644
+index e0d250c..6a009a9 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -420,6 +420,131 @@ class StreamFailFast(StreamResult):
@@ -242,7 +242,7 @@ index 89e98ed..7f33d9b 100644
      """Adds or discards tags from StreamResult events."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 8f20b86..57c0ab6 100644
+index 74d1ea8..0ccefe0 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -26,6 +26,7 @@ from testtools import (
@@ -266,7 +266,7 @@ index 8f20b86..57c0ab6 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -1669,6 +1676,145 @@ class TestMergeTags(TestCase):
+@@ -1673,6 +1680,145 @@ class TestMergeTags(TestCase):
              expected, _merge_tags(current_tags, changing_tags))
  
  
