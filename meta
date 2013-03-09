@@ -1,5 +1,5 @@
 Version: 1
-Previous: 339f013615592fff9b4ce5581fb8a84fb9b9fca2
+Previous: dda5dcb1f00183bffb0a6e35a50fbac30e6f45e1
 Head: fdcb2efbaf0826c6ef4b881618d21afb86fcf386
 Applied:
   copy-stream: 581ea46320d7f472a88178df66b3bda8aa82a1ca
@@ -11,8 +11,8 @@ Applied:
   stream-tagger: c902880bb5f466d92b5793f9216904a57cb58e2b
   timestamp-stream-result: 81bea12228e52b70d891b1cd47caf100e27e35cc
   threadsafestreamresult: e2e17fb0cfd1f04cb9132ab2eebd87360acb223f
+  streamresult-router: fdcb2efbaf0826c6ef4b881618d21afb86fcf386
 Unapplied:
-  streamresult-router: 57c7bc3d361ec7d0aed0b3c02dea4c1983961d93
   extensible-run: 47cca73d0d9cb9c08895df334e25d1d0a96463dd
   detect-incomplete-tests: 7b11df645973936759e3a1cfa2aca573db0433f4
 Hidden:
