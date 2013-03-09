@@ -1,5 +1,5 @@
 Bottom: 2bca7596a644443d7a46bb1014bab7149f8063a1
-Top:    a090421b8d9ae408d97fca61f6e230e5054a2e2d
+Top:    bd664be5fecd03a44f074f035df966ccada05304
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-09 16:05:46 +1300
 
@@ -86,7 +86,7 @@ index 404aa3c..f4f302e 100644
      StreamToExtendedDecorator,
      Tagger,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 2fb1212..a7a0492 100644
+index 2fb1212..381f849 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -10,6 +10,7 @@ __all__ = [
@@ -117,7 +117,7 @@ index 2fb1212..a7a0492 100644
 +        self.discard = frozenset(discard or ())
 +
 +    def status(self, *args, **kwargs):
-+        test_tags = kwargs.get('test_tags', set())
++        test_tags = kwargs.get('test_tags') or set()
 +        test_tags.update(self.add)
 +        test_tags.difference_update(self.discard)
 +        kwargs['test_tags'] = test_tags or None
@@ -128,7 +128,7 @@ index 2fb1212..a7a0492 100644
      """A specialised StreamResult that emits a callback as tests complete.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 9725d38..7ffbcac 100644
+index 9725d38..e99ae8d 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -27,6 +27,7 @@ from testtools import (
@@ -152,7 +152,7 @@ index 9725d38..7ffbcac 100644
  class TestStreamToDictContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -649,6 +656,41 @@ class TestCopyStreamResultCopies(TestCase):
+@@ -649,6 +656,45 @@ class TestCopyStreamResultCopies(TestCase):
                  ])))
  
  
@@ -164,11 +164,13 @@ index 9725d38..7ffbcac 100644
 +        result.startTestRun()
 +        result.status()
 +        result.status(test_tags=set(['bar']))
++        result.status(test_tags=None)
 +        result.stopTestRun()
 +        self.assertEqual([
 +            ('startTestRun',),
 +            ('status', None, None, set(['foo']), True, None, None, False, None, None, None),
 +            ('status', None, None, set(['foo', 'bar']), True, None, None, False, None, None, None),
++            ('status', None, None, set(['foo']), True, None, None, False, None, None, None),
 +            ('stopTestRun',),
 +            ], log._events)
 +
@@ -177,12 +179,14 @@ index 9725d38..7ffbcac 100644
 +        result = StreamTagger([log], discard=['foo'])
 +        result.startTestRun()
 +        result.status()
++        result.status(test_tags=None)
 +        result.status(test_tags=set(['foo']))
 +        result.status(test_tags=set(['bar']))
 +        result.status(test_tags=set(['foo', 'bar']))
 +        result.stopTestRun()
 +        self.assertEqual([
 +            ('startTestRun',),
++            ('status', None, None, None, True, None, None, False, None, None, None),
 +            ('status', None, None, None, True, None, None, False, None, None, None),
 +            ('status', None, None, None, True, None, None, False, None, None, None),
 +            ('status', None, None, set(['bar']), True, None, None, False, None, None, None),
