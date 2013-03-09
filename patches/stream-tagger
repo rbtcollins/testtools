@@ -1,0 +1,11 @@
+Bottom: 2bca7596a644443d7a46bb1014bab7149f8063a1
+Top:    2bca7596a644443d7a46bb1014bab7149f8063a1
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-09 16:05:46 +1300
+
+Add StreamTagger, for tagging StreamResult events.
+
+
+---
+
+
