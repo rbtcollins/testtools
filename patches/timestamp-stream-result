@@ -1,5 +1,5 @@
-Bottom: 2bca7596a644443d7a46bb1014bab7149f8063a1
-Top:    637fe8ed1104ebe5cfedd3ea85b6de4331e103e1
+Bottom: a090421b8d9ae408d97fca61f6e230e5054a2e2d
+Top:    0ed53b09be50cc3fb5545e774c028b3ff0a84608
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-09 01:12:35 +1300
 
@@ -13,7 +13,7 @@ it will be accurate enough.
 ---
 
 diff --git a/NEWS b/NEWS
-index 4f99759..85af1bf 100644
+index b781bd0..e3bc0a6 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -24,6 +24,9 @@ Improvements
@@ -27,10 +27,10 @@ index 4f99759..85af1bf 100644
    ``StreamResult`` objects (each of which receives all the events).
    (Robert Collins)
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 57dae2c..e8a33ae 100644
+index fc27315..e9bc1cf 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -229,6 +229,15 @@ at once. Each method takes out a lock around the decorated result to prevent
+@@ -241,6 +241,15 @@ at once. Each method takes out a lock around the decorated result to prevent
  race conditions. The ``startTestRun`` and ``stopTestRun`` methods are not
  forwarded to prevent the decorated result having them called multiple times.
  
@@ -47,10 +47,10 @@ index 57dae2c..e8a33ae 100644
  ------------------
  
 diff --git a/testtools/__init__.py b/testtools/__init__.py
-index 2bde458..f317e0b 100644
+index faab2fb..1f2ab50 100644
 --- a/testtools/__init__.py
 +++ b/testtools/__init__.py
-@@ -35,6 +35,7 @@ __all__ = [
+@@ -36,6 +36,7 @@ __all__ = [
      'StreamToExtendedDecorator',
      'TestControl',
      'ThreadsafeForwardingResult',
@@ -58,7 +58,7 @@ index 2bde458..f317e0b 100644
      'try_import',
      'try_imports',
      ]
-@@ -90,6 +91,7 @@ else:
+@@ -92,6 +93,7 @@ else:
          TestResultDecorator,
          TextTestResult,
          ThreadsafeForwardingResult,
@@ -67,10 +67,10 @@ index 2bde458..f317e0b 100644
      from testtools.testsuite import (
          ConcurrentTestSuite,
 diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
-index 404aa3c..04960ba 100644
+index f4f302e..c2cc022 100644
 --- a/testtools/testresult/__init__.py
 +++ b/testtools/testresult/__init__.py
-@@ -19,6 +19,7 @@ __all__ = [
+@@ -20,6 +20,7 @@ __all__ = [
      'TestResultDecorator',
      'TextTestResult',
      'ThreadsafeForwardingResult',
@@ -78,17 +78,17 @@ index 404aa3c..04960ba 100644
      ]
  
  from testtools.testresult.real import (
-@@ -38,4 +39,5 @@ from testtools.testresult.real import (
+@@ -40,4 +41,5 @@ from testtools.testresult.real import (
      TestResultDecorator,
      TextTestResult,
      ThreadsafeForwardingResult,
 +    TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 2fb1212..8ec5c9a 100644
+index a7a0492..b0d3159 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -17,6 +17,7 @@ __all__ = [
+@@ -18,6 +18,7 @@ __all__ = [
      'TestResult',
      'TestResultDecorator',
      'ThreadsafeForwardingResult',
@@ -96,7 +96,7 @@ index 2fb1212..8ec5c9a 100644
      ]
  
  import datetime
-@@ -1462,6 +1463,23 @@ class TestByTestResult(TestResult):
+@@ -1486,6 +1487,23 @@ class TestByTestResult(TestResult):
          self._details = details
  
  
@@ -121,10 +121,10 @@ index 2fb1212..8ec5c9a 100644
      """An exception made from an arbitrary string."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 9725d38..d1eb8ef 100644
+index 7ffbcac..b6a17a8 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
-@@ -37,6 +37,7 @@ from testtools import (
+@@ -38,6 +38,7 @@ from testtools import (
      TestByTestResult,
      TextTestResult,
      ThreadsafeForwardingResult,
@@ -132,7 +132,7 @@ index 9725d38..d1eb8ef 100644
      testresult,
      )
  from testtools.compat import (
-@@ -2618,6 +2619,38 @@ class TestTagger(TestCase):
+@@ -2660,6 +2661,38 @@ class TestTagger(TestCase):
               ], result._events)
  
  

@@ -1,5 +1,5 @@
-Bottom: 637fe8ed1104ebe5cfedd3ea85b6de4331e103e1
-Top:    62aef35588807e0334d72cdddb73d720f18a4fee
+Bottom: 0ed53b09be50cc3fb5545e774c028b3ff0a84608
+Top:    431171ae969431ec125658e4786a79905f83f9c5
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-09 01:12:35 +1300
 
@@ -9,7 +9,7 @@ Add a StreamResult decorator safe for use in threaded/concurrent code.
 ---
 
 diff --git a/NEWS b/NEWS
-index 85af1bf..a57d560 100644
+index e3bc0a6..7c55637 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -27,6 +27,9 @@ Improvements
@@ -22,7 +22,7 @@ index 85af1bf..a57d560 100644
  * New support class ``CopyStreamResult`` which forwards events onto multiple
    ``StreamResult`` objects (each of which receives all the events).
    (Robert Collins)
-@@ -59,6 +62,9 @@ Improvements
+@@ -62,6 +65,9 @@ Improvements
    ``TestResult``) calls. This permits using un-migrated result objects with
    new runners / tests. (Robert Collins)
  
@@ -33,10 +33,10 @@ index 85af1bf..a57d560 100644
    ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
    a particular result object is used even if the runner running the test doesn't
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index e8a33ae..23beb90 100644
+index e9bc1cf..e9b6018 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -346,6 +346,20 @@ ConcurrentTestSuite uses the helper to get a number of separate runnable
+@@ -358,6 +358,20 @@ ConcurrentTestSuite uses the helper to get a number of separate runnable
  objects with a run(result), runs them all in threads using the
  ThreadsafeForwardingResult to coalesce their activity.
  
@@ -58,7 +58,7 @@ index e8a33ae..23beb90 100644
  ------------
  
 diff --git a/testtools/__init__.py b/testtools/__init__.py
-index f317e0b..59834a5 100644
+index 1f2ab50..0296c05 100644
 --- a/testtools/__init__.py
 +++ b/testtools/__init__.py
 @@ -6,6 +6,7 @@ __all__ = [
@@ -69,7 +69,7 @@ index f317e0b..59834a5 100644
      'DecorateTestCaseResult',
      'ErrorHolder',
      'ExpectedException',
-@@ -35,6 +36,7 @@ __all__ = [
+@@ -36,6 +37,7 @@ __all__ = [
      'StreamToExtendedDecorator',
      'TestControl',
      'ThreadsafeForwardingResult',
@@ -77,7 +77,7 @@ index f317e0b..59834a5 100644
      'TimestampingStreamResult',
      'try_import',
      'try_imports',
-@@ -91,10 +93,12 @@ else:
+@@ -93,10 +95,12 @@ else:
          TestResultDecorator,
          TextTestResult,
          ThreadsafeForwardingResult,
@@ -91,10 +91,10 @@ index f317e0b..59834a5 100644
          iterate_tests,
          )
 diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
-index 04960ba..5b311c7 100644
+index c2cc022..a3af5d5 100644
 --- a/testtools/testresult/__init__.py
 +++ b/testtools/testresult/__init__.py
-@@ -19,6 +19,7 @@ __all__ = [
+@@ -20,6 +20,7 @@ __all__ = [
      'TestResultDecorator',
      'TextTestResult',
      'ThreadsafeForwardingResult',
@@ -102,7 +102,7 @@ index 04960ba..5b311c7 100644
      'TimestampingStreamResult',
      ]
  
-@@ -39,5 +40,6 @@ from testtools.testresult.real import (
+@@ -41,5 +42,6 @@ from testtools.testresult.real import (
      TestResultDecorator,
      TextTestResult,
      ThreadsafeForwardingResult,
@@ -110,10 +110,10 @@ index 04960ba..5b311c7 100644
      TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 8ec5c9a..08f6471 100644
+index b0d3159..89e98ed 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -18,6 +18,7 @@ __all__ = [
+@@ -19,6 +19,7 @@ __all__ = [
      'TestResultDecorator',
      'ThreadsafeForwardingResult',
      'TimestampingStreamResult',
@@ -121,7 +121,7 @@ index 8ec5c9a..08f6471 100644
      ]
  
  import datetime
-@@ -631,6 +632,65 @@ class TestControl(object):
+@@ -655,6 +656,65 @@ class TestControl(object):
          self.shouldStop = True
  
  
@@ -188,10 +188,10 @@ index 8ec5c9a..08f6471 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index d1eb8ef..0976e0d 100644
+index b6a17a8..8f20b86 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
-@@ -37,6 +37,7 @@ from testtools import (
+@@ -38,6 +38,7 @@ from testtools import (
      TestByTestResult,
      TextTestResult,
      ThreadsafeForwardingResult,
@@ -199,7 +199,7 @@ index d1eb8ef..0976e0d 100644
      TimestampingStreamResult,
      testresult,
      )
-@@ -1626,6 +1627,53 @@ class TestMergeTags(TestCase):
+@@ -1668,6 +1669,53 @@ class TestMergeTags(TestCase):
              expected, _merge_tags(current_tags, changing_tags))
  
  
