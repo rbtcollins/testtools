@@ -434,7 +434,7 @@ class StreamTagger(CopyStreamResult):
         self.discard = frozenset(discard or ())
 
     def status(self, *args, **kwargs):
-        test_tags = kwargs.get('test_tags', set())
+        test_tags = kwargs.get('test_tags') or set()
         test_tags.update(self.add)
         test_tags.difference_update(self.discard)
         kwargs['test_tags'] = test_tags or None

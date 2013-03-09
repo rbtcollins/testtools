@@ -664,11 +664,13 @@ class TestStreamTagger(TestCase):
         result.startTestRun()
         result.status()
         result.status(test_tags=set(['bar']))
+        result.status(test_tags=None)
         result.stopTestRun()
         self.assertEqual([
             ('startTestRun',),
             ('status', None, None, set(['foo']), True, None, None, False, None, None, None),
             ('status', None, None, set(['foo', 'bar']), True, None, None, False, None, None, None),
+            ('status', None, None, set(['foo']), True, None, None, False, None, None, None),
             ('stopTestRun',),
             ], log._events)
 
@@ -677,12 +679,14 @@ class TestStreamTagger(TestCase):
         result = StreamTagger([log], discard=['foo'])
         result.startTestRun()
         result.status()
+        result.status(test_tags=None)
         result.status(test_tags=set(['foo']))
         result.status(test_tags=set(['bar']))
         result.status(test_tags=set(['foo', 'bar']))
         result.stopTestRun()
         self.assertEqual([
             ('startTestRun',),
+            ('status', None, None, None, True, None, None, False, None, None, None),
             ('status', None, None, None, True, None, None, False, None, None, None),
             ('status', None, None, None, True, None, None, False, None, None, None),
             ('status', None, None, set(['bar']), True, None, None, False, None, None, None),
