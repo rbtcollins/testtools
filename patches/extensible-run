@@ -1,5 +1,5 @@
-Bottom: 82c55645e41b551ce6873c8af7b676a7b472cc4f
-Top:    41a92e29ee8b20d4edaef11f52b31294df0d016d
+Bottom: a3244bbe9bd4ed38ba00695a72666c131df1d414
+Top:    cf93e6b8c06eb845a72369d321c55fadf94e68e9
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-09 01:12:35 +1300
 
@@ -9,10 +9,10 @@ Allow customisation of testtools.run --list-tests behaviour.
 ---
 
 diff --git a/NEWS b/NEWS
-index de193af..6c0c57f 100644
+index 2cb11a8..8902887 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -79,6 +79,10 @@ Improvements
+@@ -82,6 +82,10 @@ Improvements
  * ``PlaceHolder`` can now hold timestamps, and applies them before the test and
    then before the outcome. (Robert Collins)
  
@@ -24,10 +24,10 @@ index de193af..6c0c57f 100644
    3.4. (Monty Taylor, Robert Collins, #1140688)
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 514c273..e1b2ef8 100644
+index af215eb..7be5bb6 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -420,6 +420,13 @@ If you a writing custom wrapping suites, consider implementing filter_by_ids
+@@ -432,6 +432,13 @@ If you a writing custom wrapping suites, consider implementing filter_by_ids
  to support this (though most wrappers that subclass ``unittest.TestSuite`` will
  work just fine [see ``testtools.testsuite.filter_by_ids`` for details.]
  
