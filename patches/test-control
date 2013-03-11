@@ -1,7 +1,7 @@
 Bottom: aca8d9f9f8f392df91992beb3af4c1449f37f67e
 Top:    09bfaecb222862871428e972813aadbbead5a50b
 Author: Robert Collins <robertc@robertcollins.net>
-Date:   2013-03-09 01:12:34 +1300
+Date:   2013-03-12 12:06:56 +1300
 
 Add a dedicated interface for controlling an in-progress TestRun.
 

@@ -1,7 +1,7 @@
 Bottom: 9dfa9957c499a102c92d7b40a49d0d462efb33e0
 Top:    aca8d9f9f8f392df91992beb3af4c1449f37f67e
 Author: Robert Collins <robertc@robertcollins.net>
-Date:   2013-03-09 01:12:34 +1300
+Date:   2013-03-12 12:06:56 +1300
 
 Add StreamSummary to generate summary statistics and capture failures.
 

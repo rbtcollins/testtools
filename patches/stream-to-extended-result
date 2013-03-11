@@ -1,7 +1,7 @@
 Bottom: 2ef2e787e3f51dad9e35f40c4d2813d102da670d
 Top:    2bca7596a644443d7a46bb1014bab7149f8063a1
 Author: Robert Collins <robertc@robertcollins.net>
-Date:   2013-03-09 01:12:34 +1300
+Date:   2013-03-12 12:06:56 +1300
 
 Add an adapter to adapt StreamResult event streams into ExtendedTestResult.
 

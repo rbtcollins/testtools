@@ -1,7 +1,7 @@
 Bottom: 09bfaecb222862871428e972813aadbbead5a50b
 Top:    2ef2e787e3f51dad9e35f40c4d2813d102da670d
 Author: Robert Collins <robertc@robertcollins.net>
-Date:   2013-03-09 01:12:34 +1300
+Date:   2013-03-12 12:06:56 +1300
 
 Add an adapter to convert ExtendedTestResult to StreamResult.
 

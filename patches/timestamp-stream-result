@@ -1,7 +1,7 @@
 Bottom: bd664be5fecd03a44f074f035df966ccada05304
 Top:    08dc662364cafb232bf17dd7757db9939024d983
 Author: Robert Collins <robertc@robertcollins.net>
-Date:   2013-03-09 01:12:35 +1300
+Date:   2013-03-12 12:06:57 +1300
 
 Add a timestamping StreamResult.
 
