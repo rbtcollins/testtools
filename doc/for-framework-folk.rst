@@ -199,6 +199,17 @@ A ``StreamResult`` filter that adds or removes tags from events::
     >>> # Run tests against result here.
     >>> result.stopTestRun()
 
+IncompleteTestDetector
+----------------------
+
+This ``StreamResult`` filter tracks tests that have emitted events but not
+completed (whether with an error or not). When ``stopTestRun`` is called, these
+outstanding tests have a ``fail`` event generated. This is useful to permit
+analysers of streams to assume that all tests will complete - as long as there
+is an ``IncompleteTestDetector`` in the processing chain within a single
+process, code can allow it to be responsible for detecting hung or crashed
+tests.
+
 StreamToDict
 ------------
 
