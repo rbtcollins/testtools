@@ -1,10 +1,10 @@
 Version: 1
-Previous: e34344fb86e39ed2c561211f5fc64dc6ab97cb7a
-Head: e69005e01aee717056918d62a7b1e780dbfd56e7
+Previous: a653095e03fcd6d8a30487496d9e10d075d59298
+Head: 4e979cdafb2220fa0c38eeb36952a4105c39aa5c
 Applied:
   copy-stream: e69005e01aee717056918d62a7b1e780dbfd56e7
+  stream-to-dict: 4e979cdafb2220fa0c38eeb36952a4105c39aa5c
 Unapplied:
-  stream-to-dict: 0a19e4037e16e1ccb6d4396a8646be7e237b10f4
   stream-summary: d9b40a4d832db39b0eaab3c270b4411f2cbd1110
   test-control: 453f7c2cccafcb92d047d1852f0e355d08f2f961
   extended-to-stream: 86672b212265393dccd7c58d9551748f2a9e6691
