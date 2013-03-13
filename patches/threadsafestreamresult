@@ -1,5 +1,5 @@
-Bottom: 08dc662364cafb232bf17dd7757db9939024d983
-Top:    d86deda0ad75523eec2ced5d6f3bef3a3d89692b
+Bottom: 68d06471a44ceb1a450363532c2017ab7aae2a0a
+Top:    07925729213247bbcdf5581cd56fc7105883ad04
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:57 +1300
 
@@ -110,7 +110,7 @@ index c2cc022..a3af5d5 100644
      TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 8118ad4..e0d250c 100644
+index f34a5af..a1d399f 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -19,6 +19,7 @@ __all__ = [
@@ -188,7 +188,7 @@ index 8118ad4..e0d250c 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 922e15d..74d1ea8 100644
+index 9de2b9e..b51bf98 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -38,6 +38,7 @@ from testtools import (
@@ -199,7 +199,7 @@ index 922e15d..74d1ea8 100644
      TimestampingStreamResult,
      testresult,
      )
-@@ -1672,6 +1673,53 @@ class TestMergeTags(TestCase):
+@@ -1680,6 +1681,53 @@ class TestMergeTags(TestCase):
              expected, _merge_tags(current_tags, changing_tags))
  
  

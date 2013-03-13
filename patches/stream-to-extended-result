@@ -1,5 +1,5 @@
-Bottom: 2ef2e787e3f51dad9e35f40c4d2813d102da670d
-Top:    2bca7596a644443d7a46bb1014bab7149f8063a1
+Bottom: c61f50dfa82d4c1f826805d57e86f0aead006444
+Top:    00dfbe687adf0333bee0da6579f6a5a97e7c8db2
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:56 +1300
 
@@ -88,7 +88,7 @@ index b0f22d6..404aa3c 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 8a9ce01..2fb1212 100644
+index 93f427a..c524d34 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -11,6 +11,7 @@ __all__ = [
@@ -109,7 +109,7 @@ index 8a9ce01..2fb1212 100644
  
  
  class StreamSummary(StreamToDict):
-@@ -1258,6 +1260,44 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+@@ -1254,6 +1256,44 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
          return super(ExtendedToStreamDecorator, self).wasSuccessful()
  
  
@@ -155,7 +155,7 @@ index 8a9ce01..2fb1212 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 90b7ac6..9725d38 100644
+index c964f62..830997d 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -28,6 +28,7 @@ from testtools import (

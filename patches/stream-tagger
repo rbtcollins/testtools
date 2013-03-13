@@ -1,5 +1,5 @@
-Bottom: 2bca7596a644443d7a46bb1014bab7149f8063a1
-Top:    bd664be5fecd03a44f074f035df966ccada05304
+Bottom: 00dfbe687adf0333bee0da6579f6a5a97e7c8db2
+Top:    17e33ad6bfee43f51d3b5866956149d4aa7ac142
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:57 +1300
 
@@ -86,7 +86,7 @@ index 404aa3c..f4f302e 100644
      StreamToExtendedDecorator,
      Tagger,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 2fb1212..381f849 100644
+index c524d34..cda48cc 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -10,6 +10,7 @@ __all__ = [
@@ -128,7 +128,7 @@ index 2fb1212..381f849 100644
      """A specialised StreamResult that emits a callback as tests complete.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 9725d38..e99ae8d 100644
+index 830997d..0500fba 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -27,6 +27,7 @@ from testtools import (
