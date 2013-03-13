@@ -1,5 +1,5 @@
 Bottom: 9dfa9957c499a102c92d7b40a49d0d462efb33e0
-Top:    aca8d9f9f8f392df91992beb3af4c1449f37f67e
+Top:    73bceecc37f03c1110df6cf3719bfec3e38dff0a
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:56 +1300
 
@@ -196,7 +196,7 @@ index b4482d7..c20b918 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 61693bf..528e098 100644
+index 61693bf..5f49bfe 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -24,6 +24,7 @@ from testtools import (
@@ -220,7 +220,7 @@ index 61693bf..528e098 100644
  class TestStreamToDictContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -687,6 +694,153 @@ class TestStreamToDict(TestCase):
+@@ -687,6 +694,156 @@ class TestStreamToDict(TestCase):
          self.assertEqual(["C", None], tests[1]['timestamps'])
  
  
@@ -285,7 +285,10 @@ index 61693bf..528e098 100644
 +        result.stopTestRun()
 +        self.assertEqual(True, result.wasSuccessful())
 +        self.assertEqual(3, result.testsRun)
++
++    def test_stopTestRun_inprogress_test_fails(self):
 +        # Tests inprogress at stopTestRun trigger a failure.
++        result = StreamSummary()
 +        result.startTestRun()
 +        result.status("foo", "inprogress")
 +        result.stopTestRun()
