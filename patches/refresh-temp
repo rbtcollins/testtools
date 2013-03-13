@@ -1,0 +1,26 @@
+Bottom: a29b54e15c27ea8f7ebf3191a6f5b67fd8eb8f40
+Top:    d62ba48f1adc907afec16c31b3bda97cdfe3da27
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-14 08:03:00 +1300
+
+Refresh of test-control
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index fde4a0d..415a90d 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -613,9 +613,9 @@ class StreamSummary(StreamToDict):
+ class TestControl(object):
+     """Controls a running test run, allowing it to be interrupted.
+     
+-    :attribute shouldStop: If True, tests should no run and should instead
+-        return without running. Similarly a TestSuite should abort running
+-        and return immediately.
++    :attribute shouldStop: If True, tests should not run and should instead
++        return immediately. Similarly a TestSuite should check this between
++        each test and if set stop dispatching any new tests and return.
+     """
+ 
+     def __init__(self):
