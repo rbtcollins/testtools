@@ -1,5 +1,5 @@
 Bottom: 09bfaecb222862871428e972813aadbbead5a50b
-Top:    2ef2e787e3f51dad9e35f40c4d2813d102da670d
+Top:    c61f50dfa82d4c1f826805d57e86f0aead006444
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:56 +1300
 
@@ -93,7 +93,7 @@ index cc00e57..b0f22d6 100644
      StreamFailFast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index fde4a0d..8a9ce01 100644
+index fde4a0d..93f427a 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -113,7 +113,7 @@ index fde4a0d..8a9ce01 100644
  from testtools.content import (
      Content,
      text_content,
-@@ -1121,6 +1122,142 @@ class ExtendedToOriginalDecorator(object):
+@@ -1121,6 +1122,138 @@ class ExtendedToOriginalDecorator(object):
          return self.decorated.wasSuccessful()
  
  
@@ -212,10 +212,6 @@ index fde4a0d..8a9ce01 100644
 +        self.__now = None
 +        self._started = True
 +
-+    def stopTestRun(self):
-+        super(ExtendedToStreamDecorator, self).stopTestRun()
-+        self._started = False
-+
 +    def stopTest(self, test):
 +        self._tags = self._tags.parent
 +
@@ -257,7 +253,7 @@ index fde4a0d..8a9ce01 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 26cccba..90b7ac6 100644
+index 26cccba..c964f62 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -21,6 +21,7 @@ from extras import safe_hasattr
@@ -324,7 +320,7 @@ index 26cccba..90b7ac6 100644
  class TestStreamSummaryResultContract(TestCase, TestStreamResultContract):
  
      def _make_result(self):
-@@ -702,6 +719,45 @@ class TestStreamToDict(TestCase):
+@@ -702,6 +719,53 @@ class TestStreamToDict(TestCase):
          self.assertEqual(["C", None], tests[1]['timestamps'])
  
  
@@ -366,6 +362,14 @@ index 26cccba..90b7ac6 100644
 +              now),
 +             ('stopTestRun',)], log._events)
 +
++    def test_wasSuccessful_after_stopTestRun(self):
++        log = LoggingStreamResult()
++        result = ExtendedToStreamDecorator(log)
++        result.startTestRun()
++        result.status(test_id='foo', test_status='fail')
++        result.stopTestRun()
++        self.assertEqual(False, result.wasSuccessful())
++        
 +
  class TestStreamFailFast(TestCase):
  
