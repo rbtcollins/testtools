@@ -1,8 +1,7 @@
 Version: 1
-Previous: d37ac3c823c557b6165eb378aca5cc6b1da52e1e
-Head: 228a8ff38596b9c4be5ec777786855e2123bf2de
+Previous: 00a9047b0094f3f2b1651737b828f2cfddc9353d
+Head: df4fa302ab3837d9bb1893f08efa51ac4d101307
 Applied:
-  stream-summary: 228a8ff38596b9c4be5ec777786855e2123bf2de
 Unapplied:
   test-control: 949f9eb5268e1911855394f47f08123c24cac1ca
   extended-to-stream: 2eaf2088f61b07be24813c0921f6476b1e60c5c6
