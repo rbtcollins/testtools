@@ -1,0 +1,28 @@
+Bottom: 4a23c0f75f395baf7609b4f31ad992114d1a93d2
+Top:    a29b54e15c27ea8f7ebf3191a6f5b67fd8eb8f40
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-14 08:01:42 +1300
+
+Refresh of test-control
+
+---
+
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index ec62287..3022007 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -182,10 +182,10 @@ TestControl
+ Lastly we define the ``TestControl`` API which is used to provide the
+ ``shouldStop`` and ``stop`` elements from ``TestResult``. Again, see the API
+ documentation for ``testtools.TestControl``. ``TestControl`` can be paired with
+-a ``StreamFailFast`` to trigger failing aborting a test run when a failure
+-is observed. Aborting multiple workers in a distributed environment requires
+-hooking whatever signalling mechanism the distributed environment has up to
+-a ``TestControl`` in each worker process.
++a ``StreamFailFast`` to trigger aborting a test run when a failure is observed.
++Aborting multiple workers in a distributed environment requires hooking
++whatever signalling mechanism the distributed environment has up to a
++``TestControl`` in each worker process.
+ 
+ StreamToDict
+ ------------
