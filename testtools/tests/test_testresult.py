@@ -755,7 +755,10 @@ class TestStreamSummary(TestCase):
         result.stopTestRun()
         self.assertEqual(True, result.wasSuccessful())
         self.assertEqual(3, result.testsRun)
+
+    def test_stopTestRun_inprogress_test_fails(self):
         # Tests inprogress at stopTestRun trigger a failure.
+        result = StreamSummary()
         result.startTestRun()
         result.status("foo", "inprogress")
         result.stopTestRun()
