@@ -1,5 +1,5 @@
 Bottom: 73bceecc37f03c1110df6cf3719bfec3e38dff0a
-Top:    4a23c0f75f395baf7609b4f31ad992114d1a93d2
+Top:    a29b54e15c27ea8f7ebf3191a6f5b67fd8eb8f40
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:56 +1300
 
@@ -26,7 +26,7 @@ index c298aa6..4c300de 100644
    ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
    a particular result object is used even if the runner running the test doesn't
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 36cbd2b..ec62287 100644
+index 36cbd2b..3022007 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -181,7 +181,11 @@ TestControl
@@ -35,10 +35,10 @@ index 36cbd2b..ec62287 100644
  ``shouldStop`` and ``stop`` elements from ``TestResult``. Again, see the API
 -documentation for ``testtools.TestControl``.
 +documentation for ``testtools.TestControl``. ``TestControl`` can be paired with
-+a ``StreamFailFast`` to trigger failing aborting a test run when a failure
-+is observed. Aborting multiple workers in a distributed environment requires
-+hooking whatever signalling mechanism the distributed environment has up to
-+a ``TestControl`` in each worker process.
++a ``StreamFailFast`` to trigger aborting a test run when a failure is observed.
++Aborting multiple workers in a distributed environment requires hooking
++whatever signalling mechanism the distributed environment has up to a
++``TestControl`` in each worker process.
  
  StreamToDict
  ------------
