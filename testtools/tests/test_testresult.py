@@ -757,6 +757,14 @@ class TestExtendedToStreamDecorator(TestCase):
               now),
              ('stopTestRun',)], log._events)
 
+    def test_wasSuccessful_after_stopTestRun(self):
+        log = LoggingStreamResult()
+        result = ExtendedToStreamDecorator(log)
+        result.startTestRun()
+        result.status(test_id='foo', test_status='fail')
+        result.stopTestRun()
+        self.assertEqual(False, result.wasSuccessful())
+        
 
 class TestStreamFailFast(TestCase):
 

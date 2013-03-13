@@ -1217,10 +1217,6 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
         self.__now = None
         self._started = True
 
-    def stopTestRun(self):
-        super(ExtendedToStreamDecorator, self).stopTestRun()
-        self._started = False
-
     def stopTest(self, test):
         self._tags = self._tags.parent
 
