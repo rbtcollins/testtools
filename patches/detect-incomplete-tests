@@ -1,5 +1,5 @@
-Bottom: 3d1efef013f04f010ae1dcbbd007309309b2e925
-Top:    4c4904f065a1cac480041e55a55eab49b77c6f42
+Bottom: b5fffa49648610b2b1c91355c1d01b7e14871c07
+Top:    55af9e0f39b26f0d3661eda093035804c2d4c31e
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:57 +1300
 
@@ -24,7 +24,7 @@ index 8902887..c39801a 100644
    stream compatibly with ``TestResult`` code. (Robert Collins)
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 7be5bb6..3441d76 100644
+index 5b3e21d..1cfa57f 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -199,6 +199,17 @@ A ``StreamResult`` filter that adds or removes tags from events::
@@ -86,7 +86,7 @@ index cf4946d..c0d8903 100644
      StreamFailFast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index e2af3eb..deac325 100644
+index 400c6ce..2a6ea8e 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,6 +6,7 @@ __metaclass__ = type

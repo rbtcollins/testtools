@@ -1,5 +1,5 @@
-Bottom: 68d06471a44ceb1a450363532c2017ab7aae2a0a
-Top:    07925729213247bbcdf5581cd56fc7105883ad04
+Bottom: b1487aaa3c2980bba9fe6a3aad8a4f8a998bc5cf
+Top:    a952f5fab42790a37f055305d220077fb119a10e
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:57 +1300
 
@@ -33,7 +33,7 @@ index e3bc0a6..7c55637 100644
    ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
    a particular result object is used even if the runner running the test doesn't
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index e9bc1cf..e9b6018 100644
+index 0cf80d8..921051f 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -358,6 +358,20 @@ ConcurrentTestSuite uses the helper to get a number of separate runnable
@@ -110,7 +110,7 @@ index c2cc022..a3af5d5 100644
      TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index f34a5af..a1d399f 100644
+index 9301dd2..73b366e 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -19,6 +19,7 @@ __all__ = [
@@ -188,7 +188,7 @@ index f34a5af..a1d399f 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 9de2b9e..b51bf98 100644
+index 0d9cf9f..e6eeb30 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -38,6 +38,7 @@ from testtools import (
@@ -199,7 +199,7 @@ index 9de2b9e..b51bf98 100644
      TimestampingStreamResult,
      testresult,
      )
-@@ -1680,6 +1681,53 @@ class TestMergeTags(TestCase):
+@@ -1683,6 +1684,53 @@ class TestMergeTags(TestCase):
              expected, _merge_tags(current_tags, changing_tags))
  
  

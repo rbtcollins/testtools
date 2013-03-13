@@ -1,5 +1,5 @@
-Bottom: c61f50dfa82d4c1f826805d57e86f0aead006444
-Top:    00dfbe687adf0333bee0da6579f6a5a97e7c8db2
+Bottom: 90d6ebf930fae253bbe42f44174fb9ce1d235cfe
+Top:    d64d5df9b8497ca1bffca79299096ccfc7535652
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:56 +1300
 
@@ -29,7 +29,7 @@ index 80cba69..4f99759 100644
    ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
    a particular result object is used even if the runner running the test doesn't
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 4ea12d9..57dae2c 100644
+index beb9b01..5c9ffe8 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -213,6 +213,14 @@ This is useful when a ``StreamResult`` stream is desired, but you cannot
@@ -88,7 +88,7 @@ index b0f22d6..404aa3c 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 93f427a..c524d34 100644
+index c7bb74d..fec9c9e 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -11,6 +11,7 @@ __all__ = [
@@ -155,7 +155,7 @@ index 93f427a..c524d34 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index c964f62..830997d 100644
+index 9716802..c35a231 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -28,6 +28,7 @@ from testtools import (

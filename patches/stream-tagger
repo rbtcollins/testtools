@@ -1,5 +1,5 @@
-Bottom: 00dfbe687adf0333bee0da6579f6a5a97e7c8db2
-Top:    17e33ad6bfee43f51d3b5866956149d4aa7ac142
+Bottom: d64d5df9b8497ca1bffca79299096ccfc7535652
+Top:    34b00f0afd6675621c3b6cbe7bf6716bf51b9c77
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:57 +1300
 
@@ -23,12 +23,12 @@ index 4f99759..b781bd0 100644
    series of dicts describing a test. Useful for writing trivial stream
    analysers. (Robert Collins)
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 57dae2c..fc27315 100644
+index 5c9ffe8..407be36 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -187,6 +187,18 @@ is observed. Aborting multiple workers in a distributed environment requires
- hooking whatever signalling mechanism the distributed environment has up to
- a ``TestControl`` in each worker process.
+@@ -187,6 +187,18 @@ Aborting multiple workers in a distributed environment requires hooking
+ whatever signalling mechanism the distributed environment has up to a
+ ``TestControl`` in each worker process.
  
 +StreamTagger
 +------------
@@ -86,7 +86,7 @@ index 404aa3c..f4f302e 100644
      StreamToExtendedDecorator,
      Tagger,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index c524d34..cda48cc 100644
+index fec9c9e..cf380a7 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -10,6 +10,7 @@ __all__ = [
@@ -128,7 +128,7 @@ index c524d34..cda48cc 100644
      """A specialised StreamResult that emits a callback as tests complete.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 830997d..0500fba 100644
+index c35a231..99a804e 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -27,6 +27,7 @@ from testtools import (

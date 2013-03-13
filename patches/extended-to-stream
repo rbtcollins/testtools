@@ -1,5 +1,5 @@
-Bottom: 09bfaecb222862871428e972813aadbbead5a50b
-Top:    c61f50dfa82d4c1f826805d57e86f0aead006444
+Bottom: d62ba48f1adc907afec16c31b3bda97cdfe3da27
+Top:    90d6ebf930fae253bbe42f44174fb9ce1d235cfe
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:56 +1300
 
@@ -33,7 +33,7 @@ index 4c300de..80cba69 100644
    ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
    a particular result object is used even if the runner running the test doesn't
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index ec62287..4ea12d9 100644
+index 3022007..beb9b01 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -204,6 +204,15 @@ with the result. e.g.::
@@ -93,7 +93,7 @@ index cc00e57..b0f22d6 100644
      StreamFailFast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index fde4a0d..93f427a 100644
+index 415a90d..c7bb74d 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -253,7 +253,7 @@ index fde4a0d..93f427a 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 26cccba..c964f62 100644
+index 842a8fe..9716802 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -21,6 +21,7 @@ from extras import safe_hasattr
