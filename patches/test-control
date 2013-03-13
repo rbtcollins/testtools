@@ -1,5 +1,5 @@
-Bottom: aca8d9f9f8f392df91992beb3af4c1449f37f67e
-Top:    09bfaecb222862871428e972813aadbbead5a50b
+Bottom: 73bceecc37f03c1110df6cf3719bfec3e38dff0a
+Top:    4a23c0f75f395baf7609b4f31ad992114d1a93d2
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:56 +1300
 
@@ -166,7 +166,7 @@ index c20b918..fde4a0d 100644
      """A test result that dispatches to many test results."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 528e098..26cccba 100644
+index 5f49bfe..842a8fe 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -23,11 +23,13 @@ from testtools import (
@@ -244,7 +244,7 @@ index 528e098..26cccba 100644
  class TestStreamSummary(TestCase):
  
      def test_attributes(self):
-@@ -841,6 +890,17 @@ testtools.matchers._impl.MismatchError: Differences: [
+@@ -844,6 +893,17 @@ testtools.matchers._impl.MismatchError: Differences: [
          self.assertEqual("foo.bar", result.unexpectedSuccesses[0].id())
  
  
