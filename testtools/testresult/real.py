@@ -613,9 +613,9 @@ class StreamSummary(StreamToDict):
 class TestControl(object):
     """Controls a running test run, allowing it to be interrupted.
     
-    :attribute shouldStop: If True, tests should no run and should instead
-        return without running. Similarly a TestSuite should abort running
-        and return immediately.
+    :attribute shouldStop: If True, tests should not run and should instead
+        return immediately. Similarly a TestSuite should check this between
+        each test and if set stop dispatching any new tests and return.
     """
 
     def __init__(self):
