@@ -1,5 +1,5 @@
 Bottom: 73bceecc37f03c1110df6cf3719bfec3e38dff0a
-Top:    d62ba48f1adc907afec16c31b3bda97cdfe3da27
+Top:    21e443855e84eb9b6988eb79e44a5b7d463cc58a
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:56 +1300
 
@@ -105,7 +105,7 @@ index 29ee39d..cc00e57 100644
      TestResultDecorator,
      TextTestResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index c20b918..415a90d 100644
+index c20b918..8b179b0 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,10 +6,12 @@ __metaclass__ = type
@@ -121,27 +121,33 @@ index c20b918..415a90d 100644
      'TestResult',
      'TestResultDecorator',
      'ThreadsafeForwardingResult',
-@@ -400,6 +402,19 @@ class CopyStreamResult(StreamResult):
+@@ -400,6 +402,25 @@ class CopyStreamResult(StreamResult):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  
 +class StreamFailFast(StreamResult):
-+    """Call the supplied callback if an error is seen in a stream."""
++    """Call the supplied callback if an error is seen in a stream.
++    
++    An example callback::
++    
++       def do_something():
++           pass
++    """
 +
-+    def __init__(self, callback):
-+        self.callback = callback
++    def __init__(self, on_error):
++        self.on_error = on_error
 +
 +    def status(self, test_id=None, test_status=None, test_tags=None,
 +        runnable=True, file_name=None, file_bytes=None, eof=False,
 +        mime_type=None, route_code=None, timestamp=None):
 +        if test_status in ('uxsuccess', 'fail'):
-+            self.callback()
++            self.on_error()
 +
 +
  class StreamToDict(StreamResult):
      """A specialised StreamResult that emits a callback as tests complete.
  
-@@ -595,6 +610,23 @@ class StreamSummary(StreamToDict):
+@@ -595,6 +616,23 @@ class StreamSummary(StreamToDict):
          self.unexpectedSuccesses.append(case)
  
  
