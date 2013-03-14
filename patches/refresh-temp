@@ -1,0 +1,40 @@
+Bottom: d62ba48f1adc907afec16c31b3bda97cdfe3da27
+Top:    21e443855e84eb9b6988eb79e44a5b7d463cc58a
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-15 05:25:17 +1300
+
+Refresh of test-control
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 415a90d..8b179b0 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -403,16 +403,22 @@ class CopyStreamResult(StreamResult):
+ 
+ 
+ class StreamFailFast(StreamResult):
+-    """Call the supplied callback if an error is seen in a stream."""
++    """Call the supplied callback if an error is seen in a stream.
++    
++    An example callback::
++    
++       def do_something():
++           pass
++    """
+ 
+-    def __init__(self, callback):
+-        self.callback = callback
++    def __init__(self, on_error):
++        self.on_error = on_error
+ 
+     def status(self, test_id=None, test_status=None, test_tags=None,
+         runnable=True, file_name=None, file_bytes=None, eof=False,
+         mime_type=None, route_code=None, timestamp=None):
+         if test_status in ('uxsuccess', 'fail'):
+-            self.callback()
++            self.on_error()
+ 
+ 
+ class StreamToDict(StreamResult):
