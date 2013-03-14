@@ -1,5 +1,5 @@
-Bottom: b1487aaa3c2980bba9fe6a3aad8a4f8a998bc5cf
-Top:    a952f5fab42790a37f055305d220077fb119a10e
+Bottom: 3051c3a376ee40126a81988a30c08aeb9cdf6703
+Top:    e884cf63b81a1d6c350ce9b71b14bf174288c2ea
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:57 +1300
 
@@ -110,7 +110,7 @@ index c2cc022..a3af5d5 100644
      TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 9301dd2..73b366e 100644
+index 480e834..74f303f 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -19,6 +19,7 @@ __all__ = [
@@ -121,7 +121,7 @@ index 9301dd2..73b366e 100644
      ]
  
  import datetime
-@@ -655,6 +656,65 @@ class TestControl(object):
+@@ -661,6 +662,65 @@ class TestControl(object):
          self.shouldStop = True
  
  

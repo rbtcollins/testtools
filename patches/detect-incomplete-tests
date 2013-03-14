@@ -1,5 +1,5 @@
-Bottom: b5fffa49648610b2b1c91355c1d01b7e14871c07
-Top:    55af9e0f39b26f0d3661eda093035804c2d4c31e
+Bottom: 63df20ca2680662ca0c3a012db5c0c4a998667de
+Top:    5c907390c59e9ffedd4c29cb8ab55c55653822de
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:57 +1300
 
@@ -86,7 +86,7 @@ index cf4946d..c0d8903 100644
      StreamFailFast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 400c6ce..2a6ea8e 100644
+index d2efe63..b1594f0 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,6 +6,7 @@ __metaclass__ = type
@@ -110,4 +110,4 @@ index 400c6ce..2a6ea8e 100644
 +
 +    
  class StreamFailFast(StreamResult):
-     """Call the supplied callback if an error is seen in a stream."""
+     """Call the supplied callback if an error is seen in a stream.

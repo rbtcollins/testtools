@@ -1,5 +1,5 @@
-Bottom: 90d6ebf930fae253bbe42f44174fb9ce1d235cfe
-Top:    d64d5df9b8497ca1bffca79299096ccfc7535652
+Bottom: 17b0209b53cb885f6dd475130a7c645dcc7df4d9
+Top:    f1bae488eb942d2862b0efba0a800d42e26c9bc1
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:56 +1300
 
@@ -88,7 +88,7 @@ index b0f22d6..404aa3c 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index c7bb74d..fec9c9e 100644
+index e57a0fc..93bf255 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -11,6 +11,7 @@ __all__ = [
@@ -99,7 +99,7 @@ index c7bb74d..fec9c9e 100644
      'Tagger',
      'TestControl',
      'TestResult',
-@@ -534,7 +535,8 @@ def test_dict_to_case(test_dict):
+@@ -540,7 +541,8 @@ def test_dict_to_case(test_dict):
          from testtools.testcase import PlaceHolder
      outcome = _status_map[test_dict['status']]
      return PlaceHolder(test_dict['id'], outcome=outcome,
@@ -109,7 +109,7 @@ index c7bb74d..fec9c9e 100644
  
  
  class StreamSummary(StreamToDict):
-@@ -1254,6 +1256,44 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+@@ -1260,6 +1262,44 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
          return super(ExtendedToStreamDecorator, self).wasSuccessful()
  
  

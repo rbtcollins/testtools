@@ -1,5 +1,5 @@
-Bottom: a952f5fab42790a37f055305d220077fb119a10e
-Top:    4f009b4e61cc0bf5a440c82c444e51718214732e
+Bottom: e884cf63b81a1d6c350ce9b71b14bf174288c2ea
+Top:    c4663ba20d0119b336b5ec08fbd923975b200d4c
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:57 +1300
 
@@ -106,11 +106,11 @@ index a3af5d5..cf4946d 100644
      StreamTagger,
      StreamToDict,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 73b366e..400c6ce 100644
+index 74f303f..d2efe63 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -420,6 +420,131 @@ class StreamFailFast(StreamResult):
-             self.callback()
+@@ -426,6 +426,131 @@ class StreamFailFast(StreamResult):
+             self.on_error()
  
  
 +class StreamResultRouter(StreamResult):

@@ -1,5 +1,5 @@
-Bottom: d64d5df9b8497ca1bffca79299096ccfc7535652
-Top:    34b00f0afd6675621c3b6cbe7bf6716bf51b9c77
+Bottom: f1bae488eb942d2862b0efba0a800d42e26c9bc1
+Top:    3a46ebf2ae7208933eabc322d84b4b7c1bc2b4b1
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:57 +1300
 
@@ -86,7 +86,7 @@ index 404aa3c..f4f302e 100644
      StreamToExtendedDecorator,
      Tagger,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index fec9c9e..cf380a7 100644
+index 93bf255..b282fd1 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -10,6 +10,7 @@ __all__ = [
@@ -97,8 +97,8 @@ index fec9c9e..cf380a7 100644
      'StreamToDict',
      'StreamToExtendedDecorator',
      'Tagger',
-@@ -417,6 +418,29 @@ class StreamFailFast(StreamResult):
-             self.callback()
+@@ -423,6 +424,29 @@ class StreamFailFast(StreamResult):
+             self.on_error()
  
  
 +class StreamTagger(CopyStreamResult):
