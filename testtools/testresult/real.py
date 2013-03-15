@@ -1167,7 +1167,7 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
     def addError(self, test, err=None, details=None):
         self._check_args(err, details)
         self._convert(test, err, details, 'fail')
-    addFailure=addError
+    addFailure = addError
 
     def _convert(self, test, err, details, status, reason=None):
         if not self._started:
