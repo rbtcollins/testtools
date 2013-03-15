@@ -1,10 +1,10 @@
 Version: 1
-Previous: 8241e0ccbe126b2ce4204e8e304bc92852265f48
-Head: 0175baf2655712c07191e22ec0902a0aebc4208f
+Previous: 4e6997e34de71a4a2a320ecfdcc2ccc259e3a969
+Head: 909d17a56375577c5aaa481bdfd85aa7a8ed8282
 Applied:
   extended-to-stream: 0175baf2655712c07191e22ec0902a0aebc4208f
+  stream-to-extended-result: 909d17a56375577c5aaa481bdfd85aa7a8ed8282
 Unapplied:
-  stream-to-extended-result: e8f939601ddb4b613a52fba1ceb0a30dd31af5e1
   stream-tagger: 4a8041653a7f3e1bc7e2a5cdc5ed8f7c7277dc35
   timestamp-stream-result: 74587e8b572b6c650462d96461792a5258c5ccab
   threadsafestreamresult: 3b5db9f08ca0a6518b44e69f8df7180c7e9328aa

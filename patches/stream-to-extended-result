@@ -1,5 +1,5 @@
-Bottom: 17b0209b53cb885f6dd475130a7c645dcc7df4d9
-Top:    f1bae488eb942d2862b0efba0a800d42e26c9bc1
+Bottom: e7351cff237ceff29ff63698655eb8143cd9cc1b
+Top:    408ba1245493a0328bd6bbae93b538edcc5530c8
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:56 +1300
 
@@ -88,7 +88,7 @@ index b0f22d6..404aa3c 100644
      TestByTestResult,
      TestControl,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index e57a0fc..93bf255 100644
+index 7b8fed4..d9369d2 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -11,6 +11,7 @@ __all__ = [
