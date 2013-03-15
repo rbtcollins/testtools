@@ -1,5 +1,5 @@
 Bottom: 21e443855e84eb9b6988eb79e44a5b7d463cc58a
-Top:    17b0209b53cb885f6dd475130a7c645dcc7df4d9
+Top:    e7351cff237ceff29ff63698655eb8143cd9cc1b
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-15 05:27:57 +1300
 
@@ -93,7 +93,7 @@ index cc00e57..b0f22d6 100644
      StreamFailFast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 8b179b0..e57a0fc 100644
+index 8b179b0..7b8fed4 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -5,6 +5,7 @@
@@ -156,7 +156,7 @@ index 8b179b0..e57a0fc 100644
 +    def addError(self, test, err=None, details=None):
 +        self._check_args(err, details)
 +        self._convert(test, err, details, 'fail')
-+    addFailure=addError
++    addFailure = addError
 +
 +    def _convert(self, test, err, details, status, reason=None):
 +        if not self._started:
