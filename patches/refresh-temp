@@ -1,0 +1,22 @@
+Bottom: 17b0209b53cb885f6dd475130a7c645dcc7df4d9
+Top:    e7351cff237ceff29ff63698655eb8143cd9cc1b
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-16 05:12:17 +1300
+
+Refresh of extended-to-stream
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index e57a0fc..7b8fed4 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -1167,7 +1167,7 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+     def addError(self, test, err=None, details=None):
+         self._check_args(err, details)
+         self._convert(test, err, details, 'fail')
+-    addFailure=addError
++    addFailure = addError
+ 
+     def _convert(self, test, err, details, status, reason=None):
+         if not self._started:
