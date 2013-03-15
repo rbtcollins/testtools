@@ -1,9 +1,8 @@
 Version: 1
-Previous: aa8c701336872b8f4006f7fdfe7059b8066a5aa5
-Head: ae300eda15c4194052572ebfdc567c6e9545f870
+Previous: b766580c8acf6ff2aa694f9c5f1fa263f05556ee
+Head: 92c675a9ff60d8ddb180b991b91dda2e9f9594d8
 Applied:
-  extended-to-stream: 2f982e282221a3f6613399c0ae99189ec762db5b
-  stream-to-extended-result: ae300eda15c4194052572ebfdc567c6e9545f870
+  stream-to-extended-result: 92c675a9ff60d8ddb180b991b91dda2e9f9594d8
 Unapplied:
   stream-tagger: 4a8041653a7f3e1bc7e2a5cdc5ed8f7c7277dc35
   timestamp-stream-result: 74587e8b572b6c650462d96461792a5258c5ccab
