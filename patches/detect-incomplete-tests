@@ -1,5 +1,5 @@
-Bottom: 63df20ca2680662ca0c3a012db5c0c4a998667de
-Top:    5c907390c59e9ffedd4c29cb8ab55c55653822de
+Bottom: 7a59d450f3542479f2c4e5094359bb21dc8c2fe0
+Top:    1caac0dc13ed0b8e645ecf30fa53d1bcdfd03e19
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:57 +1300
 
@@ -86,7 +86,7 @@ index cf4946d..c0d8903 100644
      StreamFailFast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index d2efe63..b1594f0 100644
+index f5df2a8..a20ead4 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,6 +6,7 @@ __metaclass__ = type

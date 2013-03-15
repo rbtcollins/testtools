@@ -1,5 +1,5 @@
-Bottom: 3a46ebf2ae7208933eabc322d84b4b7c1bc2b4b1
-Top:    3051c3a376ee40126a81988a30c08aeb9cdf6703
+Bottom: b591aff8cf49cd13010d4173f8318a1081b36e2e
+Top:    2b3e566c3e2f0caf15e4861d1830a6044cce96d0
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-12 12:06:57 +1300
 
@@ -85,7 +85,7 @@ index f4f302e..c2cc022 100644
 +    TimestampingStreamResult,
      )
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index b282fd1..480e834 100644
+index f1379cb..79d26c7 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -18,6 +18,7 @@ __all__ = [
