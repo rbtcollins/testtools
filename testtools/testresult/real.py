@@ -6,6 +6,7 @@ __metaclass__ = type
 __all__ = [
     'ExtendedToOriginalDecorator',
     'ExtendedToStreamDecorator',
+    'IncompleteTestDetector',
     'MultiTestResult',
     'StreamFailFast',
     'StreamResult',
@@ -408,6 +409,14 @@ class CopyStreamResult(StreamResult):
         domap(methodcaller('status', *args, **kwargs), self.targets)
 
 
+class IncompleteTestDetector(CopyStreamResult):
+    """Detect tests that are incomplete when stopTestRun is called.
+
+    Such tests have a ``fail`` result generated and forwarded before
+    the ``stopTestRun`` event is forwarded.
+    """
+
+    
 class StreamFailFast(StreamResult):
     """Call the supplied callback if an error is seen in a stream.
     
