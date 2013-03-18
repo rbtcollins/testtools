@@ -1,8 +1,8 @@
 Version: 1
-Previous: 69b1c25c2342f1e0b55a66bdf3696c81b1d8b65b
-Head: e7ac371211442024a6429f343df3b0876cae073b
+Previous: 7562b46f51f57178e90398be6b030aa951763509
+Head: 974adac20c498def70b28c11f6f4a0f2ce278d03
 Applied:
-  stream-tagger: e7ac371211442024a6429f343df3b0876cae073b
+  stream-tagger: 974adac20c498def70b28c11f6f4a0f2ce278d03
 Unapplied:
   timestamp-stream-result: cf537ca72c15b58c57ecb21a56ebf955ff476c7b
   threadsafestreamresult: 84f6a212dbeb4c39e13ca898183e6dfd0de42a61
