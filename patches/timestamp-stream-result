@@ -1,5 +1,5 @@
 Bottom: 5275ac9d213029f460b8418ad4c00014928d1ca7
-Top:    b929ebbb9b800f98eac7f635ec6784ae61b8c908
+Top:    836d6b4fdaa7a0ace3c82a2bdeeb85608587989f
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -13,19 +13,19 @@ it will be accurate enough.
 ---
 
 diff --git a/NEWS b/NEWS
-index b2211fc..984dc5d 100644
+index b2211fc..cf6eb0b 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -27,6 +27,9 @@ Improvements
- * New class ``StreamResult`` which defines the API for the new result type.
-   (Robert Collins)
+@@ -62,6 +62,9 @@ Improvements
+   ``TestResult``) calls. This permits using un-migrated result objects with
+   new runners / tests. (Robert Collins)
  
 +* New support class ``TimestampingStreamResult`` which adds a timestamp to
 +  events with no timestamp. (Robert Collins)
 +
- * New support class ``CopyStreamResult`` which forwards events onto multiple
-   ``StreamResult`` objects (each of which receives all the events).
-   (Robert Collins)
+ * New ``TestCase`` decorator ``DecorateTestCaseResult`` that adapts the
+   ``TestResult`` or ``StreamResult`` a case will be run with, for ensuring that
+   a particular result object is used even if the runner running the test doesn't
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
 index 407be36..0cf80d8 100644
 --- a/doc/for-framework-folk.rst
