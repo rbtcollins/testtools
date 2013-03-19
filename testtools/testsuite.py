@@ -122,8 +122,9 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
         :param suite: A suite to run concurrently. Each test will be run in its
             own thread.
         :param make_tests: A helper function to split the tests in the
-            ConcurrentTestSuite into some number of concurrently executing
-            sub-suites. make_tests must take a suite, and return an iterable
+            supplied suite into some number of concurrently executable
+            sub-suites. make_tests must take whatever the ``suite`` parameter
+            given to the constructor, and return an iterable
             of tuples. Each tuple must be of the form (case, route_code), where
             case is a TestCase-like object with a run(result) method, and
             route_code is either None or a unicode string.
@@ -144,13 +145,13 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
         ConcurrentTestSuite provides no special mechanism to stop the tests
         returned by make_tests, it is up to the made tests to honour the
         shouldStop attribute on the result object they are run with, which will
-        be set if an exception is raised in the thread which
-        ConcurrentTestSuite.run is called in.
+        be set if the test run is to be aborted.
 
         The tests are run with an ExtendedToStreamDecorator wrapped around a
-        ThreadsafeStreamResult forwarding to result. Tests can therefore be
-        either original unittest tests (or compatible tests), or new tests
-        that emit StreamResult events directly.
+        StreamToQueue instance. ConcurrentStreamTestSuite dequeues events from
+        the queue and forwards them to result. Tests can therefore be either
+        original unittest tests (or compatible tests), or new tests that emit
+        StreamResult events directly.
 
         :param result: A StreamResult instance. The caller is responsible for
             calling startTestRun on this instance prior to invoking suite.run,
@@ -160,21 +161,27 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
         try:
             threads = {}
             queue = Queue()
-            semaphore = threading.Semaphore(1)
             for test, route_code in tests:
+                to_queue = testtools.StreamToQueue(queue, route_code)
                 process_result = testtools.ExtendedToStreamDecorator(
-                    testtools.TimestampingStreamResult(
-                    testtools.ThreadsafeStreamResult(
-                        result, semaphore, route_code)))
-                reader_thread = threading.Thread(
+                    testtools.TimestampingStreamResult(to_queue))
+                runner_thread = threading.Thread(
                     target=self._run_test,
-                    args=(test, process_result, queue, route_code))
-                threads[test] = reader_thread, process_result
-                reader_thread.start()
+                    args=(test, process_result, route_code))
+                threads[to_queue] = runner_thread, process_result
+                runner_thread.start()
             while threads:
-                finished_test = queue.get()
-                threads[finished_test][0].join()
-                del threads[finished_test]
+                event_dict = queue.get()
+                event = event_dict.pop('event')
+                if event == 'status':
+                    result.status(**event_dict)
+                elif event == 'stopTestRun':
+                    thread = threads.pop(event_dict['result'])[0]
+                    thread.join()
+                elif event == 'startTestRun':
+                    pass
+                else:
+                    raise ValueError('unknown event type %r' % (event,))
         except:
             for thread, process_result in threads.values():
                 # Signal to each TestControl in the ExtendedToStreamDecorator
@@ -182,22 +189,19 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
                 process_result.stop()
             raise
 
-    def _run_test(self, test, process_result, queue, route_code):
+    def _run_test(self, test, process_result, route_code):
         process_result.startTestRun()
         try:
             try:
-                try:
-                    test.run(process_result)
-                except Exception as e:
-                    # The run logic itself failed.
-                    case = testtools.ErrorHolder(
-                        "broken-runner-'%s'" % (route_code,),
-                        error=sys.exc_info())
-                    case.run(process_result)
-            finally:
-                process_result.stopTestRun()
+                test.run(process_result)
+            except Exception as e:
+                # The run logic itself failed.
+                case = testtools.ErrorHolder(
+                    "broken-runner-'%s'" % (route_code,),
+                    error=sys.exc_info())
+                case.run(process_result)
         finally:
-            queue.put(test)
+            process_result.stopTestRun()
 
 
 class FixtureSuite(unittest.TestSuite):

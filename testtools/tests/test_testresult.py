@@ -16,7 +16,9 @@ import threading
 from unittest import TestSuite
 import warnings
 
-from extras import safe_hasattr
+from extras import safe_hasattr, try_imports
+
+Queue = try_imports(['Queue.Queue', 'queue.Queue'])
 
 from testtools import (
     CopyStreamResult,
@@ -30,6 +32,7 @@ from testtools import (
     StreamTagger,
     StreamToDict,
     StreamToExtendedDecorator,
+    StreamToQueue,
     Tagger,
     TestCase,
     TestControl,
@@ -38,7 +41,6 @@ from testtools import (
     TestByTestResult,
     TextTestResult,
     ThreadsafeForwardingResult,
-    ThreadsafeStreamResult,
     TimestampingStreamResult,
     testresult,
     )
@@ -582,6 +584,13 @@ class TestStreamToExtendedDecoratorContract(TestCase, TestStreamResultContract):
 
     def _make_result(self):
         return StreamToExtendedDecorator(ExtendedTestResult())
+
+
+class TestStreamToQueueContract(TestCase, TestStreamResultContract):
+
+    def _make_result(self):
+        queue = Queue()
+        return StreamToQueue(queue, "foo")
 
 
 class TestStreamFailFastContract(TestCase, TestStreamResultContract):
@@ -1686,49 +1695,50 @@ class TestMergeTags(TestCase):
 
 class TestThreadStreamResult(TestCase):
 
-    def make_result(self, target):
-        semaphore = threading.Semaphore(1)
-        return (ThreadsafeStreamResult(target, semaphore, "foo"),
-            semaphore)
+    def make_result(self):
+        queue = Queue()
+        return queue, StreamToQueue(queue, "foo")
 
     def test_status(self):
-        class CallbackStream(object):
-            def status(stream, test_id=None, test_status=None, test_tags=None,
-                runnable=True, file_name=None, file_bytes=None, eof=False,
-                mime_type=None, route_code=None, timestamp=None):
-                self.assertFalse(semaphore.acquire(False))
-                self.assertEqual("test", test_id)
-                self.assertEqual("fail", test_status)
-                self.assertEqual(set(["quux"]), test_tags)
-                self.assertEqual(False, runnable)
-                self.assertEqual("file", file_name)
-                self.assertEqual(_b("content"), file_bytes)
-                self.assertEqual(True, eof)
-                self.assertEqual("quux", mime_type)
-                self.assertEqual("test", test_id)
-                self.assertEqual(expected_route, route_code)
-                self.assertEqual(expected_time, timestamp)
-        result, semaphore = self.make_result(CallbackStream())
-        expected_route = "foo"
-        expected_time = None
+        def check_event(event_dict, route=None, time=None):
+            self.assertEqual("status", event_dict['event'])
+            self.assertEqual("test", event_dict['test_id'])
+            self.assertEqual("fail", event_dict['test_status'])
+            self.assertEqual(set(["quux"]), event_dict['test_tags'])
+            self.assertEqual(False, event_dict['runnable'])
+            self.assertEqual("file", event_dict['file_name'])
+            self.assertEqual(_b("content"), event_dict['file_bytes'])
+            self.assertEqual(True, event_dict['eof'])
+            self.assertEqual("quux", event_dict['mime_type'])
+            self.assertEqual("test", event_dict['test_id'])
+            self.assertEqual(route, event_dict['route_code'])
+            self.assertEqual(time, event_dict['timestamp'])
+        queue, result = self.make_result()
         result.status("test", "fail", test_tags=set(["quux"]), runnable=False,
             file_name="file", file_bytes=_b("content"), eof=True,
             mime_type="quux", route_code=None, timestamp=None)
-        expected_route = "foo/bar"
-        expected_time = datetime.datetime.now(utc)
+        self.assertEqual(1, queue.qsize())
+        a_time = datetime.datetime.now(utc)
         result.status("test", "fail", test_tags=set(["quux"]), runnable=False,
             file_name="file", file_bytes=_b("content"), eof=True,
-            mime_type="quux", route_code="bar", timestamp=expected_time)
+            mime_type="quux", route_code="bar", timestamp=a_time)
+        self.assertEqual(2, queue.qsize())
+        check_event(queue.get(False), route="foo", time=None)
+        check_event(queue.get(False), route="foo/bar", time=a_time)
 
     def testStartTestRun(self):
-        t = object()
-        result, semaphore = self.make_result(t)
+        queue, result = self.make_result()
         result.startTestRun()
+        self.assertEqual(
+            {'event':'startTestRun', 'result':result}, queue.get(False))
+        self.assertTrue(queue.empty())
 
     def testStopTestRun(self):
-        t = object()
-        result, semaphore = self.make_result(t)
-        result.startTestRun()
+        queue, result = self.make_result()
+        result.stopTestRun()
+        self.assertEqual(
+            {'event':'stopTestRun', 'result':result}, queue.get(False))
+        self.assertTrue(queue.empty())
 
 
 class TestExtendedToOriginalResultDecoratorBase(TestCase):

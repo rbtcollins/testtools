@@ -13,6 +13,7 @@ __all__ = [
     'StreamTagger',
     'StreamToDict',
     'StreamToExtendedDecorator',
+    'StreamToQueue',
     'Tagger',
     'TestByTestResult',
     'TestControl',
@@ -20,7 +21,6 @@ __all__ = [
     'TestResultDecorator',
     'TextTestResult',
     'ThreadsafeForwardingResult',
-    'ThreadsafeStreamResult',
     'TimestampingStreamResult',
     ]
 
@@ -35,6 +35,7 @@ from testtools.testresult.real import (
     StreamTagger,
     StreamToDict,
     StreamToExtendedDecorator,
+    StreamToQueue,
     Tagger,
     TestByTestResult,
     TestControl,
@@ -42,6 +43,5 @@ from testtools.testresult.real import (
     TestResultDecorator,
     TextTestResult,
     ThreadsafeForwardingResult,
-    ThreadsafeStreamResult,
     TimestampingStreamResult,
     )

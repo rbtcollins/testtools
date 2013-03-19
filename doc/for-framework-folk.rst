@@ -233,13 +233,12 @@ response to events from the ``StreamResult`` API. Useful when outputting
 ``StreamResult`` events from a ``TestCase`` but the supplied ``TestResult``
 does not support the ``status`` and ``file`` methods.
 
-ThreadsafeStreamResult
-----------------------
+StreamToQueue
+-------------
 
 This is a ``StreamResult`` decorator for reporting tests from multiple threads
-at once. Each method takes out a lock around the decorated result to prevent
-race conditions. The ``startTestRun`` and ``stopTestRun`` methods are not
-forwarded to prevent the decorated result having them called multiple times.
+at once. Each method submits an event to a supplied Queue object as a simple
+dict. See ``ConcurrentStreamTestSuite`` for a convenient way to use this.
 
 TimestampingStreamResult
 ------------------------

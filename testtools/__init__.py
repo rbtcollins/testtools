@@ -35,9 +35,9 @@ __all__ = [
     'StreamTagger',
     'StreamToDict',
     'StreamToExtendedDecorator',
+    'StreamToQueue',
     'TestControl',
     'ThreadsafeForwardingResult',
-    'ThreadsafeStreamResult',
     'TimestampingStreamResult',
     'try_import',
     'try_imports',
@@ -88,6 +88,7 @@ else:
         StreamTagger,
         StreamToDict,
         StreamToExtendedDecorator,
+        StreamToQueue,
         Tagger,
         TestByTestResult,
         TestControl,
@@ -95,7 +96,6 @@ else:
         TestResultDecorator,
         TextTestResult,
         ThreadsafeForwardingResult,
-        ThreadsafeStreamResult,
         TimestampingStreamResult,
         )
     from testtools.testsuite import (
