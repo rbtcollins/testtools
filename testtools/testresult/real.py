@@ -673,8 +673,8 @@ class ThreadsafeStreamResult(StreamResult):
     in different threads.
 
     Events have their route code updated on the way through. A code of None
-    becomes the supplied code, any other code has is prefixed with the supplied
-    code hypen, old code.
+    becomes the supplied code, any other code is prefixed with the supplied
+    code + a hypen.
 
     startTestRun and stopTestRun are not forwarded (as otherwise the recipients
     would have these events called multiple times). 
