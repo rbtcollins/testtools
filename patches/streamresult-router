@@ -1,5 +1,5 @@
-Bottom: c9e0d205930454fbfdab77cff3c9505f6a181b86
-Top:    6c82cc034b625ffdc11dae7e45be351e7c19c7b3
+Bottom: 903ea51e0de0562131943d5d6294afcb8bc8b43f
+Top:    6feb8e52698dbbd6ca73d8493aa8b39016e485c4
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -13,10 +13,10 @@ a fallback stream.
 ---
 
 diff --git a/NEWS b/NEWS
-index 7c55637..2cb11a8 100644
+index 88e3c22..1133b13 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -89,6 +89,10 @@ Improvements
+@@ -92,6 +92,10 @@ Improvements
    test that accidentally depended on the CPython repr for object().
    (Jonathan Lange)
  
@@ -106,7 +106,7 @@ index a3af5d5..cf4946d 100644
      StreamTagger,
      StreamToDict,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 5009175..f5df2a8 100644
+index 795d09c..c0cb6ad 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -426,6 +426,131 @@ class StreamFailFast(StreamResult):

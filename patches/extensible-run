@@ -1,5 +1,5 @@
-Bottom: 6c82cc034b625ffdc11dae7e45be351e7c19c7b3
-Top:    7a59d450f3542479f2c4e5094359bb21dc8c2fe0
+Bottom: 6feb8e52698dbbd6ca73d8493aa8b39016e485c4
+Top:    09d60a0779cb3299ff09be1bf50af7ce168171fa
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -9,10 +9,10 @@ Allow customisation of testtools.run --list-tests behaviour.
 ---
 
 diff --git a/NEWS b/NEWS
-index 2cb11a8..8902887 100644
+index 1133b13..ecc2ed3 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -82,6 +82,10 @@ Improvements
+@@ -85,6 +85,10 @@ Improvements
  * ``PlaceHolder`` can now hold timestamps, and applies them before the test and
    then before the outcome. (Robert Collins)
  

@@ -1,5 +1,5 @@
-Bottom: 7a59d450f3542479f2c4e5094359bb21dc8c2fe0
-Top:    1caac0dc13ed0b8e645ecf30fa53d1bcdfd03e19
+Bottom: 09d60a0779cb3299ff09be1bf50af7ce168171fa
+Top:    beda4f5b1c251e2c0a1206a776bf5c23e42bd910
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -9,7 +9,7 @@ Add IncompleteTestDetector, for detecting incomplete tests.
 ---
 
 diff --git a/NEWS b/NEWS
-index 8902887..c39801a 100644
+index ecc2ed3..f80251f 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -34,6 +34,10 @@ Improvements
@@ -86,7 +86,7 @@ index cf4946d..c0d8903 100644
      StreamFailFast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index f5df2a8..a20ead4 100644
+index c0cb6ad..db2de21 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,6 +6,7 @@ __metaclass__ = type
