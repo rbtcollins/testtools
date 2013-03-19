@@ -1,0 +1,28 @@
+Bottom: dc9ca450158f9f80a6d067a4417bee755e020e6a
+Top:    7c5a9d5d6bf28d2ff61610d0cd3e69d11dafa2c0
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-20 11:38:30 +1300
+
+Refresh of threadsafestreamresult
+
+---
+
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index c5b3b3f..5f397a0 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -362,11 +362,11 @@ ConcurrentStreamTestSuite
+ 
+ A variant of ConcurrentTestSuite that uses the new StreamResult API instead of
+ the TestResult API. ConcurrentStreamTestSuite coordinates running some number
+-of test/suites concurrently, with one ThreadsafeStreamResult per test/suite.
++of test/suites concurrently, with one StreamToQueue per test/suite.
+ 
+ Each test/suite gets given its own ExtendedToStreamDecorator +
+-TimestampingStreamResult wrapped ThreadsafeStreamResult instance, forwarding
+-onto the StreamResult that ConcurrentStreamTestSuite.run was called with.
++TimestampingStreamResult wrapped StreamToQueue instance, forwarding onto the
++StreamResult that ConcurrentStreamTestSuite.run was called with.
+ 
+ ConcurrentStreamTestSuite is a thin shim and it is easy to implement your own
+ specialised form if that is needed.
