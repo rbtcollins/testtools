@@ -1,9 +1,8 @@
 Version: 1
-Previous: 8c4dc168a962686d9d2667d436ba1ea77f652aad
-Head: 975de011e505695ecaa2f776a0f41de9ae6b862b
+Previous: 55ad0aaf71bb7df9710a13b029d12b90c96158af
+Head: ed249424e00c1867c65aa7384cb740382ae40faf
 Applied:
-  threadsafestreamresult: e8e44e41eee27e6d78214e09df490fddbb64d51f
-  refresh-temp: 975de011e505695ecaa2f776a0f41de9ae6b862b
+  threadsafestreamresult: ed249424e00c1867c65aa7384cb740382ae40faf
 Unapplied:
   streamresult-router: c8aff7aad03cc86bb441ea3301ec00d3c2aab326
   extensible-run: a1d564a2eb1621cc384fdaa116862d614d65db96
