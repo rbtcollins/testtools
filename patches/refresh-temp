@@ -1,0 +1,24 @@
+Bottom: b9d8e1f12790b606d22c2045c4998920052d5454
+Top:    903ea51e0de0562131943d5d6294afcb8bc8b43f
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-20 02:49:40 +1300
+
+Refresh of threadsafestreamresult
+
+---
+
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 5009175..795d09c 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -673,8 +673,8 @@ class ThreadsafeStreamResult(StreamResult):
+     in different threads.
+ 
+     Events have their route code updated on the way through. A code of None
+-    becomes the supplied code, any other code has is prefixed with the supplied
+-    code hypen, old code.
++    becomes the supplied code, any other code is prefixed with the supplied
++    code + a hypen.
+ 
+     startTestRun and stopTestRun are not forwarded (as otherwise the recipients
+     would have these events called multiple times).
