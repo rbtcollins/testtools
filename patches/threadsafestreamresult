@@ -3,7 +3,7 @@ Top:    dc9ca450158f9f80a6d067a4417bee755e020e6a
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
-Add a StreamResult decorator safe for use in threaded/concurrent code.
+Add a StreamResult safe for use in threaded/concurrent code.
 
 
 ---
