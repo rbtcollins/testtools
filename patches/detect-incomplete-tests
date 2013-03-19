@@ -1,5 +1,5 @@
-Bottom: 09d60a0779cb3299ff09be1bf50af7ce168171fa
-Top:    beda4f5b1c251e2c0a1206a776bf5c23e42bd910
+Bottom: d23558b74b49edb198c142ba6e4ea5f74fb36f17
+Top:    096dce135f7e51d3550f15cce44c1f2c8a85410e
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -9,7 +9,7 @@ Add IncompleteTestDetector, for detecting incomplete tests.
 ---
 
 diff --git a/NEWS b/NEWS
-index ecc2ed3..f80251f 100644
+index 7cc1d41..e08c6a6 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -34,6 +34,10 @@ Improvements
@@ -24,7 +24,7 @@ index ecc2ed3..f80251f 100644
    stream compatibly with ``TestResult`` code. (Robert Collins)
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 5b3e21d..1cfa57f 100644
+index e6dfb0a..2cee49d 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -199,6 +199,17 @@ A ``StreamResult`` filter that adds or removes tags from events::
@@ -46,7 +46,7 @@ index 5b3e21d..1cfa57f 100644
  ------------
  
 diff --git a/testtools/__init__.py b/testtools/__init__.py
-index 997d1d4..e24ca48 100644
+index 94e526f..2e88d43 100644
 --- a/testtools/__init__.py
 +++ b/testtools/__init__.py
 @@ -13,6 +13,7 @@ __all__ = [
@@ -66,7 +66,7 @@ index 997d1d4..e24ca48 100644
          StreamFailFast,
          StreamResult,
 diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
-index cf4946d..c0d8903 100644
+index 5bf8f9c..6899bb1 100644
 --- a/testtools/testresult/__init__.py
 +++ b/testtools/testresult/__init__.py
 @@ -6,6 +6,7 @@ __all__ = [
@@ -86,7 +86,7 @@ index cf4946d..c0d8903 100644
      StreamFailFast,
      StreamResult,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index c0cb6ad..db2de21 100644
+index 41b9d63..8fa4875 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -6,6 +6,7 @@ __metaclass__ = type
@@ -97,7 +97,7 @@ index c0cb6ad..db2de21 100644
      'MultiTestResult',
      'StreamFailFast',
      'StreamResult',
-@@ -407,6 +408,14 @@ class CopyStreamResult(StreamResult):
+@@ -408,6 +409,14 @@ class CopyStreamResult(StreamResult):
          domap(methodcaller('status', *args, **kwargs), self.targets)
  
  

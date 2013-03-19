@@ -1,5 +1,5 @@
-Bottom: 903ea51e0de0562131943d5d6294afcb8bc8b43f
-Top:    6feb8e52698dbbd6ca73d8493aa8b39016e485c4
+Bottom: dc9ca450158f9f80a6d067a4417bee755e020e6a
+Top:    e2caf0058cc5525801a6643b459a452c54c2184e
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -13,7 +13,7 @@ a fallback stream.
 ---
 
 diff --git a/NEWS b/NEWS
-index 88e3c22..1133b13 100644
+index 0258834..796e948 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -92,6 +92,10 @@ Improvements
@@ -28,10 +28,10 @@ index 88e3c22..1133b13 100644
  ~~~~~~
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 921051f..57bd1a7 100644
+index c5b3b3f..9baf160 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -250,6 +250,33 @@ passing the events via this decorator to get timestamped data. As long as
+@@ -249,6 +249,33 @@ passing the events via this decorator to get timestamped data. As long as
  no buffering/queueing or blocking happen before the timestamper sees the event
  the timestamp will be as accurate as if the original event had it.
  
@@ -66,7 +66,7 @@ index 921051f..57bd1a7 100644
  ------------------
  
 diff --git a/testtools/__init__.py b/testtools/__init__.py
-index 0296c05..997d1d4 100644
+index e58f60a..94e526f 100644
 --- a/testtools/__init__.py
 +++ b/testtools/__init__.py
 @@ -31,6 +31,7 @@ __all__ = [
@@ -86,7 +86,7 @@ index 0296c05..997d1d4 100644
          StreamTagger,
          StreamToDict,
 diff --git a/testtools/testresult/__init__.py b/testtools/testresult/__init__.py
-index a3af5d5..cf4946d 100644
+index bdef369..5bf8f9c 100644
 --- a/testtools/testresult/__init__.py
 +++ b/testtools/testresult/__init__.py
 @@ -9,6 +9,7 @@ __all__ = [
@@ -106,10 +106,10 @@ index a3af5d5..cf4946d 100644
      StreamTagger,
      StreamToDict,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 795d09c..c0cb6ad 100644
+index bad2a3a..41b9d63 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
-@@ -426,6 +426,131 @@ class StreamFailFast(StreamResult):
+@@ -427,6 +427,131 @@ class StreamFailFast(StreamResult):
              self.on_error()
  
  
@@ -242,10 +242,10 @@ index 795d09c..c0cb6ad 100644
      """Adds or discards tags from StreamResult events."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index e6eeb30..915d1f6 100644
+index ea1d5af..be18f0e 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
-@@ -26,6 +26,7 @@ from testtools import (
+@@ -28,6 +28,7 @@ from testtools import (
      PlaceHolder,
      StreamFailFast,
      StreamResult,
@@ -253,7 +253,7 @@ index e6eeb30..915d1f6 100644
      StreamSummary,
      StreamTagger,
      StreamToDict,
-@@ -590,6 +591,12 @@ class TestStreamFailFastContract(TestCase, TestStreamResultContract):
+@@ -599,6 +600,12 @@ class TestStreamFailFastContract(TestCase, TestStreamResultContract):
          return StreamFailFast(lambda:None)
  
  
@@ -266,7 +266,7 @@ index e6eeb30..915d1f6 100644
  class TestDoubleStreamResultEvents(TestCase):
  
      def test_startTestRun(self):
-@@ -1684,6 +1691,145 @@ class TestMergeTags(TestCase):
+@@ -1693,6 +1700,145 @@ class TestMergeTags(TestCase):
              expected, _merge_tags(current_tags, changing_tags))
  
  
@@ -411,4 +411,4 @@ index e6eeb30..915d1f6 100644
 +
  class TestThreadStreamResult(TestCase):
  
-     def make_result(self, target):
+     def make_result(self):

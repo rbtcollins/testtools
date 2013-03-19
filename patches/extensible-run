@@ -1,5 +1,5 @@
-Bottom: 6feb8e52698dbbd6ca73d8493aa8b39016e485c4
-Top:    09d60a0779cb3299ff09be1bf50af7ce168171fa
+Bottom: e2caf0058cc5525801a6643b459a452c54c2184e
+Top:    d23558b74b49edb198c142ba6e4ea5f74fb36f17
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -9,7 +9,7 @@ Allow customisation of testtools.run --list-tests behaviour.
 ---
 
 diff --git a/NEWS b/NEWS
-index 1133b13..ecc2ed3 100644
+index 796e948..7cc1d41 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -85,6 +85,10 @@ Improvements
@@ -24,10 +24,10 @@ index 1133b13..ecc2ed3 100644
    3.4. (Monty Taylor, Robert Collins, #1140688)
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 57bd1a7..5b3e21d 100644
+index 9baf160..e6dfb0a 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
-@@ -432,6 +432,13 @@ If you a writing custom wrapping suites, consider implementing filter_by_ids
+@@ -431,6 +431,13 @@ If you a writing custom wrapping suites, consider implementing filter_by_ids
  to support this (though most wrappers that subclass ``unittest.TestSuite`` will
  work just fine [see ``testtools.testsuite.filter_by_ids`` for details.]
  
