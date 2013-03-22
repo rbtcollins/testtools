@@ -1,10 +1,10 @@
 Version: 1
-Previous: 98b9f79f2040cb3dafbedb64915191ebbc2d4bb2
+Previous: 4bd12440d999c2d7143775b1bdc2e7499acc1578
 Head: c0d4846b9e38f4469108a00dc65d83a479eab510
 Applied:
   threadsafestreamresult: 877058e8dc59f95bcb7d1021db52ad8e0c8d9704
+  streamresult-router: c0d4846b9e38f4469108a00dc65d83a479eab510
 Unapplied:
-  streamresult-router: 49421e3b7d5edc67725bf8843f8e92b5a27b07d0
   extensible-run: 0f7a9a42260afedc918d42d5f8704f6175987b2b
   detect-incomplete-tests: 4a3522b312f8aac617989f0cd49d0c66f4b7be24
 Hidden:
