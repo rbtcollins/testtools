@@ -1,5 +1,5 @@
 Bottom: 836d6b4fdaa7a0ace3c82a2bdeeb85608587989f
-Top:    eccac8ed1a003568f8e9abae3d174d8d538360d6
+Top:    c209d2408434b68cc97462775ae12fbbbf10da0c
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -224,7 +224,7 @@ index 79d26c7..bad2a3a 100644
      """General pass-through decorator.
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 0d9cf9f..ea1d5af 100644
+index 0d9cf9f..9726c4b 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -16,7 +16,9 @@ import threading
@@ -264,7 +264,7 @@ index 0d9cf9f..ea1d5af 100644
              expected, _merge_tags(current_tags, changing_tags))
  
  
-+class TestThreadStreamResult(TestCase):
++class TestStreamToQueue(TestCase):
 +
 +    def make_result(self):
 +        queue = Queue()
