@@ -1693,7 +1693,7 @@ class TestMergeTags(TestCase):
             expected, _merge_tags(current_tags, changing_tags))
 
 
-class TestThreadStreamResult(TestCase):
+class TestStreamToQueue(TestCase):
 
     def make_result(self):
         queue = Queue()
