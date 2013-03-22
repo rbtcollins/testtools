@@ -1,0 +1,170 @@
+Bottom: 2f07e40e9d56cefd92037bbecc846c6fa6a8cd1c
+Top:    9bd7626293cb852f5fbe217efba66db85c1ed9b4
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-03-23 01:57:16 +1300
+
+Refresh of extensible-run
+
+---
+
+diff --git a/NEWS b/NEWS
+index 61bad55..bdbcfd1 100644
+--- a/NEWS
++++ b/NEWS
+@@ -89,6 +89,10 @@ Improvements
+   partitioning analysis of events or sending feedback encapsulated in
+   StreamResult events back to their source. (Robert Collins)
+ 
++* ``testtools.run.TestProgram`` now supports the ``TestRunner`` taking over
++  responsibility for formatting the output of ``--list-tests``.
++  (Robert Collins)
++
+ * The error message for setUp and tearDown upcall errors was broken on Python
+   3.4. (Monty Taylor, Robert Collins, #1140688)
+ 
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index 8be1e22..f052e4e 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -431,6 +431,13 @@ If you a writing custom wrapping suites, consider implementing filter_by_ids
+ to support this (though most wrappers that subclass ``unittest.TestSuite`` will
+ work just fine [see ``testtools.testsuite.filter_by_ids`` for details.]
+ 
++Extensions to TestRunner
++========================
++
++To facilitate custom listing of tests, ``testtools.run.TestProgram`` attempts
++to call ``list`` on the ``TestRunner``, falling back to a generic
++implementation if it is not present.
++
+ .. _`testtools API docs`: http://mumak.net/testtools/apidocs/
+ .. _unittest: http://docs.python.org/library/unittest.html
+ .. _fixture: http://pypi.python.org/pypi/fixtures
+diff --git a/testtools/run.py b/testtools/run.py
+index dc604b5..8dce5e4 100755
+--- a/testtools/run.py
++++ b/testtools/run.py
+@@ -8,10 +8,13 @@ For instance, to run the testtools test suite.
+  $ python -m testtools.run testtools.tests.test_suite
+ """
+ 
++from functools import partial
+ import os
+ import unittest
+ import sys
+ 
++from extras import safe_hasattr
++
+ from testtools import TextTestResult
+ from testtools.compat import classtypes, istext, unicode_output_stream
+ from testtools.testsuite import filter_by_ids, iterate_tests, sorted_tests
+@@ -35,14 +38,22 @@ else:
+ class TestToolsTestRunner(object):
+     """ A thunk object to support unittest.TestProgram."""
+ 
+-    def __init__(self, verbosity=None, failfast=None, buffer=None):
++    def __init__(self, verbosity=None, failfast=None, buffer=None,
++        stdout=None):
+         """Create a TestToolsTestRunner.
+ 
+         :param verbosity: Ignored.
+         :param failfast: Stop running tests at the first failure.
+         :param buffer: Ignored.
++        :param stdout: Stream to use for stdout.
+         """
+         self.failfast = failfast
++        self.stdout = stdout
++
++    def list(self, test):
++        """List the tests that would be run if test() was run."""
++        for test in iterate_tests(test):
++            self.stdout.write('%s\n' % test.id())
+ 
+     def run(self, test):
+         "Run the given test case or test suite."
+@@ -177,8 +188,12 @@ class TestProgram(object):
+         if not self.listtests:
+             self.runTests()
+         else:
+-            for test in iterate_tests(self.test):
+-                stdout.write('%s\n' % test.id())
++            runner = self._get_runner()
++            if safe_hasattr(runner, 'list'):
++                runner.list(self.test)
++            else:
++                for test in iterate_tests(self.test):
++                    stdout.write('%s\n' % test.id())
+ 
+     def usageExit(self, msg=None):
+         if msg:
+@@ -321,26 +336,32 @@ class TestProgram(object):
+         if (self.catchbreak
+             and getattr(unittest, 'installHandler', None) is not None):
+             unittest.installHandler()
++        testRunner = self._get_runner()
++        self.result = testRunner.run(self.test)
++        if self.exit:
++            sys.exit(not self.result.wasSuccessful())
++
++    def _get_runner(self):
+         if self.testRunner is None:
+             self.testRunner = TestToolsTestRunner
+-        if isinstance(self.testRunner, classtypes()):
++        try:
++            testRunner = self.testRunner(verbosity=self.verbosity,
++                                         failfast=self.failfast,
++                                         buffer=self.buffer)
++        except TypeError:
++            # didn't accept the verbosity, buffer or failfast arguments
+             try:
+-                testRunner = self.testRunner(verbosity=self.verbosity,
+-                                             failfast=self.failfast,
+-                                             buffer=self.buffer)
+-            except TypeError:
+-                # didn't accept the verbosity, buffer or failfast arguments
+                 testRunner = self.testRunner()
+-        else:
+-            # it is assumed to be a TestRunner instance
+-            testRunner = self.testRunner
+-        self.result = testRunner.run(self.test)
+-        if self.exit:
+-            sys.exit(not self.result.wasSuccessful())
++            except TypeError:
++                # it is assumed to be a TestRunner instance
++                testRunner = self.testRunner
++        return testRunner
++
++
+ ################
+ 
+ def main(argv, stdout):
+-    program = TestProgram(argv=argv, testRunner=TestToolsTestRunner,
++    program = TestProgram(argv=argv, testRunner=partial(TestToolsTestRunner, stdout=stdout),
+         stdout=stdout)
+ 
+ if __name__ == '__main__':
+diff --git a/testtools/tests/test_run.py b/testtools/tests/test_run.py
+index 2b41e9f..91410b1 100644
+--- a/testtools/tests/test_run.py
++++ b/testtools/tests/test_run.py
+@@ -97,6 +97,20 @@ class TestRun(TestCase):
+         if fixtures is None:
+             self.skipTest("Need fixtures")
+ 
++    def test_run_custom_list(self):
++        self.useFixture(SampleTestFixture())
++        tests = []
++        class CaptureList(run.TestToolsTestRunner):
++            def list(self, test):
++                tests.append(set([case.id() for case
++                    in testtools.testsuite.iterate_tests(test)]))
++        out = StringIO()
++        program = run.TestProgram(
++            argv=['prog', '-l', 'testtools.runexample.test_suite'],
++            stdout=out, testRunner=CaptureList)
++        self.assertEqual([set(['testtools.runexample.TestFoo.test_bar',
++            'testtools.runexample.TestFoo.test_quux'])], tests)
++
+     def test_run_list(self):
+         self.useFixture(SampleTestFixture())
+         out = StringIO()
