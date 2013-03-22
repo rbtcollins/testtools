@@ -1,5 +1,5 @@
-Bottom: d23558b74b49edb198c142ba6e4ea5f74fb36f17
-Top:    096dce135f7e51d3550f15cce44c1f2c8a85410e
+Bottom: 578a5a1c449ac1b5e04d95feb5d5047af6b59456
+Top:    83af2a08a49adc4830061fd149e6deff66f461a0
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -24,7 +24,7 @@ index 7cc1d41..e08c6a6 100644
    stream compatibly with ``TestResult`` code. (Robert Collins)
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index e6dfb0a..2cee49d 100644
+index f052e4e..2629878 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -199,6 +199,17 @@ A ``StreamResult`` filter that adds or removes tags from events::

@@ -1,5 +1,5 @@
-Bottom: dc9ca450158f9f80a6d067a4417bee755e020e6a
-Top:    e2caf0058cc5525801a6643b459a452c54c2184e
+Bottom: eccac8ed1a003568f8e9abae3d174d8d538360d6
+Top:    609eea45dc635acb3f885fce77a0c1118da4b7e0
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -28,7 +28,7 @@ index 0258834..796e948 100644
  ~~~~~~
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index c5b3b3f..9baf160 100644
+index 5f397a0..8be1e22 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -249,6 +249,33 @@ passing the events via this decorator to get timestamped data. As long as
