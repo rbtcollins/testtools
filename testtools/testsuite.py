@@ -113,34 +113,27 @@ class ConcurrentTestSuite(unittest.TestSuite):
             queue.put(test)
 
 
-class ConcurrentStreamTestSuite(unittest.TestSuite):
+class ConcurrentStreamTestSuite(object):
     """A TestSuite whose run() parallelises."""
 
-    def __init__(self, suite, make_tests):
-        """Create a ConcurrentTestSuite to execute suite.
+    def __init__(self, make_tests):
+        """Create a ConcurrentTestSuite to execute tests returned by make_tests.
 
-        :param suite: A suite to run concurrently. Each test will be run in its
-            own thread.
-        :param make_tests: A helper function to split the tests in the
-            supplied suite into some number of concurrently executable
-            sub-suites. make_tests must take whatever the ``suite`` parameter
-            given to the constructor, and return an iterable
-            of tuples. Each tuple must be of the form (case, route_code), where
+        :param make_tests: A helper function that should return some number
+            of concurrently executable test suite / test case objects.
+            make_tests must take no parameters and return an iterable of
+            tuples. Each tuple must be of the form (case, route_code), where
             case is a TestCase-like object with a run(result) method, and
             route_code is either None or a unicode string.
         """
-        super(ConcurrentStreamTestSuite, self).__init__([suite])
+        super(ConcurrentStreamTestSuite, self).__init__()
         self.make_tests = make_tests
 
     def run(self, result):
         """Run the tests concurrently.
 
         This calls out to the provided make_tests helper to determine the
-        concurrency to use and to assign routing codes to each worker. It
-        is possible to also decorate or alter the tests in make_tests if
-        desired. Another option is to decorate or alter the tests when
-        you construct them. The right approach will depend on your test
-        framework and the extension points it offers you.
+        concurrency to use and to assign routing codes to each worker.
 
         ConcurrentTestSuite provides no special mechanism to stop the tests
         returned by make_tests, it is up to the made tests to honour the
@@ -157,7 +150,7 @@ class ConcurrentStreamTestSuite(unittest.TestSuite):
             calling startTestRun on this instance prior to invoking suite.run,
             and stopTestRun subsequent to the run method returning.
         """
-        tests = self.make_tests(self)
+        tests = self.make_tests()
         try:
             threads = {}
             queue = Queue()

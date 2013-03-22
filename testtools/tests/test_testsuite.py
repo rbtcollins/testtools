@@ -5,6 +5,7 @@
 __metaclass__ = type
 
 import doctest
+from functools import partial
 import sys
 import unittest
 
@@ -100,8 +101,8 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
         result = LoggingStream()
         test1 = Sample('test_method1')
         test2 = Sample('test_method2')
-        original_suite = unittest.TestSuite([test1, test2])
-        suite = ConcurrentStreamTestSuite(original_suite, self.split_suite)
+        cases = lambda:[(test1, '0'), (test2, '1')]
+        suite = ConcurrentStreamTestSuite(cases)
         suite.run(result)
         def freeze(set_or_none):
             if set_or_none is None:
@@ -172,14 +173,14 @@ class TestConcurrentStreamTestSuiteRun(TestCase):
             def run(self):
                 pass
         result = LoggingStream()
-        original_suite = unittest.TestSuite([BrokenTest()])
-        suite = ConcurrentStreamTestSuite(original_suite, self.split_suite)
+        cases = lambda:[(BrokenTest(), '0')]
+        suite = ConcurrentStreamTestSuite(cases)
         suite.run(result)
         events = result._events
         # Check the traceback loosely.
         self.assertThat(events[1][6].decode('utf8'), DocTestMatches("""\
 Traceback (most recent call last):
-  File "...testtools/testsuite.py", line 196, in _run_test
+  File "...testtools/testsuite.py", line ..., in _run_test
     test.run(process_result)
 TypeError: run() takes ...1 ...argument...2...given...
 """, doctest.ELLIPSIS))
