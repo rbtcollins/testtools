@@ -1,5 +1,5 @@
 Bottom: 836d6b4fdaa7a0ace3c82a2bdeeb85608587989f
-Top:    7c5a9d5d6bf28d2ff61610d0cd3e69d11dafa2c0
+Top:    eccac8ed1a003568f8e9abae3d174d8d538360d6
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -316,18 +316,19 @@ index 0d9cf9f..ea1d5af 100644
  
      def make_26_result(self):
 diff --git a/testtools/tests/test_testsuite.py b/testtools/tests/test_testsuite.py
-index 289beb9..69dc668 100644
+index 289beb9..578bda3 100644
 --- a/testtools/tests/test_testsuite.py
 +++ b/testtools/tests/test_testsuite.py
-@@ -4,6 +4,7 @@
+@@ -4,6 +4,8 @@
  
  __metaclass__ = type
  
 +import doctest
++from functools import partial
  import sys
  import unittest
  
-@@ -11,14 +12,17 @@ from extras import try_import
+@@ -11,14 +13,17 @@ from extras import try_import
  
  from testtools import (
      ConcurrentTestSuite,
@@ -346,7 +347,7 @@ index 289beb9..69dc668 100644
  
  FunctionFixture = try_import('fixtures.FunctionFixture')
  
-@@ -30,6 +34,7 @@ class Sample(TestCase):
+@@ -30,6 +35,7 @@ class Sample(TestCase):
      def test_method2(self):
          pass
  
@@ -354,7 +355,7 @@ index 289beb9..69dc668 100644
  class TestConcurrentTestSuiteRun(TestCase):
  
      def test_broken_test(self):
-@@ -89,6 +94,114 @@ class TestConcurrentTestSuiteRun(TestCase):
+@@ -89,6 +95,114 @@ class TestConcurrentTestSuiteRun(TestCase):
          return list(iterate_tests(suite))
  
  
@@ -364,8 +365,8 @@ index 289beb9..69dc668 100644
 +        result = LoggingStream()
 +        test1 = Sample('test_method1')
 +        test2 = Sample('test_method2')
-+        original_suite = unittest.TestSuite([test1, test2])
-+        suite = ConcurrentStreamTestSuite(original_suite, self.split_suite)
++        cases = lambda:[(test1, '0'), (test2, '1')]
++        suite = ConcurrentStreamTestSuite(cases)
 +        suite.run(result)
 +        def freeze(set_or_none):
 +            if set_or_none is None:
@@ -436,14 +437,14 @@ index 289beb9..69dc668 100644
 +            def run(self):
 +                pass
 +        result = LoggingStream()
-+        original_suite = unittest.TestSuite([BrokenTest()])
-+        suite = ConcurrentStreamTestSuite(original_suite, self.split_suite)
++        cases = lambda:[(BrokenTest(), '0')]
++        suite = ConcurrentStreamTestSuite(cases)
 +        suite.run(result)
 +        events = result._events
 +        # Check the traceback loosely.
 +        self.assertThat(events[1][6].decode('utf8'), DocTestMatches("""\
 +Traceback (most recent call last):
-+  File "...testtools/testsuite.py", line 196, in _run_test
++  File "...testtools/testsuite.py", line ..., in _run_test
 +    test.run(process_result)
 +TypeError: run() takes ...1 ...argument...2...given...
 +""", doctest.ELLIPSIS))
@@ -470,7 +471,7 @@ index 289beb9..69dc668 100644
  
      def setUp(self):
 diff --git a/testtools/testsuite.py b/testtools/testsuite.py
-index 0ffe6f3..d682481 100644
+index 0ffe6f3..04dd968 100644
 --- a/testtools/testsuite.py
 +++ b/testtools/testsuite.py
 @@ -5,6 +5,7 @@
@@ -481,38 +482,31 @@ index 0ffe6f3..d682481 100644
    'filter_by_ids',
    'iterate_tests',
    'sorted_tests',
-@@ -112,6 +113,97 @@ class ConcurrentTestSuite(unittest.TestSuite):
+@@ -112,6 +113,90 @@ class ConcurrentTestSuite(unittest.TestSuite):
              queue.put(test)
  
  
-+class ConcurrentStreamTestSuite(unittest.TestSuite):
++class ConcurrentStreamTestSuite(object):
 +    """A TestSuite whose run() parallelises."""
 +
-+    def __init__(self, suite, make_tests):
-+        """Create a ConcurrentTestSuite to execute suite.
++    def __init__(self, make_tests):
++        """Create a ConcurrentTestSuite to execute tests returned by make_tests.
 +
-+        :param suite: A suite to run concurrently. Each test will be run in its
-+            own thread.
-+        :param make_tests: A helper function to split the tests in the
-+            supplied suite into some number of concurrently executable
-+            sub-suites. make_tests must take whatever the ``suite`` parameter
-+            given to the constructor, and return an iterable
-+            of tuples. Each tuple must be of the form (case, route_code), where
++        :param make_tests: A helper function that should return some number
++            of concurrently executable test suite / test case objects.
++            make_tests must take no parameters and return an iterable of
++            tuples. Each tuple must be of the form (case, route_code), where
 +            case is a TestCase-like object with a run(result) method, and
 +            route_code is either None or a unicode string.
 +        """
-+        super(ConcurrentStreamTestSuite, self).__init__([suite])
++        super(ConcurrentStreamTestSuite, self).__init__()
 +        self.make_tests = make_tests
 +
 +    def run(self, result):
 +        """Run the tests concurrently.
 +
 +        This calls out to the provided make_tests helper to determine the
-+        concurrency to use and to assign routing codes to each worker. It
-+        is possible to also decorate or alter the tests in make_tests if
-+        desired. Another option is to decorate or alter the tests when
-+        you construct them. The right approach will depend on your test
-+        framework and the extension points it offers you.
++        concurrency to use and to assign routing codes to each worker.
 +
 +        ConcurrentTestSuite provides no special mechanism to stop the tests
 +        returned by make_tests, it is up to the made tests to honour the
@@ -529,7 +523,7 @@ index 0ffe6f3..d682481 100644
 +            calling startTestRun on this instance prior to invoking suite.run,
 +            and stopTestRun subsequent to the run method returning.
 +        """
-+        tests = self.make_tests(self)
++        tests = self.make_tests()
 +        try:
 +            threads = {}
 +            queue = Queue()
