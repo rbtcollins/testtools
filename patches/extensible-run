@@ -1,5 +1,5 @@
-Bottom: 2f07e40e9d56cefd92037bbecc846c6fa6a8cd1c
-Top:    9bd7626293cb852f5fbe217efba66db85c1ed9b4
+Bottom: df1e7f101594115d38817fc4cc3b2e30ef4d367f
+Top:    da80bc76a1968d5360c47a2e61118c3ec7bb78bf
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -24,7 +24,7 @@ index 61bad55..bdbcfd1 100644
    3.4. (Monty Taylor, Robert Collins, #1140688)
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 8be1e22..f052e4e 100644
+index 1d1d3e0..936f0f7 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -431,6 +431,13 @@ If you a writing custom wrapping suites, consider implementing filter_by_ids
