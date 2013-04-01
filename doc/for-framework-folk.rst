@@ -255,7 +255,7 @@ StreamResultRouter
 This is a ``StreamResult`` which forwards events to an arbitrary set of target
 ``StreamResult`` objects. Events that have no forwarding rule are passed onto
 an fallback ``StreamResult`` for processing. The mapping can be changed at
-runtime, allowing great flexability and responsiveness to changes. Because
+runtime, allowing great flexibility and responsiveness to changes. Because
 The mapping can change dynamically and there could be the same recipient for
 two different maps, ``startTestRun`` and ``stopTestRun`` handling is fine
 grained and up to the user.
