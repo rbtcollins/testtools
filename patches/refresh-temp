@@ -1,0 +1,22 @@
+Bottom: 2f07e40e9d56cefd92037bbecc846c6fa6a8cd1c
+Top:    df1e7f101594115d38817fc4cc3b2e30ef4d367f
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-04-01 17:34:23 +1300
+
+Refresh of streamresult-router
+
+---
+
+diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
+index 8be1e22..1d1d3e0 100644
+--- a/doc/for-framework-folk.rst
++++ b/doc/for-framework-folk.rst
+@@ -255,7 +255,7 @@ StreamResultRouter
+ This is a ``StreamResult`` which forwards events to an arbitrary set of target
+ ``StreamResult`` objects. Events that have no forwarding rule are passed onto
+ an fallback ``StreamResult`` for processing. The mapping can be changed at
+-runtime, allowing great flexability and responsiveness to changes. Because
++runtime, allowing great flexibility and responsiveness to changes. Because
+ The mapping can change dynamically and there could be the same recipient for
+ two different maps, ``startTestRun`` and ``stopTestRun`` handling is fine
+ grained and up to the user.
