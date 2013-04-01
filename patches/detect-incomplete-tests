@@ -1,5 +1,5 @@
-Bottom: 9d9568d14f9d19bed057e5e6cfbbdc9bc5039116
-Top:    4e8ecc8b26fe7ab707a793b24a25d5d683e65f7a
+Bottom: 9bd7626293cb852f5fbe217efba66db85c1ed9b4
+Top:    60be510e21534a7d2cce4af66d3bee449c853001
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-16 19:45:05 +1300
 
@@ -9,7 +9,7 @@ Add IncompleteTestDetector, for detecting incomplete tests.
 ---
 
 diff --git a/NEWS b/NEWS
-index 7cc1d41..e08c6a6 100644
+index bdbcfd1..02bcf22 100644
 --- a/NEWS
 +++ b/NEWS
 @@ -34,6 +34,10 @@ Improvements
