@@ -1,5 +1,5 @@
 Bottom: da80bc76a1968d5360c47a2e61118c3ec7bb78bf
-Top:    da80bc76a1968d5360c47a2e61118c3ec7bb78bf
+Top:    0cf6da0b68b2f5ae61909a53bcfcd9145d6d6789
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-04-02 07:50:29 +1300
 
@@ -8,4 +8,27 @@ ExtendedToStreamDecorator wasn't using kwargs consistently.
 
 ---
 
-
+diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
+index 41b9d63..bc9b703 100644
+--- a/testtools/testresult/real.py
++++ b/testtools/testresult/real.py
+@@ -1312,7 +1312,7 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+     def startTest(self, test):
+         if not self._started:
+             self.startTestRun()
+-        self.status(test.id(), 'inprogress', timestamp=self._now())
++        self.status(test_id=test.id(), test_status='inprogress', timestamp=self._now())
+         self._tags = TagContext(self._tags)
+ 
+     def stopTest(self, test):
+@@ -1344,8 +1344,8 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
+             self.status(file_name='reason', file_bytes=reason.encode('utf8'),
+                 eof=True, mime_type="text/plain; charset=utf8",
+                 test_id=test_id, timestamp=now)
+-        self.status(test_id, status, test_tags=self.current_tags,
+-            timestamp=now)
++        self.status(test_id=test_id, test_status=status,
++            test_tags=self.current_tags, timestamp=now)
+ 
+     def addExpectedFailure(self, test, err=None, details=None):
+         self._check_args(err, details)
