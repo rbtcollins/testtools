@@ -1,5 +1,5 @@
 Bottom: c209d2408434b68cc97462775ae12fbbbf10da0c
-Top:    2f07e40e9d56cefd92037bbecc846c6fa6a8cd1c
+Top:    df1e7f101594115d38817fc4cc3b2e30ef4d367f
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-23 01:56:47 +1300
 
@@ -28,7 +28,7 @@ index 0258834..61bad55 100644
    3.4. (Monty Taylor, Robert Collins, #1140688)
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 5f397a0..8be1e22 100644
+index 5f397a0..1d1d3e0 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -249,6 +249,33 @@ passing the events via this decorator to get timestamped data. As long as
@@ -41,7 +41,7 @@ index 5f397a0..8be1e22 100644
 +This is a ``StreamResult`` which forwards events to an arbitrary set of target
 +``StreamResult`` objects. Events that have no forwarding rule are passed onto
 +an fallback ``StreamResult`` for processing. The mapping can be changed at
-+runtime, allowing great flexability and responsiveness to changes. Because
++runtime, allowing great flexibility and responsiveness to changes. Because
 +The mapping can change dynamically and there could be the same recipient for
 +two different maps, ``startTestRun`` and ``stopTestRun`` handling is fine
 +grained and up to the user.
