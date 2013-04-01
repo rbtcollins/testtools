@@ -1,0 +1,12 @@
+Bottom: 0cf6da0b68b2f5ae61909a53bcfcd9145d6d6789
+Top:    0cf6da0b68b2f5ae61909a53bcfcd9145d6d6789
+Author: Robert Collins <robertc@robertcollins.net>
+Date:   2013-04-02 07:59:41 +1300
+
+DecorateTestCaseResult was missing some used attributes in its exclusion of
+forwarded attributes.
+
+
+---
+
+
