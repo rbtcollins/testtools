@@ -1,5 +1,5 @@
 Bottom: c209d2408434b68cc97462775ae12fbbbf10da0c
-Top:    e01b7178a8e28b2545a95aa972faf1bfad76b694
+Top:    f43eeca1dd7218d0e04fc7be1b4a4a20e0b26e3e
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-23 01:56:47 +1300
 
@@ -242,7 +242,7 @@ index bad2a3a..b7fdf52 100644
      """Adds or discards tags from StreamResult events."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 9726c4b..274c189 100644
+index 9726c4b..04dc7ce 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -28,6 +28,7 @@ from testtools import (
@@ -306,30 +306,30 @@ index 9726c4b..274c189 100644
 +            ],
 +            fallback._events)
 +
-+    def test_map_bad_policy(self):
++    def test_add_rule_bad_policy(self):
 +        router = StreamResultRouter()
 +        target = LoggingStreamResult()
-+        self.assertRaises(ValueError, router.map, target, 'route_code_prefixa',
++        self.assertRaises(ValueError, router.add_rule, target, 'route_code_prefixa',
 +            route_prefix='0')
 +
-+    def test_map_extra_policy_arg(self):
++    def test_add_rule_extra_policy_arg(self):
 +        router = StreamResultRouter()
 +        target = LoggingStreamResult()
-+        self.assertRaises(TypeError, router.map, target, 'route_code_prefix',
++        self.assertRaises(TypeError, router.add_rule, target, 'route_code_prefix',
 +            route_prefix='0', foo=1)
 +
-+    def test_map_missing_prefix(self):
++    def test_add_rule_missing_prefix(self):
 +        router = StreamResultRouter()
 +        target = LoggingStreamResult()
-+        self.assertRaises(TypeError, router.map, target, 'route_code_prefix')
++        self.assertRaises(TypeError, router.add_rule, target, 'route_code_prefix')
 +
-+    def test_map_slash_in_prefix(self):
++    def test_add_rule_slash_in_prefix(self):
 +        router = StreamResultRouter()
 +        target = LoggingStreamResult()
-+        self.assertRaises(TypeError, router.map, target, 'route_code_prefix',
++        self.assertRaises(TypeError, router.add_rule, target, 'route_code_prefix',
 +            route_prefix='0/')
 +
-+    def test_map_route_code_consume_False(self):
++    def test_add_rule_route_code_consume_False(self):
 +        fallback = LoggingStreamResult()
 +        target = LoggingStreamResult()
 +        router = StreamResultRouter(fallback)
@@ -350,7 +350,7 @@ index 9726c4b..274c189 100644
 +            ],
 +            fallback._events)
 +
-+    def test_map_route_code_consume_True(self):
++    def test_add_rule_route_code_consume_True(self):
 +        fallback = LoggingStreamResult()
 +        target = LoggingStreamResult()
 +        router = StreamResultRouter(fallback)
@@ -372,7 +372,7 @@ index 9726c4b..274c189 100644
 +            ],
 +            fallback._events)
 +
-+    def test_map_test_id(self):
++    def test_add_rule_test_id(self):
 +        nontest = LoggingStreamResult()
 +        test = LoggingStreamResult()
 +        router = StreamResultRouter(test)
@@ -386,7 +386,7 @@ index 9726c4b..274c189 100644
 +            ('status', None, None, None, True, 'bar', b'', False, None, None,
 +             None),], nontest._events)
 +
-+    def test_map_do_start_stop_run(self):
++    def test_add_rule_do_start_stop_run(self):
 +        nontest = LoggingStreamResult()
 +        router = StreamResultRouter()
 +        router.add_rule(nontest, 'test_id', test_id=None, do_start_stop_run=True)
@@ -397,7 +397,7 @@ index 9726c4b..274c189 100644
 +            ('stopTestRun',),
 +            ], nontest._events)
 +
-+    def test_map_do_start_stop_run_after_startTestRun(self):
++    def test_add_rule_do_start_stop_run_after_startTestRun(self):
 +        nontest = LoggingStreamResult()
 +        router = StreamResultRouter()
 +        router.startTestRun()
