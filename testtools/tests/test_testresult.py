@@ -1736,30 +1736,30 @@ class TestStreamResultRouter(TestCase):
             ],
             fallback._events)
 
-    def test_map_bad_policy(self):
+    def test_add_rule_bad_policy(self):
         router = StreamResultRouter()
         target = LoggingStreamResult()
-        self.assertRaises(ValueError, router.map, target, 'route_code_prefixa',
+        self.assertRaises(ValueError, router.add_rule, target, 'route_code_prefixa',
             route_prefix='0')
 
-    def test_map_extra_policy_arg(self):
+    def test_add_rule_extra_policy_arg(self):
         router = StreamResultRouter()
         target = LoggingStreamResult()
-        self.assertRaises(TypeError, router.map, target, 'route_code_prefix',
+        self.assertRaises(TypeError, router.add_rule, target, 'route_code_prefix',
             route_prefix='0', foo=1)
 
-    def test_map_missing_prefix(self):
+    def test_add_rule_missing_prefix(self):
         router = StreamResultRouter()
         target = LoggingStreamResult()
-        self.assertRaises(TypeError, router.map, target, 'route_code_prefix')
+        self.assertRaises(TypeError, router.add_rule, target, 'route_code_prefix')
 
-    def test_map_slash_in_prefix(self):
+    def test_add_rule_slash_in_prefix(self):
         router = StreamResultRouter()
         target = LoggingStreamResult()
-        self.assertRaises(TypeError, router.map, target, 'route_code_prefix',
+        self.assertRaises(TypeError, router.add_rule, target, 'route_code_prefix',
             route_prefix='0/')
 
-    def test_map_route_code_consume_False(self):
+    def test_add_rule_route_code_consume_False(self):
         fallback = LoggingStreamResult()
         target = LoggingStreamResult()
         router = StreamResultRouter(fallback)
@@ -1780,7 +1780,7 @@ class TestStreamResultRouter(TestCase):
             ],
             fallback._events)
 
-    def test_map_route_code_consume_True(self):
+    def test_add_rule_route_code_consume_True(self):
         fallback = LoggingStreamResult()
         target = LoggingStreamResult()
         router = StreamResultRouter(fallback)
@@ -1802,7 +1802,7 @@ class TestStreamResultRouter(TestCase):
             ],
             fallback._events)
 
-    def test_map_test_id(self):
+    def test_add_rule_test_id(self):
         nontest = LoggingStreamResult()
         test = LoggingStreamResult()
         router = StreamResultRouter(test)
@@ -1816,7 +1816,7 @@ class TestStreamResultRouter(TestCase):
             ('status', None, None, None, True, 'bar', b'', False, None, None,
              None),], nontest._events)
 
-    def test_map_do_start_stop_run(self):
+    def test_add_rule_do_start_stop_run(self):
         nontest = LoggingStreamResult()
         router = StreamResultRouter()
         router.add_rule(nontest, 'test_id', test_id=None, do_start_stop_run=True)
@@ -1827,7 +1827,7 @@ class TestStreamResultRouter(TestCase):
             ('stopTestRun',),
             ], nontest._events)
 
-    def test_map_do_start_stop_run_after_startTestRun(self):
+    def test_add_rule_do_start_stop_run_after_startTestRun(self):
         nontest = LoggingStreamResult()
         router = StreamResultRouter()
         router.startTestRun()
