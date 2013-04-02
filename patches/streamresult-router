@@ -1,5 +1,5 @@
 Bottom: c209d2408434b68cc97462775ae12fbbbf10da0c
-Top:    df1e7f101594115d38817fc4cc3b2e30ef4d367f
+Top:    e01b7178a8e28b2545a95aa972faf1bfad76b694
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-03-23 01:56:47 +1300
 
@@ -28,7 +28,7 @@ index 0258834..61bad55 100644
    3.4. (Monty Taylor, Robert Collins, #1140688)
  
 diff --git a/doc/for-framework-folk.rst b/doc/for-framework-folk.rst
-index 5f397a0..1d1d3e0 100644
+index 5f397a0..8846025 100644
 --- a/doc/for-framework-folk.rst
 +++ b/doc/for-framework-folk.rst
 @@ -249,6 +249,33 @@ passing the events via this decorator to get timestamped data. As long as
@@ -52,7 +52,7 @@ index 5f397a0..1d1d3e0 100644
 +
 +    >>> router = StreamResultRouter()
 +    >>> sink = doubles.StreamResult()
-+    >>> router.map(sink, 'route_code_prefix', route_prefix='0',
++    >>> router.add_rule(sink, 'route_code_prefix', route_prefix='0',
 +    ...     consume_route=True)
 +    >>> router.status(test_id='foo', route_code='0/1', test_status='uxsuccess')
 +
@@ -106,7 +106,7 @@ index bdef369..5bf8f9c 100644
      StreamTagger,
      StreamToDict,
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index bad2a3a..41b9d63 100644
+index bad2a3a..b7fdf52 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -427,6 +427,131 @@ class StreamFailFast(StreamResult):
@@ -126,7 +126,7 @@ index bad2a3a..41b9d63 100644
 +
 +      >>> router = StreamResultRouter()
 +      >>> sink = doubles.StreamResult()
-+      >>> router.map(sink, 'route_code_prefix', route_prefix='0',
++      >>> router.add_rule(sink, 'route_code_prefix', route_prefix='0',
 +      ...     consume_route=True)
 +      >>> router.status(test_id='foo', route_code='0/1', test_status='uxsuccess')
 +
@@ -143,7 +143,7 @@ index bad2a3a..41b9d63 100644
 +    the behaviour is undefined. Only a single route is chosen for any event.
 +    """
 +
-+    policies = {}
++    _policies = {}
 +
 +    def __init__(self, fallback=None, do_start_stop_run=True):
 +        """Construct a StreamResultRouter with optional fallback.
@@ -194,8 +194,8 @@ index bad2a3a..41b9d63 100644
 +            target = self.fallback
 +        target.status(**kwargs)
 +
-+    def map(self, sink, policy, do_start_stop_run=False, **policy_args):
-+        """Route events to sink when they match a given policy.
++    def add_rule(self, sink, policy, do_start_stop_run=False, **policy_args):
++        """Add a rule to route events to sink when they match a given policy.
 +
 +        :param sink: A StreamResult to receive events.
 +        :param policy: A routing policy. Valid policies are
@@ -217,7 +217,7 @@ index bad2a3a..41b9d63 100644
 +        :raises: ValueError if the policy is unknown
 +        :raises: TypeError if the policy is given arguments it cannot handle.
 +        """
-+        policy_method = StreamResultRouter.policies.get(policy, None)
++        policy_method = StreamResultRouter._policies.get(policy, None)
 +        if not policy_method:
 +            raise ValueError("bad policy %r" % (policy,))
 +        policy_method(self, sink, **policy_args)
@@ -231,18 +231,18 @@ index bad2a3a..41b9d63 100644
 +            raise TypeError(
 +                "%r is more than one route step long" % (route_prefix,))
 +        self._route_code_prefixes[route_prefix] = (sink, consume_route)
-+    policies['route_code_prefix'] = _map_route_code_prefix
++    _policies['route_code_prefix'] = _map_route_code_prefix
 +
 +    def _map_test_id(self, sink, test_id):
 +        self._test_ids[test_id] = sink
-+    policies['test_id'] = _map_test_id
++    _policies['test_id'] = _map_test_id
 +
 +
  class StreamTagger(CopyStreamResult):
      """Adds or discards tags from StreamResult events."""
  
 diff --git a/testtools/tests/test_testresult.py b/testtools/tests/test_testresult.py
-index 9726c4b..e2643f7 100644
+index 9726c4b..274c189 100644
 --- a/testtools/tests/test_testresult.py
 +++ b/testtools/tests/test_testresult.py
 @@ -28,6 +28,7 @@ from testtools import (
@@ -333,7 +333,7 @@ index 9726c4b..e2643f7 100644
 +        fallback = LoggingStreamResult()
 +        target = LoggingStreamResult()
 +        router = StreamResultRouter(fallback)
-+        router.map(target, 'route_code_prefix', route_prefix='0')
++        router.add_rule(target, 'route_code_prefix', route_prefix='0')
 +        router.status(test_id='foo', route_code='0')
 +        router.status(test_id='foo', route_code='0/1')
 +        router.status(test_id='foo')
@@ -354,7 +354,7 @@ index 9726c4b..e2643f7 100644
 +        fallback = LoggingStreamResult()
 +        target = LoggingStreamResult()
 +        router = StreamResultRouter(fallback)
-+        router.map(
++        router.add_rule(
 +            target, 'route_code_prefix', route_prefix='0', consume_route=True)
 +        router.status(test_id='foo', route_code='0') # -> None
 +        router.status(test_id='foo', route_code='0/1') # -> 1
@@ -376,7 +376,7 @@ index 9726c4b..e2643f7 100644
 +        nontest = LoggingStreamResult()
 +        test = LoggingStreamResult()
 +        router = StreamResultRouter(test)
-+        router.map(nontest, 'test_id', test_id=None)
++        router.add_rule(nontest, 'test_id', test_id=None)
 +        router.status(test_id='foo', file_name="bar", file_bytes=b'')
 +        router.status(file_name="bar", file_bytes=b'')
 +        self.assertEqual([
@@ -389,7 +389,7 @@ index 9726c4b..e2643f7 100644
 +    def test_map_do_start_stop_run(self):
 +        nontest = LoggingStreamResult()
 +        router = StreamResultRouter()
-+        router.map(nontest, 'test_id', test_id=None, do_start_stop_run=True)
++        router.add_rule(nontest, 'test_id', test_id=None, do_start_stop_run=True)
 +        router.startTestRun()
 +        router.stopTestRun()
 +        self.assertEqual([
@@ -401,7 +401,7 @@ index 9726c4b..e2643f7 100644
 +        nontest = LoggingStreamResult()
 +        router = StreamResultRouter()
 +        router.startTestRun()
-+        router.map(nontest, 'test_id', test_id=None, do_start_stop_run=True)
++        router.add_rule(nontest, 'test_id', test_id=None, do_start_stop_run=True)
 +        router.stopTestRun()
 +        self.assertEqual([
 +            ('startTestRun',),
