@@ -440,7 +440,7 @@ class StreamResultRouter(StreamResult):
 
       >>> router = StreamResultRouter()
       >>> sink = doubles.StreamResult()
-      >>> router.map(sink, 'route_code_prefix', route_prefix='0',
+      >>> router.add_rule(sink, 'route_code_prefix', route_prefix='0',
       ...     consume_route=True)
       >>> router.status(test_id='foo', route_code='0/1', test_status='uxsuccess')
 
@@ -457,7 +457,7 @@ class StreamResultRouter(StreamResult):
     the behaviour is undefined. Only a single route is chosen for any event.
     """
 
-    policies = {}
+    _policies = {}
 
     def __init__(self, fallback=None, do_start_stop_run=True):
         """Construct a StreamResultRouter with optional fallback.
@@ -508,8 +508,8 @@ class StreamResultRouter(StreamResult):
             target = self.fallback
         target.status(**kwargs)
 
-    def map(self, sink, policy, do_start_stop_run=False, **policy_args):
-        """Route events to sink when they match a given policy.
+    def add_rule(self, sink, policy, do_start_stop_run=False, **policy_args):
+        """Add a rule to route events to sink when they match a given policy.
 
         :param sink: A StreamResult to receive events.
         :param policy: A routing policy. Valid policies are
@@ -531,7 +531,7 @@ class StreamResultRouter(StreamResult):
         :raises: ValueError if the policy is unknown
         :raises: TypeError if the policy is given arguments it cannot handle.
         """
-        policy_method = StreamResultRouter.policies.get(policy, None)
+        policy_method = StreamResultRouter._policies.get(policy, None)
         if not policy_method:
             raise ValueError("bad policy %r" % (policy,))
         policy_method(self, sink, **policy_args)
@@ -545,11 +545,11 @@ class StreamResultRouter(StreamResult):
             raise TypeError(
                 "%r is more than one route step long" % (route_prefix,))
         self._route_code_prefixes[route_prefix] = (sink, consume_route)
-    policies['route_code_prefix'] = _map_route_code_prefix
+    _policies['route_code_prefix'] = _map_route_code_prefix
 
     def _map_test_id(self, sink, test_id):
         self._test_ids[test_id] = sink
-    policies['test_id'] = _map_test_id
+    _policies['test_id'] = _map_test_id
 
 
 class StreamTagger(CopyStreamResult):

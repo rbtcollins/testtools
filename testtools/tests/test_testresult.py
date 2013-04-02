@@ -1763,7 +1763,7 @@ class TestStreamResultRouter(TestCase):
         fallback = LoggingStreamResult()
         target = LoggingStreamResult()
         router = StreamResultRouter(fallback)
-        router.map(target, 'route_code_prefix', route_prefix='0')
+        router.add_rule(target, 'route_code_prefix', route_prefix='0')
         router.status(test_id='foo', route_code='0')
         router.status(test_id='foo', route_code='0/1')
         router.status(test_id='foo')
@@ -1784,7 +1784,7 @@ class TestStreamResultRouter(TestCase):
         fallback = LoggingStreamResult()
         target = LoggingStreamResult()
         router = StreamResultRouter(fallback)
-        router.map(
+        router.add_rule(
             target, 'route_code_prefix', route_prefix='0', consume_route=True)
         router.status(test_id='foo', route_code='0') # -> None
         router.status(test_id='foo', route_code='0/1') # -> 1
@@ -1806,7 +1806,7 @@ class TestStreamResultRouter(TestCase):
         nontest = LoggingStreamResult()
         test = LoggingStreamResult()
         router = StreamResultRouter(test)
-        router.map(nontest, 'test_id', test_id=None)
+        router.add_rule(nontest, 'test_id', test_id=None)
         router.status(test_id='foo', file_name="bar", file_bytes=b'')
         router.status(file_name="bar", file_bytes=b'')
         self.assertEqual([
@@ -1819,7 +1819,7 @@ class TestStreamResultRouter(TestCase):
     def test_map_do_start_stop_run(self):
         nontest = LoggingStreamResult()
         router = StreamResultRouter()
-        router.map(nontest, 'test_id', test_id=None, do_start_stop_run=True)
+        router.add_rule(nontest, 'test_id', test_id=None, do_start_stop_run=True)
         router.startTestRun()
         router.stopTestRun()
         self.assertEqual([
@@ -1831,7 +1831,7 @@ class TestStreamResultRouter(TestCase):
         nontest = LoggingStreamResult()
         router = StreamResultRouter()
         router.startTestRun()
-        router.map(nontest, 'test_id', test_id=None, do_start_stop_run=True)
+        router.add_rule(nontest, 'test_id', test_id=None, do_start_stop_run=True)
         router.stopTestRun()
         self.assertEqual([
             ('startTestRun',),

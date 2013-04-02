@@ -266,7 +266,7 @@ For instance::
 
     >>> router = StreamResultRouter()
     >>> sink = doubles.StreamResult()
-    >>> router.map(sink, 'route_code_prefix', route_prefix='0',
+    >>> router.add_rule(sink, 'route_code_prefix', route_prefix='0',
     ...     consume_route=True)
     >>> router.status(test_id='foo', route_code='0/1', test_status='uxsuccess')
 
