@@ -1,9 +1,8 @@
 Version: 1
-Previous: a724ac923c3efca25a77e2479e9ba7b9ffacafbe
-Head: 4a64b24f294d177bb4214276f06ae839156285c8
+Previous: b8c5653988715cced5f4fb54d72aad6b80078ac3
+Head: dbe3be7611005fe3dc5ea211ba0a9dfcecd3a5bc
 Applied:
-  use-kwargs-extended-to-stream: 8bc364a1e814a71f16cb65716df163d58ad7203f
-  decorate-test-case-result-hygiene: 4a64b24f294d177bb4214276f06ae839156285c8
+  decorate-test-case-result-hygiene: dbe3be7611005fe3dc5ea211ba0a9dfcecd3a5bc
 Unapplied:
   detect-incomplete-tests: eb8a4496cd3c314d1ef21ed3be328172ecaea880
 Hidden:
