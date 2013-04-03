@@ -1,5 +1,5 @@
-Bottom: da80bc76a1968d5360c47a2e61118c3ec7bb78bf
-Top:    0cf6da0b68b2f5ae61909a53bcfcd9145d6d6789
+Bottom: 169060180bc0a934ce5f95c2f7f527dc3f2b329a
+Top:    eb70b4eb565e1ea8258ed8f9d9b934a43b4b7f7d
 Author: Robert Collins <robertc@robertcollins.net>
 Date:   2013-04-02 07:50:29 +1300
 
@@ -9,7 +9,7 @@ ExtendedToStreamDecorator wasn't using kwargs consistently.
 ---
 
 diff --git a/testtools/testresult/real.py b/testtools/testresult/real.py
-index 41b9d63..bc9b703 100644
+index b7fdf52..1fbf614 100644
 --- a/testtools/testresult/real.py
 +++ b/testtools/testresult/real.py
 @@ -1312,7 +1312,7 @@ class ExtendedToStreamDecorator(CopyStreamResult, StreamSummary, TestControl):
