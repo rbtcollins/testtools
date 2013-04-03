@@ -1,7 +1,7 @@
 Bottom: 169060180bc0a934ce5f95c2f7f527dc3f2b329a
 Top:    eb70b4eb565e1ea8258ed8f9d9b934a43b4b7f7d
 Author: Robert Collins <robertc@robertcollins.net>
-Date:   2013-04-02 07:50:29 +1300
+Date:   2013-04-04 00:32:49 +1300
 
 ExtendedToStreamDecorator wasn't using kwargs consistently.
 

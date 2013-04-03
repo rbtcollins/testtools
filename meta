@@ -1,9 +1,9 @@
 Version: 1
-Previous: 8a2cb25461d009b6b3adb1d762f1d15d003947b8
-Head: c25037980329bf7dc97e97c490c19da3269ce172
+Previous: 19d452ef6e8ceccaf6a483de747f493192d75bff
+Head: f72a533be96968369050b751a83f67b8c7551c84
 Applied:
-  extensible-run: 43f565ef2c1c7c13d0b127081c7dae9ebe691275
-  use-kwargs-extended-to-stream: c25037980329bf7dc97e97c490c19da3269ce172
+  extensible-run: b2ffba2c265d1c8f8ddbedc6594d11937d60badb
+  use-kwargs-extended-to-stream: f72a533be96968369050b751a83f67b8c7551c84
 Unapplied:
   decorate-test-case-result-hygiene: 49d987281da8ad3f83ac2bc6cb8a5a85cfdb3708
   detect-incomplete-tests: eb8a4496cd3c314d1ef21ed3be328172ecaea880
