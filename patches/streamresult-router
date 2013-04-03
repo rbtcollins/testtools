@@ -1,7 +1,7 @@
-Bottom: c209d2408434b68cc97462775ae12fbbbf10da0c
-Top:    f43eeca1dd7218d0e04fc7be1b4a4a20e0b26e3e
+Bottom: baca4dc8fe66d994e845b6883c6656830ac86235
+Top:    95ab5825bd217451470d8b48d0707e7f29ec263f
 Author: Robert Collins <robertc@robertcollins.net>
-Date:   2013-03-23 01:56:47 +1300
+Date:   2013-04-03 13:11:33 +1300
 
 Add a StreamResult Router.
 
@@ -13,10 +13,10 @@ a fallback stream.
 ---
 
 diff --git a/NEWS b/NEWS
-index 0258834..61bad55 100644
+index 781747b..e7ece2d 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -85,6 +85,10 @@ Improvements
+@@ -87,6 +87,10 @@ Improvements
  * ``PlaceHolder`` can now hold timestamps, and applies them before the test and
    then before the outcome. (Robert Collins)
  

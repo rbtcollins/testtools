@@ -1,8 +1,8 @@
 Version: 1
-Previous: 96c9fb786a4cc7af39646b256b50950bae0bd585
-Head: 44b863dbed607c37be39b9d2edbce3821cfa1cf1
+Previous: 527e7c56cfe1630f35354d7ba8a0d344104f362a
+Head: 088f82f4ddd9e1e02d9c81ecbaf1f971442891a2
 Applied:
-  streamresult-router: 44b863dbed607c37be39b9d2edbce3821cfa1cf1
+  streamresult-router: 088f82f4ddd9e1e02d9c81ecbaf1f971442891a2
 Unapplied:
   extensible-run: 5cf9305f070bd4b7fb50250eb2ff805718370a4e
   use-kwargs-extended-to-stream: 8a223403ce96f2527c6aab64e7cdaf7bbf45f388
