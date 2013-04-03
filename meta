@@ -1,9 +1,9 @@
 Version: 1
-Previous: 0e2d63ac34474a686c789ac9436b1dda24c2ffb9
-Head: fda4549fc816985aa51945588eb019f1c5146d46
+Previous: d412d5aa64c96a1d06a3f7b0c2c2d264dda5ee78
+Head: 759ea5858fe55421fe8e99c178eb3d48a67bb9a6
 Applied:
   use-kwargs-extended-to-stream: fda4549fc816985aa51945588eb019f1c5146d46
+  decorate-test-case-result-hygiene: 759ea5858fe55421fe8e99c178eb3d48a67bb9a6
 Unapplied:
-  decorate-test-case-result-hygiene: 49d987281da8ad3f83ac2bc6cb8a5a85cfdb3708
   detect-incomplete-tests: eb8a4496cd3c314d1ef21ed3be328172ecaea880
 Hidden:
