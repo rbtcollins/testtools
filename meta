@@ -1,10 +1,10 @@
 Version: 1
-Previous: 527e7c56cfe1630f35354d7ba8a0d344104f362a
-Head: 088f82f4ddd9e1e02d9c81ecbaf1f971442891a2
+Previous: 008162d2ac8d9b553f8fda7b602cbecdbff404c8
+Head: d561afcacfdb1a4481b36837f259ad510eba9dce
 Applied:
   streamresult-router: 088f82f4ddd9e1e02d9c81ecbaf1f971442891a2
+  extensible-run: d561afcacfdb1a4481b36837f259ad510eba9dce
 Unapplied:
-  extensible-run: 5cf9305f070bd4b7fb50250eb2ff805718370a4e
   use-kwargs-extended-to-stream: 8a223403ce96f2527c6aab64e7cdaf7bbf45f388
   decorate-test-case-result-hygiene: 49d987281da8ad3f83ac2bc6cb8a5a85cfdb3708
   detect-incomplete-tests: eb8a4496cd3c314d1ef21ed3be328172ecaea880
