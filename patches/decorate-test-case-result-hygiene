@@ -1,7 +1,7 @@
 Bottom: eb70b4eb565e1ea8258ed8f9d9b934a43b4b7f7d
 Top:    2137fd4bd686cabc01c898987f8ee28780bf7142
 Author: Robert Collins <robertc@robertcollins.net>
-Date:   2013-04-02 07:59:41 +1300
+Date:   2013-04-04 00:41:39 +1300
 
 DecorateTestCaseResult was missing some used attributes in its exclusion of
 forwarded attributes.
