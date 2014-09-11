@@ -15,7 +15,7 @@ import sys
 
 from extras import safe_hasattr
 
-from testtools import TextTestResult, testcase
+from testtools import server, TextTestResult, testcase
 from testtools.compat import classtypes, istext, unicode_output_stream
 from testtools.testsuite import filter_by_ids, iterate_tests, sorted_tests
 
@@ -256,6 +256,9 @@ class TestProgram(object):
         if len(argv) > 1 and argv[1].lower() == 'discover':
             self._do_discovery(argv[2:])
             return
+        if len(argv) > 2 and argv[1] == 'serve':
+            self._do_serve(argv)
+            return
 
         import getopt
         long_opts = ['help', 'verbose', 'quiet', 'failfast', 'catch', 'buffer',
@@ -375,6 +378,18 @@ class TestProgram(object):
         # keys.
         loaded = loader.discover(start_dir, pattern, top_level_dir)
         self.test = sorted_tests(loaded)
+
+    def _do_serve(self, argv):
+        # handle command line args for test discovery
+        self.progName = '%s serve' % self.progName
+        import optparse
+        parser = optparse.OptionParser()
+        parser.prog = self.progName
+        # There are no serve specific options yet.
+        options, args = parser.parse_args(argv[2:])
+        run_argv = args
+        test_server = server.Server(run_argv)
+        sys.exit(test_server.serve())
 
     def runTests(self):
         if (self.catchbreak

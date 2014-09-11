@@ -449,5 +449,47 @@ To facilitate custom listing of tests, ``testtools.run.TestProgram`` attempts
 to call ``list`` on the ``TestRunner``, falling back to a generic
 implementation if it is not present.
 
+The test server
+---------------
+
+``testtools.run`` can be put into server mode by passing ``serve --`` at the
+beginning of the arguments. The server will startup and attempt to load your
+test suite. Rather than running it, or listing the tests, it will stop and
+wait for your instructions. The server is extensible - e.g. Subunit extends
+it to accept and emit the subunit prototocol.
+
+The following commands are available:
+
+* ``list-tests``: This will enumerate your tests the same as the ``-l`` option.
+* ``run-tests``: This will run your tests.
+* ``std-in``: This will connect you to the standard in of a command that hasn't
+  completed (e.g. because its sitting in a debugger). ``~`` straight after a
+  new line will be handled by the server, not the command. ``~~`` will bypass
+  that and pass a single ``~`` to the command. To break out of stdin, start a
+  new line and type ``~.`` - note that this the same escape as ssh uses, so if
+  you are ssh'd into a machine, you will need ``~~.``. If the command exits,
+  you are returned to the server itself automatically.
+* ``force-quit```: This will end the process with prejuidice. Normally just
+  closing the server control channel is enough to shutdown cleanly - if there
+  is a hung test then the quit command may be useful. Warning: force-quit does
+  not wait for background threads (which the test suite is) to exit: as such it
+  does not run exception handlers in any hung *or active* tests.
+
+The ``list-tests`` and ``run-tests`` commands accept all the parameter that
+do not affect test discovery: you can filter tests with ``--load-list``, turn
+on fail-fast etc.
+
+Many users will not need or care about the server. Users with very large or
+slow-to-import test suite (e.g. 10's of thousands of tests) may well find
+the ability to incrementally refine some sporadic problem useful. The server is
+intended to assist in high performance testing in distributed environments
+where some external agent is scheduling tests on multiple CPUs or even machines
+and wishes to use an online scheduler (e.g. delivering work just-in-time)
+rather than with the current choice between one-shot up-front calculation and
+death by a thousand repeats of test instantiation and discovery.
+
+The server will exit 0 unless some catastrophic error occurs - e.g. the tests
+cannot be loaded, or it is killed by a signal.
+
 .. _unittest: http://docs.python.org/library/unittest.html
 .. _fixture: http://pypi.python.org/pypi/fixtures

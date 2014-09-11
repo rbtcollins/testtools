@@ -2,6 +2,7 @@
 
 """Tests for the test runner logic."""
 
+import os
 from unittest import TestSuite
 import sys
 from textwrap import dedent
@@ -52,6 +53,34 @@ def test_suite():
 
         def setUp(self):
             super(SampleTestFixture, self).setUp()
+            self.useFixture(self.package)
+            testtools.__path__.append(self.package.base)
+            self.addCleanup(testtools.__path__.remove, self.package.base)
+            self.addCleanup(sys.modules.pop, 'testtools.runexample', None)
+
+
+    class SampleServerFixture(fixtures.Fixture):
+        """Creates testtools.runexample temporarily."""
+
+        def __init__(self):
+            """Create a SampleServerFixture.
+
+            :param broken: If True, the sample file will not be importable.
+            """
+            init_contents = _b("""\
+from testtools import TestCase
+
+class TestFoo(TestCase):
+    def test_bar(self):
+        import pdb;pdb.set_trace()
+    def test_quux(self):
+        import pdb;pdb.set_trace()
+""")
+            self.package = fixtures.PythonPackage(
+            'runexample', [('__init__.py', init_contents)])
+
+        def setUp(self):
+            super(SampleServerFixture, self).setUp()
             self.useFixture(self.package)
             testtools.__path__.append(self.package.base)
             self.addCleanup(testtools.__path__.remove, self.package.base)
@@ -302,6 +331,49 @@ OK
             discoverexample.TestExample.test_foo
             fred
             """), out.getvalue())
+
+    @skipUnless(fixtures, "fixtures not present")
+    def test_serve_smoke(self):
+        self.useFixture(SampleServerFixture())
+        # The outer layer of the server is tricky to test, since it has a
+        # hard dependency on a working event loop.
+        stdin_r, stdin_w = os.pipe()
+        stdin = os.fdopen(stdin_w, 'wt', 0)
+        stdin.write('list-tests\n')
+        stdin.write('run-tests\n')
+        # Can we drop into std-in mode
+        stdin.write('std-in\n')
+        # And out again
+        stdin.write('~.')
+        # And in again
+        stdin.write('std-in\n')
+        # Tell pdb to continue
+        stdin.write('c\n')
+        # Twice
+        stdin.write('c\n')
+        # out again (may race but not allowed to errror)
+        stdin.write('~.\n')
+        # and exit the server
+        stdin.flush()
+        stdin.close()
+        tests = []
+        out = StringIO()
+        patch = fixtures.MonkeyPatch('sys.stdin', os.fdopen(stdin_r, 'rt'))
+        patch.setUp()
+        try:
+            exc = self.assertRaises(SystemExit, run.main,
+                argv=['prog', 'serve', '--', 'testtools.runexample'],
+                stdout=out)
+        finally:
+            patch.cleanUp()
+        self.assertEqual((0,), exc.args)
+        self.assertThat(
+            out.getvalue(),
+            MatchesRegex(_u("""Tests running...
+
+Ran 2 tests in \\d.\\d\\d\\ds
+OK
+""")))
 
 
 def test_suite():
