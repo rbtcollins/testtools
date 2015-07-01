@@ -2,6 +2,14 @@
 Contributing to testtools
 =========================
 
+Getting the code
+----------------
+
+Clone from `github <https://github.com/testing-cabal/testools/>`.
+Install for development::
+
+  pip install -e .[dev,test]
+
 Bugs and patches
 ----------------
 
